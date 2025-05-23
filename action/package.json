@@ -1,0 +1,27 @@
+{
+  "name": "dependents-img",
+  "version": "0.1.0",
+  "description": "Generates a list of the dependents of a repository to be later rendered in the README.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "author": "Gourav Khunger <gouravkhunger18@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gouravkhunger/dependents-img.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gouravkhunger/dependents-img/issues"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,13 @@
+name: "Repository Dependents Image Action"
+author: "Gourav Khunger"
+
+description: "Generates a list of the dependents of a repository to be later rendered in the README."
+
+inputs:
+  repo:
+    description: "Owner and name of the repository (example: nvuillam/node-sarif-builder)"
+    required: true
+
+runs:
+  using: 'node20'
+  main: 'action/dist/index.js'
