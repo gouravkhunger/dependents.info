@@ -4,7 +4,7 @@
   "description": "Generates a list of the dependents of a repository to be later rendered in the README.",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "ncc build src/index.ts -mo dist"
   },
   "keywords": [],
   "license": "MIT",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.21",
+    "@vercel/ncc": "^0.38.3",
     "typescript": "^5.8.3"
   }
 }
