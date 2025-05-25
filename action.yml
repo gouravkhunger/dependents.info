@@ -5,7 +5,7 @@ description: "Generates a list of the dependents of a repository to be later ren
 
 inputs:
   repo:
-    description: "Owner and name of the repository (example: nvuillam/node-sarif-builder)"
+    description: "Owner and name of the repository (example: owner/repo)"
     required: true
 
 runs:
