@@ -1,29 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "pretty": true,
-    "rootDir": ".",
     "baseUrl": ".",
-    "newLine": "lf",
-    "strict": true,
     "outDir": "dist",
-    "lib": ["ES2022"],
-    "target": "ES2022",
     "module": "NodeNext",
-    "declaration": false,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "declarationMap": false,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "strictNullChecks": true,
-    "resolveJsonModule": true,
-    "noUnusedParameters": false,
-    "moduleResolution": "NodeNext",
     "paths": { "@/*": ["src/*"] },
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "moduleResolution": "NodeNext"
   },
-  "include": ["src/**/*.ts", "tests"],
+  "include": ["src", "tests"],
   "exclude": ["dist", "node_modules"]
 }

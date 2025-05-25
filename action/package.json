@@ -5,6 +5,10 @@
   "description": "Generates a list of the dependents of a repository to be later rendered in the README.",
   "main": "./dist/index.js",
   "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --check",
+    "format:fix": "prettier . --write",
     "test": "NODE_NO_WARNINGS=1 npx jest",
     "build": "ncc build src/index.ts -mo dist"
   },
@@ -22,10 +26,19 @@
     "@actions/github": "^6.0.1"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.27.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.21",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
     "@vercel/ncc": "^0.38.3",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-jest": "^28.11.0",
+    "eslint-plugin-prettier": "^5.4.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.4",
     "ts-jest-resolver": "^2.0.1",

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "pretty": true,
+    "newLine": "lf",
+    "strict": true,
+    "lib": ["ES2023"],
+    "target": "ES2023",
+    "declaration": false,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "declarationMap": false,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "noUnusedParameters": false,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

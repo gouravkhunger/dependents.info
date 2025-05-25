@@ -1,5 +1,5 @@
-import { pathsToModuleNameMapper } from "ts-jest"
-import config from "./tsconfig.json" assert { type: "json" }
+import { pathsToModuleNameMapper } from "ts-jest";
+import config from "./tsconfig.json" assert { type: "json" };
 
 /** @type {import("ts-jest").JestConfigWithTsJest} **/
 export default {
@@ -14,5 +14,7 @@ export default {
   moduleFileExtensions: ["ts", "js"],
   transform: { "^.+\\.ts$": ["ts-jest"] },
   testPathIgnorePatterns: ["/dist/", "/node_modules/"],
-  moduleNameMapper: pathsToModuleNameMapper(config.compilerOptions.paths, { prefix: "<rootDir>" }),
-}
+  moduleNameMapper: pathsToModuleNameMapper(config.compilerOptions.paths, {
+    prefix: "<rootDir>",
+  }),
+};
