@@ -1,0 +1,29 @@
+import * as cheerio from "cheerio";
+
+import { Dependents, DependentsPage } from "@/types";
+
+export const parseDependentsPage = (doc: string): DependentsPage => {
+  const $ = cheerio.load(doc);
+  const dependents: Dependents = [];
+  $('[data-test-id="dg-repo-pkg-dependent"]').each((i, el) => {
+    const owner = $(el)
+      .find(
+        '[data-hovercard-type="user"], [data-hovercard-type="organization"]',
+      )
+      .text()
+      .trim();
+    const repo = $(el).find('[data-hovercard-type="repository"]').text().trim();
+    const name = `${owner}/${repo}`;
+
+    const starsText = $(el).find(".octicon-star").parent().text().trim();
+    const stars = parseInt(starsText.replace(/,/g, ""), 10) || 0;
+
+    const image = $(el).find("img").attr("src") || "";
+    dependents.push({ name, stars, image });
+  });
+
+  const nextPageLink =
+    $('[data-test-selector="pagination"]').find("a").attr("href") || "";
+
+  return { dependents, nextPageLink };
+};

@@ -10,7 +10,8 @@
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
     "test": "NODE_NO_WARNINGS=1 npx jest",
-    "build": "ncc build src/index.ts -mo dist"
+    "build": "ncc build src/index.ts -mo dist",
+    "local-action": "npx @github/local-action .. action/src/main.ts .env"
   },
   "license": "MIT",
   "author": "Gourav Khunger <gouravkhunger18@gmail.com>",
@@ -23,11 +24,14 @@
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/github": "^6.0.1"
+    "@actions/github": "^6.0.1",
+    "@actions/http-client": "^2.2.3",
+    "cheerio": "^1.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.27.0",
+    "@github/local-action": "^3.2.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
