@@ -1,12 +1,13 @@
 {
   "name": "dependents-img",
   "version": "0.1.0",
+  "private": true,
   "description": "Generates a list of the dependents of a repository to be later rendered in the README.",
   "main": "./dist/index.js",
   "scripts": {
+    "test": "NODE_NO_WARNINGS=1 npx jest",
     "build": "ncc build src/index.ts -mo dist"
   },
-  "keywords": [],
   "license": "MIT",
   "author": "Gourav Khunger <gouravkhunger18@gmail.com>",
   "repository": {
@@ -21,8 +22,13 @@
     "@actions/github": "^6.0.1"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.15.21",
     "@vercel/ncc": "^0.38.3",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4",
+    "ts-jest-resolver": "^2.0.1",
     "typescript": "^5.8.3"
   }
 }

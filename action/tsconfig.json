@@ -1,13 +1,29 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "pretty": true,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "newLine": "lf",
     "strict": true,
-    "target": "ES2020",
-    "module": "CommonJS",
-    "lib": ["ES2020"],
     "outDir": "dist",
-    "rootDir": "src",
-    "esModuleInterop": true
+    "lib": ["ES2022"],
+    "target": "ES2022",
+    "module": "NodeNext",
+    "declaration": false,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "declarationMap": false,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "noUnusedParameters": false,
+    "moduleResolution": "NodeNext",
+    "paths": { "@/*": ["src/*"] },
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["dist"],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "tests"],
+  "exclude": ["dist", "node_modules"]
 }
