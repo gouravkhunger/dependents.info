@@ -1,6 +1,6 @@
 import { getImageBuffer } from "@/http/client";
 
-export const dependentsUrl = (repoName: string): string => {
+export const buildDependentsUrl = (repoName: string): string => {
   if (!validateRepoName(repoName)) {
     throw new Error("Invalid repository name format");
   }

@@ -4,11 +4,11 @@ import { MESSAGE } from "@/constants";
 import { get } from "@/http/client";
 import { parseDependentsPage } from "@/parser/parse";
 import { type Dependents } from "@/types";
-import { dependentsUrl } from "@/utils";
+import { buildDependentsUrl } from "@/utils";
 
 export async function processRepo(name: string): Promise<Dependents[]> {
   const dependents: Dependents[] = [];
-  let pageLink: string | undefined = dependentsUrl(name);
+  let pageLink: string | undefined = buildDependentsUrl(name);
 
   let count = 0;
   while (pageLink) {
