@@ -13,11 +13,13 @@ export async function run(): Promise<void> {
 
     core.info(MESSAGE.initExtraction(name));
 
-    const dependents = await processRepo(name);
-    const output = dependents.flat();
+    const data = await processRepo(name);
 
-    core.info(MESSAGE.processedDependents(output.length, name));
-    core.setOutput("dependents", output);
+    core.info(
+      MESSAGE.processedDependents("public", data.dependents.length, name),
+    );
+    core.info(MESSAGE.processedDependents("total", data.total, name));
+    core.setOutput("dependents", data);
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);

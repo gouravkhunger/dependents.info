@@ -1,12 +1,10 @@
 export const MESSAGE = {
-  initExtraction: (name: string) =>
-    `Extracting dependents of repository ${name}`,
-  processedPage: (count: number, name: string) =>
-    `Processed page ${count} for repository ${name}`,
-  REACHED_MAX_PAGES:
-    "Reached the maximum number of pages (5). Stopping further processing.",
-  processedDependents: (count: number, name: string) =>
-    `Processed ${count} public dependents for repository ${name}`,
+  initExtraction: (repo: string) =>
+    `Extracting dependents of repository ${repo}`,
+  processedPage: (count: number, repo: string) =>
+    `Processed page ${count} for repository ${repo}`,
+  processedDependents: (type: string, count: number, repo: string) =>
+    `Processed ${count} ${type} dependents for repository ${repo}`,
 } as const;
 
 export const ERROR = {
@@ -18,4 +16,6 @@ export const ERROR = {
     `Expected Content-Type for ${url} to be '${expected}', but got ${actual ?? "'unknown'"}`,
   readBufferNotSupported: (url: string) =>
     `Response from ${url} does not support readBodyBuffer.`,
+  failedToParseTotalDependents: (repo: string) =>
+    `Failed to parse total dependents for repository ${repo}.`,
 } as const;

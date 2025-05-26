@@ -2,12 +2,13 @@ import * as core from "@actions/core";
 
 import { MESSAGE } from "@/constants";
 import { get } from "@/http/client";
-import { parseDependentsPage } from "@/parser/parse";
-import { type Dependents } from "@/types";
+import { parseDependentsPage, parseTotalDependents } from "@/parser/parse";
+import type { Dependents, ProcessedDependents } from "@/types";
 import { buildDependentsUrl } from "@/utils";
 
-export async function processRepo(name: string): Promise<Dependents[]> {
-  const dependents: Dependents[] = [];
+export async function processRepo(name: string): Promise<ProcessedDependents> {
+  const dependents: Dependents = [];
+  let total: number | undefined = undefined;
   let pageLink: string | undefined = buildDependentsUrl(name);
 
   let count = 0;
@@ -15,14 +16,16 @@ export async function processRepo(name: string): Promise<Dependents[]> {
     count++;
     const response = await get(pageLink);
     const page = parseDependentsPage(response);
-    dependents.push(page.dependents);
+    dependents.push(...page.dependents);
     pageLink = page.nextPageLink;
     core.info(MESSAGE.processedPage(count, name));
-    if (count >= 5) {
-      core.warning(MESSAGE.REACHED_MAX_PAGES);
-      break;
+    if (typeof total === "undefined") {
+      total = parseTotalDependents(response, name);
     }
   }
 
-  return dependents;
+  return {
+    total: total ?? dependents.length,
+    dependents,
+  };
 }
