@@ -8,6 +8,7 @@ export const MESSAGE = {
   wroteFile: (filePath: string) => `File written successfully at ${filePath}.`,
   artifactUploadLog: (status: string, name: string) =>
     `Artifact upload ${status} for ${name}.`,
+  DONE: "Action completed successfully.",
 } as const;
 
 export const ERROR = {

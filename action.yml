@@ -7,6 +7,10 @@ inputs:
   repo:
     description: "Owner and name of the repository (example: owner/repo)"
     required: true
+  upload-artifacts:
+    description: "Whether to upload the outputs as artifacts (true/false)"
+    required: false
+    default: "false"
 
 outputs:
   dependents:

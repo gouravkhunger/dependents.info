@@ -15,4 +15,5 @@ jobs:
       - name: Run custom action
         uses: ./
         with:
+          upload-artifacts: true
           repo: "gouravkhunger/jekyll-auto-authors"
