@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio";
 
 import { Dependents, DependentsPage } from "@/types";
+import { removeQueryParams } from "@/utils";
 
 export const parseDependentsPage = (doc: string): DependentsPage => {
   const $ = cheerio.load(doc);
@@ -18,7 +19,9 @@ export const parseDependentsPage = (doc: string): DependentsPage => {
     const starsText = $(el).find(".octicon-star").parent().text().trim();
     const stars = parseInt(starsText.replace(/,/g, ""), 10) || 0;
 
-    const image = $(el).find("img").attr("src") || "";
+    const imageSrc = $(el).find("img").attr("src") || "";
+    const image = removeQueryParams(imageSrc, "s");
+
     dependents.push({ name, stars, image });
   });
 

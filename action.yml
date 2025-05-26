@@ -8,6 +8,10 @@ inputs:
     description: "Owner and name of the repository (example: owner/repo)"
     required: true
 
+outputs:
+  dependents:
+    description: "List of dependents of the repository."
+
 runs:
   using: 'node20'
   main: 'action/dist/index.js'

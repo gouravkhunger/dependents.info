@@ -12,6 +12,12 @@ export const validateRepoName = (repoName: string): boolean => {
   return regex.test(repoName);
 };
 
+export const removeQueryParams = (url: string, ...params: string[]): string => {
+  const urlObj = new URL(url);
+  params.forEach((param) => urlObj.searchParams.delete(param));
+  return urlObj.toString();
+};
+
 export const imageUrlToBase64 = async (url: string): Promise<string> => {
   const [buffer, headers] = await getImageBuffer(url);
   const base64 = Buffer.from(buffer).toString("base64");

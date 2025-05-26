@@ -2,9 +2,8 @@ import { type IncomingHttpHeaders } from "node:http";
 
 import { HttpClient } from "@actions/http-client";
 
-const client = new HttpClient();
-
 export const get = async (url: string): Promise<string> => {
+  const client = new HttpClient();
   try {
     const response = await client.get(url);
     if (response.message.statusCode !== 200) {
@@ -19,6 +18,7 @@ export const get = async (url: string): Promise<string> => {
 export const getImageBuffer = async (
   url: string,
 ): Promise<[Buffer, IncomingHttpHeaders]> => {
+  const client = new HttpClient();
   try {
     const response = await client.get(url);
     if (response.message.statusCode !== 200) {

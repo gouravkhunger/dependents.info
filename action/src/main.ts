@@ -1,10 +1,8 @@
 import * as core from "@actions/core";
 
 import { ERRORS } from "@/errors";
-import { get } from "@/http/client";
-import { parseDependentsPage } from "@/parser/parse";
-import { type Dependents } from "@/types";
-import { dependentsUrl, validateRepoName } from "@/utils";
+import { processRepo } from "@/parser";
+import { validateRepoName } from "@/utils";
 
 export async function run(): Promise<void> {
   try {
@@ -14,17 +12,14 @@ export async function run(): Promise<void> {
     }
 
     core.info(`Extracting dependents of repository ${name}`);
-    const dependents: Dependents[] = [];
-    let pageLink: string | undefined = dependentsUrl(name);
 
-    while (pageLink) {
-      const response = await get(pageLink);
-      const page = parseDependentsPage(response);
-      dependents.push(page.dependents);
-      pageLink = page.nextPageLink;
-    }
+    const dependents = await processRepo(name);
+    const output = dependents.flat();
 
-    core.setOutput("dependents", dependents.flat());
+    core.info(
+      `Processed ${output.length} public dependents for repository ${name}`,
+    );
+    core.setOutput("dependents", output);
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
