@@ -1,6 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { DefaultArtifactClient } from "@actions/artifact";
 import * as core from "@actions/core";
 
 import { ERROR, MESSAGE } from "@/constants";
@@ -18,15 +19,23 @@ export async function run(): Promise<void> {
 
     const data = await processRepo(name);
 
-    core.info(
-      MESSAGE.processedDependents("public", data.dependents.length, name),
-    );
-    core.info(MESSAGE.processedDependents("total", data.total, name));
+    core.info(MESSAGE.dependentsCount(data.total, name));
     core.setOutput("dependents", data);
 
     const distFile = path.join(__dirname, "..", "dist", "dependents.json");
     writeFile(distFile, JSON.stringify(data, null, 2))
       .then(() => core.info(MESSAGE.wroteFile(distFile)))
+      .catch((error) => {
+        core.error(ERROR.failedToWriteFile(distFile, error.message));
+      });
+
+    core.info(MESSAGE.artifactUploadLog("started", "dependents.json"));
+    const artifact = new DefaultArtifactClient();
+    await artifact
+      .uploadArtifact("dependents.json", [distFile], ".")
+      .then(() =>
+        core.info(MESSAGE.artifactUploadLog("succeeded", "dependents.json")),
+      )
       .catch((error) => {
         core.error(ERROR.failedToWriteFile(distFile, error.message));
       });

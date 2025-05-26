@@ -3,9 +3,11 @@ export const MESSAGE = {
     `Extracting dependents of repository ${repo}.`,
   processedPage: (count: number, repo: string) =>
     `Processed page ${count} for repository ${repo}.`,
-  processedDependents: (type: string, count: number, repo: string) =>
-    `Processed ${count} ${type} dependents for repository ${repo}.`,
+  dependentsCount: (count: number, repo: string) =>
+    `Found ${count} dependents for repository ${repo}.`,
   wroteFile: (filePath: string) => `File written successfully at ${filePath}.`,
+  artifactUploadLog: (status: string, name: string) =>
+    `Artifact upload ${status} for ${name}.`,
 } as const;
 
 export const ERROR = {

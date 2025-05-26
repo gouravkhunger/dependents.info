@@ -23,6 +23,7 @@
     "url": "https://github.com/gouravkhunger/dependents-img/issues"
   },
   "dependencies": {
+    "@actions/artifact": "^2.3.2",
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
     "@actions/http-client": "^2.2.3",
