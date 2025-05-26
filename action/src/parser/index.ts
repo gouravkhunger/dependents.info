@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
 
+import { MESSAGE } from "@/constants";
 import { get } from "@/http/client";
 import { parseDependentsPage } from "@/parser/parse";
 import { type Dependents } from "@/types";
@@ -16,11 +17,9 @@ export async function processRepo(name: string): Promise<Dependents[]> {
     const page = parseDependentsPage(response);
     dependents.push(page.dependents);
     pageLink = page.nextPageLink;
-    core.info(`Processed page ${count} for repository ${name}`);
+    core.info(MESSAGE.processedPage(count, name));
     if (count >= 5) {
-      core.warning(
-        "Reached the maximum number of pages (5). Stopping further requests.",
-      );
+      core.warning(MESSAGE.REACHED_MAX_PAGES);
       break;
     }
   }

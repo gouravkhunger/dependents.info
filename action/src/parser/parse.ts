@@ -6,7 +6,7 @@ import { removeQueryParams } from "@/utils";
 export const parseDependentsPage = (doc: string): DependentsPage => {
   const $ = cheerio.load(doc);
   const dependents: Dependents = [];
-  $('[data-test-id="dg-repo-pkg-dependent"]').each((i, el) => {
+  $('[data-test-id="dg-repo-pkg-dependent"]').each((_, el) => {
     const owner = $(el)
       .find(
         '[data-hovercard-type="user"], [data-hovercard-type="organization"]',
