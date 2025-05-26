@@ -1,3 +1,6 @@
+import { writeFile } from "node:fs/promises";
+import path from "node:path";
+
 import * as core from "@actions/core";
 
 import { ERROR, MESSAGE } from "@/constants";
@@ -20,6 +23,13 @@ export async function run(): Promise<void> {
     );
     core.info(MESSAGE.processedDependents("total", data.total, name));
     core.setOutput("dependents", data);
+
+    const distFile = path.join(__dirname, "..", "dist", "dependents.json");
+    writeFile(distFile, JSON.stringify(data, null, 2))
+      .then(() => core.info(MESSAGE.wroteFile(distFile)))
+      .catch((error) => {
+        core.error(ERROR.failedToWriteFile(distFile, error.message));
+      });
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);

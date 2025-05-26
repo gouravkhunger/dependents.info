@@ -11,5 +11,5 @@ export type DependentsPage = {
 
 export type ProcessedDependents = {
   total: number;
-  dependents: Dependents;
+  dependents: Omit<Dependents[number], "stars">[];
 };

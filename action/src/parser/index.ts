@@ -4,7 +4,7 @@ import { MESSAGE } from "@/constants";
 import { get } from "@/http/client";
 import { parseDependentsPage, parseTotalDependents } from "@/parser/parse";
 import type { Dependents, ProcessedDependents } from "@/types";
-import { buildDependentsUrl } from "@/utils";
+import { buildDependentsUrl, imageUrlToBase64 } from "@/utils";
 
 export async function processRepo(name: string): Promise<ProcessedDependents> {
   const dependents: Dependents = [];
@@ -24,8 +24,16 @@ export async function processRepo(name: string): Promise<ProcessedDependents> {
     }
   }
 
+  const transformedData = dependents
+    .sort((a, b) => b.stars - a.stars)
+    .slice(0, 10)
+    .map(async (dep) => ({
+      name: dep.name,
+      image: await imageUrlToBase64(dep.image),
+    }));
+
   return {
     total: total ?? dependents.length,
-    dependents,
+    dependents: await Promise.all(transformedData),
   };
 }
