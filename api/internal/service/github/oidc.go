@@ -2,11 +2,12 @@ package github
 
 import (
 	"context"
-	"dependents-img/internal/config"
-	"dependents-img/pkg/utils"
 	"fmt"
 
 	"github.com/coreos/go-oidc/v3/oidc"
+
+	"dependents-img/internal/config"
+	"dependents-img/pkg/utils"
 )
 
 type OIDCService struct {

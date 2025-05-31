@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"dependents-img/internal/models"
-	"dependents-img/internal/test"
 	"encoding/json"
 	"net/http/httptest"
 	"strings"
@@ -10,6 +8,9 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+
+	"dependents-img/internal/models"
+	"dependents-img/internal/test"
 )
 
 func TestHealthHandler_Health(t *testing.T) {

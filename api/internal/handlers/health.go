@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	"dependents-img/internal/models"
-	"dependents-img/pkg/utils"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+
+	"dependents-img/internal/models"
+	"dependents-img/pkg/utils"
 )
 
 type HealthHandler struct{}

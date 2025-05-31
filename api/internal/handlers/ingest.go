@@ -1,14 +1,15 @@
 package handlers
 
 import (
+	"fmt"
+
+	"github.com/gofiber/fiber/v2"
+
 	"dependents-img/internal/config"
 	"dependents-img/internal/env"
 	"dependents-img/internal/models"
 	"dependents-img/internal/service/github"
 	"dependents-img/pkg/utils"
-	"fmt"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type IngestHandler struct {

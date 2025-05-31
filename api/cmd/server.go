@@ -1,18 +1,16 @@
-package app
+package cmd
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"dependents-img/internal/config"
 	"dependents-img/internal/middleware"
 	"dependents-img/internal/routes"
 	"dependents-img/internal/service"
 	"dependents-img/pkg/utils"
-	"fmt"
-
-	"github.com/gofiber/fiber/v2"
 )
 
-func Start() error {
-	cfg := config.New()
+func Build(cfg *config.Config, services *service.Services) *fiber.App {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.ErrorHandler,
 	})
@@ -21,9 +19,7 @@ func Start() error {
 	app.Use(middleware.Logger())
 	app.Use(middleware.CORS())
 
-	services := service.BuildAll(cfg)
-
 	routes.Setup(app, services)
 
-	return app.Listen(fmt.Sprintf(":%s", cfg.Port))
+	return app
 }

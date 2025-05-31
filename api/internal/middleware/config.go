@@ -2,9 +2,10 @@ package middleware
 
 import (
 	"context"
-	"dependents-img/internal/config"
 
 	"github.com/gofiber/fiber/v2"
+
+	"dependents-img/internal/config"
 )
 
 func Config(cfg *config.Config) fiber.Handler {

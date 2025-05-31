@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"dependents-img/internal/models"
-	"dependents-img/internal/test"
 	"encoding/json"
 	"errors"
 	"io"
@@ -11,6 +9,9 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber/v2"
+
+	"dependents-img/internal/models"
+	"dependents-img/internal/test"
 )
 
 func TestSendResponse(t *testing.T) {

@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"dependents-img/internal/models"
-
 	"github.com/gofiber/fiber/v2"
+
+	"dependents-img/internal/models"
 )
 
 func SendResponse(c *fiber.Ctx, status int, response models.APIResponse) error {

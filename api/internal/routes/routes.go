@@ -1,10 +1,10 @@
 package routes
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"dependents-img/internal/handlers"
 	"dependents-img/internal/service"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 func Setup(app *fiber.App, services *service.Services) {

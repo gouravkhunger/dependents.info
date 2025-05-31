@@ -1,10 +1,10 @@
 package test
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"dependents-img/internal/config"
 	"dependents-img/internal/middleware"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 func NewServer() *fiber.App {

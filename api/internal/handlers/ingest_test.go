@@ -2,13 +2,14 @@ package handlers
 
 import (
 	"bytes"
-	"dependents-img/internal/models"
-	"dependents-img/internal/test"
 	"encoding/json"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/gofiber/fiber/v2"
+
+	"dependents-img/internal/models"
+	"dependents-img/internal/test"
 )
 
 func TestIngestHandler_Ingest(t *testing.T) {
