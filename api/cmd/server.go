@@ -4,6 +4,7 @@ import (
 	"dependents-img/internal/api"
 	"dependents-img/internal/config"
 	"dependents-img/internal/middleware"
+	"dependents-img/internal/service"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,8 +17,11 @@ func Start() error {
 	})
 
 	app.Use(middleware.Logger())
+	app.Use(middleware.CORS())
 
-	api.Setup(app)
+	services := service.BuildAll(cfg)
+
+	api.Setup(app, services)
 
 	return app.Listen(fmt.Sprintf(":%s", cfg.Port))
 }

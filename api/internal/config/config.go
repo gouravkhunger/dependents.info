@@ -8,6 +8,7 @@ import (
 type Config struct {
 	Port               string
 	GitHubOIDCAudience string
+	GitHubOIDCIssuer   string
 	Environment        env.Environment
 }
 
@@ -16,6 +17,7 @@ func New() *Config {
 		Port:               getEnv("PORT", "5000"),
 		Environment:        env.EnvFromString(getEnv("ENVIRONMENT", "development")),
 		GitHubOIDCAudience: getEnv("GITHUB_OIDC_AUDIENCE", "https://dependents.info"),
+		GitHubOIDCIssuer:   "https://token.actions.githubusercontent.com",
 	}
 }
 
