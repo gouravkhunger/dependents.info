@@ -2,6 +2,7 @@ package utils
 
 import (
 	"dependents-img/internal/models"
+	"dependents-img/internal/test"
 	"encoding/json"
 	"errors"
 	"io"
@@ -48,7 +49,7 @@ func TestSendResponse(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			app := fiber.New()
+			app := test.NewServer()
 
 			app.Get("/", func(c *fiber.Ctx) error {
 				return SendResponse(c, tt.status, tt.response)
@@ -112,7 +113,7 @@ func TestSendError(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			app := fiber.New()
+			app := test.NewServer()
 
 			app.Get("/", func(c *fiber.Ctx) error {
 				return SendError(c, tt.status, tt.message, tt.err)

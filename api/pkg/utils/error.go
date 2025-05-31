@@ -1,8 +1,6 @@
-package middleware
+package utils
 
 import (
-	"dependents-img/pkg/utils"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,5 +9,5 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 	if e, ok := err.(*fiber.Error); ok {
 		code = e.Code
 	}
-	return utils.SendError(c, code, "Internal server error", err)
+	return SendError(c, code, "Internal server error", err)
 }

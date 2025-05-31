@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"dependents-img/internal/models"
+	"dependents-img/internal/test"
 	"encoding/json"
 	"net/http/httptest"
 	"strings"
@@ -12,7 +13,7 @@ import (
 )
 
 func TestHealthHandler_Health(t *testing.T) {
-	app := fiber.New()
+	app := test.NewServer()
 	h := NewHealthHandler()
 	app.Get("/health", h.Health)
 
@@ -66,7 +67,7 @@ func TestHealthHandler_Health(t *testing.T) {
 }
 
 func TestHealthHandler_Health_MethodNotAllowed(t *testing.T) {
-	app := fiber.New()
+	app := test.NewServer()
 	h := NewHealthHandler()
 	app.Get("/health", h.Health)
 

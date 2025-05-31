@@ -1,9 +1,14 @@
 package config
 
 import (
+	"context"
 	"dependents-img/internal/env"
 	"os"
 )
+
+type contextKey string
+
+const ConfigContextKey = contextKey("config")
 
 type Config struct {
 	Port               string
@@ -19,6 +24,14 @@ func New() *Config {
 		GitHubOIDCAudience: getEnv("GITHUB_OIDC_AUDIENCE", "https://dependents.info"),
 		GitHubOIDCIssuer:   "https://token.actions.githubusercontent.com",
 	}
+}
+
+func FromContext(ctx context.Context) *Config {
+	val := ctx.Value(ConfigContextKey)
+	if cfg, ok := val.(*Config); ok {
+		return cfg
+	}
+	return nil
 }
 
 func getEnv(key, defaultValue string) string {

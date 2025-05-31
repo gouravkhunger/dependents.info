@@ -1,4 +1,4 @@
-package api
+package routes
 
 import (
 	"dependents-img/internal/handlers"
