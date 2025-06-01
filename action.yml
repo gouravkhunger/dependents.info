@@ -1,12 +1,9 @@
-name: "Repository Dependents Image Action"
+name: "Dependents Info Action"
 author: "Gourav Khunger"
 
 description: "Generates a list of the dependents of a repository to be later rendered in the README."
 
 inputs:
-  repo:
-    description: "Owner and name of the repository (example: owner/repo)"
-    required: true
   upload-artifacts:
     description: "Whether to upload the outputs as artifacts (true/false)"
     required: false

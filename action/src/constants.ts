@@ -15,7 +15,7 @@ export const MESSAGE = {
 
 export const ERROR = {
   INVALID_REPO_FORMAT:
-    "Input 'repo' must be in the format 'owner/repo' and contain only valid characters.",
+    "Repository must be in the format 'owner/repo' and contain only valid characters.",
   failedToWriteFile: (filePath: string, msg?: string) =>
     `Failed to write file at ${filePath}: ${msg ?? "unknown error"}.`,
   failedToFetch: (url: string, statusCode?: number) =>

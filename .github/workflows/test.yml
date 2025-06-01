@@ -3,17 +3,16 @@ name: Test Action
 on:
   push:
     branches: [main]
-
   workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v4
-
       - name: Run custom action
         uses: ./
         with:
           upload-artifacts: true
-          repo: "gouravkhunger/jekyll-auto-authors"

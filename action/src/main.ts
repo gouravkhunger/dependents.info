@@ -10,7 +10,8 @@ import { validateRepoName } from "@/utils";
 
 export async function run(): Promise<void> {
   try {
-    const name = core.getInput("repo");
+    const name = process.env.GITHUB_REPOSITORY ?? "";
+
     if (!validateRepoName(name)) {
       throw new Error(ERROR.INVALID_REPO_FORMAT);
     }
