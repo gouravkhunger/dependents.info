@@ -44,8 +44,8 @@ func TestNew_WithDefaults(t *testing.T) {
 	if cfg.Port != "5000" {
 		t.Errorf("expected default Port to be '5000', got '%s'", cfg.Port)
 	}
-	if cfg.DatabasePath != "/tmp/dependents.db" {
-		t.Errorf("expected default DatabasePath to be '/tmp/dependents.db', got '%s'", cfg.DatabasePath)
+	if cfg.DatabasePath != "/tmp/dependents" {
+		t.Errorf("expected default DatabasePath to be '/tmp/dependents', got '%s'", cfg.DatabasePath)
 	}
 	if cfg.Environment != env.EnvDevelopment {
 		t.Errorf("expected default Environment to be 'development', got '%s'", cfg.Environment)

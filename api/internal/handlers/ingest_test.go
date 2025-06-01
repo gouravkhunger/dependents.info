@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"dependents-img/internal/models"
+	"dependents-img/internal/service/database"
 	"dependents-img/internal/test"
 )
 
@@ -34,6 +35,7 @@ func TestIngestHandler_Ingest(t *testing.T) {
 		{
 			name: "invalid request validation",
 			requestBody: models.IngestRequest{
+				Total: 0,
 				Dependents: []models.Dependent{
 					{Name: "test"},
 				},
@@ -44,6 +46,7 @@ func TestIngestHandler_Ingest(t *testing.T) {
 		{
 			name: "invalid image base64",
 			requestBody: models.IngestRequest{
+				Total: 0,
 				Dependents: []models.Dependent{
 					{
 						Name:  "owner/repo",
@@ -57,6 +60,7 @@ func TestIngestHandler_Ingest(t *testing.T) {
 		{
 			name: "success",
 			requestBody: models.IngestRequest{
+				Total: 10,
 				Dependents: []models.Dependent{
 					{
 						Name:  "owner/repo",
@@ -69,10 +73,14 @@ func TestIngestHandler_Ingest(t *testing.T) {
 		},
 	}
 
+	cfg := test.NewConfig()
+	db := database.NewBadgerService(cfg.DatabasePath)
+	defer db.Close()
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			app := test.NewServer()
-			h := NewIngestHandler(nil)
+			app := test.NewServer(cfg)
+			h := NewIngestHandler(nil, db)
 			app.Post("/ingest", h.Ingest)
 
 			var reqBody []byte

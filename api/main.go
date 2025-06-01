@@ -32,5 +32,6 @@ func main() {
 		log.Panic(err)
 	}
 
+	services.DatabaseService.Sync()
 	services.DatabaseService.Close()
 }

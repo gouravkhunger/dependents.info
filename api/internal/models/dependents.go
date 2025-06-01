@@ -13,6 +13,7 @@ func init() {
 }
 
 type IngestRequest struct {
+	Total      int         `json:"total" validate:"required,gt=0"`
 	Dependents []Dependent `json:"dependents" validate:"required,min=1,dive"`
 }
 
@@ -23,6 +24,7 @@ type Dependent struct {
 
 var errorMessages = map[string]string{
 	"default":                    "Invalid request format",
+	"Total.required":             "Total number of dependents is required",
 	"Dependents.min":             "At least one dependent is required",
 	"Dependents.required":        "Dependents list is required",
 	"Dependent.Image.required":   "Each dependent must have an image",

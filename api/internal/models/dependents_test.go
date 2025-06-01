@@ -13,6 +13,7 @@ func TestIngestRequest_Validation(t *testing.T) {
 		{
 			name: "valid request",
 			req: IngestRequest{
+				Total: 8,
 				Dependents: []Dependent{
 					{
 						Name:  "foo/bar",
@@ -25,6 +26,7 @@ func TestIngestRequest_Validation(t *testing.T) {
 		{
 			name: "valid request with different image type",
 			req: IngestRequest{
+				Total: 10,
 				Dependents: []Dependent{
 					{
 						Name:  "owner/repo",
@@ -37,6 +39,7 @@ func TestIngestRequest_Validation(t *testing.T) {
 		{
 			name: "invalid name (wrong format)",
 			req: IngestRequest{
+				Total: -1,
 				Dependents: []Dependent{
 					{
 						Name:  "foo-bar",
@@ -49,6 +52,20 @@ func TestIngestRequest_Validation(t *testing.T) {
 		{
 			name: "invalid image (missing prefix)",
 			req: IngestRequest{
+				Total: 10,
+				Dependents: []Dependent{
+					{
+						Name:  "foo/bar",
+						Image: "r4nd0m=",
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid totals count",
+			req: IngestRequest{
+				Total: -20,
 				Dependents: []Dependent{
 					{
 						Name:  "foo/bar",

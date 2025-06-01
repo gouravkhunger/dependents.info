@@ -1,13 +1,15 @@
-package config
+package test
 
 import (
+	"dependents-img/internal/config"
 	"dependents-img/internal/env"
 )
 
-func NewTestConfig() *Config {
-	return &Config{
+func NewConfig() *config.Config {
+	return &config.Config{
 		Port:               "5000",
 		Environment:        env.EnvDevelopment,
+		DatabasePath:       "/tmp/dependents-test",
 		GitHubOIDCAudience: "http://localhost:5000",
 		GitHubOIDCIssuer:   "https://token.actions.githubusercontent.com",
 	}

@@ -22,7 +22,7 @@ type Config struct {
 func New() *Config {
 	return &Config{
 		Port:               getEnv("PORT", "5000"),
-		DatabasePath:       getEnv("DATABASE_PATH", "/tmp/dependents.db"),
+		DatabasePath:       getEnv("DATABASE_PATH", "/tmp/dependents"),
 		Environment:        env.EnvFromString(getEnv("ENVIRONMENT", "development")),
 		GitHubOIDCAudience: getEnv("GITHUB_OIDC_AUDIENCE", "https://dependents.info"),
 		GitHubOIDCIssuer:   "https://token.actions.githubusercontent.com",

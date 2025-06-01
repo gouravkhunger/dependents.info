@@ -4,6 +4,8 @@ import (
 	"github.com/dgraph-io/badger/v4"
 )
 
+type Txn = *badger.Txn
+
 type BadgerService struct {
 	db *badger.DB
 }
@@ -15,9 +17,13 @@ func NewBadgerService(path string) *BadgerService {
 	db, err := badger.Open(opts)
 	if err != nil {
 		panic("Failed to open Badger database: " + err.Error())
-  }
+	}
 
 	return &BadgerService{db: db}
+}
+
+func (b *BadgerService) Sync() error {
+	return b.db.Sync()
 }
 
 func (b *BadgerService) Close() error {

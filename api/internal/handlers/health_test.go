@@ -14,7 +14,8 @@ import (
 )
 
 func TestHealthHandler_Health(t *testing.T) {
-	app := test.NewServer()
+	cfg := test.NewConfig()
+	app := test.NewServer(cfg)
 	h := NewHealthHandler()
 	app.Get("/health", h.Health)
 
@@ -68,7 +69,8 @@ func TestHealthHandler_Health(t *testing.T) {
 }
 
 func TestHealthHandler_Health_MethodNotAllowed(t *testing.T) {
-	app := test.NewServer()
+	cfg := test.NewConfig()
+	app := test.NewServer(cfg)
 	h := NewHealthHandler()
 	app.Get("/health", h.Health)
 

@@ -7,8 +7,7 @@ import (
 	"dependents-img/internal/middleware"
 )
 
-func NewServer() *fiber.App {
-	cfg := config.NewTestConfig()
+func NewServer(cfg *config.Config) *fiber.App {
 	app := fiber.New()
 	app.Use(middleware.Config(cfg))
 	return app

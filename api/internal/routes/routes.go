@@ -9,7 +9,10 @@ import (
 
 func Setup(app *fiber.App, services *service.Services) {
 	healthHandler := handlers.NewHealthHandler()
-	ingestHandler := handlers.NewIngestHandler(services.GitHubOIDCService)
+	ingestHandler := handlers.NewIngestHandler(
+		services.GitHubOIDCService,
+		services.DatabaseService,
+	)
 
 	app.Get("/health", healthHandler.Health)
 	app.Post("/:owner/:repo/ingest", ingestHandler.Ingest)
