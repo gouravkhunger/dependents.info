@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -34,7 +34,7 @@ func NewIngestHandler(
 
 func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 	config := config.FromContext(c.UserContext())
-	name := fmt.Sprintf("%s/%s", c.Params("owner"), c.Params("repo"))
+	name := c.Params("owner") + "/" + c.Params("repo")
 
 	if config == nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Configuration not found in context", nil)
@@ -60,9 +60,16 @@ func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 		return utils.SendError(c, fiber.StatusBadRequest, "Invalid JSON payload", err)
 	}
 
-	svgBytes := h.imageService.RenderSVG(req)
+	svgBytes, err := h.imageService.RenderSVG(req)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to render SVG", err)
+	}
 
-	if err := h.databaseService.Save(name, svgBytes); err != nil {
+	if err := h.databaseService.Save("total:" + name, []byte(strconv.Itoa(req.Total))); err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to store data", err)
+	}
+
+	if err := h.databaseService.Save("svg:" + name, svgBytes); err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to store data", err)
 	}
 

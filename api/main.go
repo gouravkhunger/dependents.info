@@ -28,7 +28,7 @@ func main() {
 		_ = app.Shutdown()
 	}()
 
-	if err := app.Listen(fmt.Sprintf(":%s", cfg.Port)); err != nil {
+	if err := app.Listen(fmt.Sprint(":", cfg.Port)); err != nil {
 		log.Panic(err)
 	}
 

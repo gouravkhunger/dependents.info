@@ -1,10 +1,6 @@
 package database
 
-import (
-	"encoding/json"
-)
-
-func (b *BadgerService) Get(key string, out any) error {
+func (b *BadgerService) Get(key string, out *string) error {
 	var data []byte
 	err := b.db.View(func(txn Txn) error {
 		item, err := txn.Get([]byte(key))
@@ -17,10 +13,13 @@ func (b *BadgerService) Get(key string, out any) error {
 			return nil
 		})
 	})
+
 	if err != nil {
 		return err
 	}
-	return json.Unmarshal(data, out)
+
+	*out = string(data)
+	return nil
 }
 
 func (b *BadgerService) Save(key string, data []byte) error {
