@@ -18,6 +18,7 @@ func Build(cfg *config.Config, services *service.Services) *fiber.App {
 	app.Use(middleware.Config(cfg))
 	app.Use(middleware.Logger())
 	app.Use(middleware.CORS())
+	app.Use(middleware.ETAG())
 
 	routes.Setup(app, services)
 

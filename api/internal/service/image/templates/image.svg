@@ -1,5 +1,4 @@
-{{define "svg"}}
-<svg viewbox="0 0 672 72" width="672" height="72" xmlns="http://www.w3.org/2000/svg">
+{{define "svg"}}<svg viewbox="0 0 672 72" width="672" height="72" xmlns="http://www.w3.org/2000/svg">
   <foreignObject width="100%" height="100%">
     <div xmlns="http://www.w3.org/1999/xhtml">
       <style>
@@ -36,5 +35,4 @@
       </div>
     </div>
   </foreignObject>
-</svg>
-{{end}}
+</svg>{{end}}

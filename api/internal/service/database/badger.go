@@ -16,7 +16,14 @@ type BadgerService struct {
 
 func NewBadgerService(path string) *BadgerService {
 	opts := badger.DefaultOptions(path)
-	opts = opts.WithLoggingLevel(badger.WARNING)
+	opts = opts.WithLoggingLevel(badger.WARNING).
+		WithNumLevelZeroTablesStall(10).
+		WithValueLogFileSize(256 << 20).
+		WithIndexCacheSize(64 << 20).
+		WithBaseTableSize(16 << 20).
+		WithValueThreshold(1 << 20).
+		WithMemTableSize(32 << 20).
+		WithNumLevelZeroTables(3)
 
 	db, err := badger.Open(opts)
 	if err != nil {
