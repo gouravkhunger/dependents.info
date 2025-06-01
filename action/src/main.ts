@@ -47,7 +47,7 @@ export async function run(): Promise<void> {
         });
     }
 
-    const token = await core.getIDToken();
+    const token = await core.getIDToken(API_BASE_URL);
     const resp = await fetch(`${API_BASE_URL}/${name}/ingest`, {
       headers: {
         Authorization: `Bearer ${token}`,
