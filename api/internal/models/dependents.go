@@ -13,8 +13,8 @@ func init() {
 }
 
 type IngestRequest struct {
-	Total      int         `json:"total" validate:"required,gt=0"`
-	Dependents []Dependent `json:"dependents" validate:"required,min=1,dive"`
+	Total      int         `json:"total" validate:"min=0"`
+	Dependents []Dependent `json:"dependents" validate:"required,dive"`
 }
 
 type Dependent struct {
