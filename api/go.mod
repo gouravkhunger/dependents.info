@@ -3,6 +3,7 @@ module dependents-img
 go 1.24.2
 
 require (
+	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b
 	github.com/coreos/go-oidc/v3 v3.14.1
 	github.com/dgraph-io/badger/v4 v4.7.0
 	github.com/go-playground/validator/v10 v10.26.0

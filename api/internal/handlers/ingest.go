@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,18 +10,25 @@ import (
 	"dependents-img/internal/models"
 	"dependents-img/internal/service/database"
 	"dependents-img/internal/service/github"
+	"dependents-img/internal/service/image"
 	"dependents-img/pkg/utils"
 )
 
 type IngestHandler struct {
 	githubOIDCService *github.OIDCService
+	imageService      *image.ImageService
 	databaseService   *database.BadgerService
 }
 
-func NewIngestHandler(githubOIDC *github.OIDCService, dbService *database.BadgerService) *IngestHandler {
+func NewIngestHandler(
+	githubOIDC *github.OIDCService,
+	imageService *image.ImageService,
+	dbService *database.BadgerService,
+) *IngestHandler {
 	return &IngestHandler{
 		databaseService:   dbService,
 		githubOIDCService: githubOIDC,
+		imageService:      imageService,
 	}
 }
 
@@ -54,12 +60,9 @@ func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 		return utils.SendError(c, fiber.StatusBadRequest, "Invalid JSON payload", err)
 	}
 
-	body, err := json.Marshal(req)
-	if err != nil {
-		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to marshal request body", err)
-	}
+	svgBytes := h.imageService.RenderSVG(req)
 
-	if err = h.databaseService.Save(name, body); err != nil {
+	if err := h.databaseService.Save(name, svgBytes); err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to store data", err)
 	}
 

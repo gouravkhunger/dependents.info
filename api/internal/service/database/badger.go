@@ -1,13 +1,17 @@
 package database
 
 import (
+	"log"
+	"time"
+
 	"github.com/dgraph-io/badger/v4"
 )
 
 type Txn = *badger.Txn
 
 type BadgerService struct {
-	db *badger.DB
+	db     *badger.DB
+	gcStop chan struct{}
 }
 
 func NewBadgerService(path string) *BadgerService {
@@ -19,7 +23,28 @@ func NewBadgerService(path string) *BadgerService {
 		panic("Failed to open Badger database: " + err.Error())
 	}
 
-	return &BadgerService{db: db}
+	service := &BadgerService{
+		db:     db,
+		gcStop: make(chan struct{}),
+	}
+
+	go func() {
+		ticker := time.NewTicker(6 * time.Hour)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				err := service.db.RunValueLogGC(0.7)
+				if err != nil && err != badger.ErrNoRewrite {
+					log.Printf("GC error: %v", err)
+				}
+			case <-service.gcStop:
+				return
+			}
+		}
+	}()
+
+	return service
 }
 
 func (b *BadgerService) Sync() error {
@@ -27,5 +52,6 @@ func (b *BadgerService) Sync() error {
 }
 
 func (b *BadgerService) Close() error {
+	close(b.gcStop)
 	return b.db.Close()
 }
