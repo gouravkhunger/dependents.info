@@ -4,7 +4,7 @@ import path from "node:path";
 import { DefaultArtifactClient } from "@actions/artifact";
 import * as core from "@actions/core";
 
-import { ERROR, MESSAGE } from "@/constants";
+import { API_BASE_URL, ERROR, MESSAGE } from "@/constants";
 import { processRepo } from "@/parser";
 import { validateRepoName } from "@/utils";
 
@@ -18,34 +18,48 @@ export async function run(): Promise<void> {
     core.info(MESSAGE.initExtraction(name));
 
     const data = await processRepo(name);
+    const json = JSON.stringify(data, null, 2);
 
     core.info(MESSAGE.dependentsCount(data.total, name));
     core.setOutput("dependents", data);
 
     const distDir = path.join(__dirname, "..", "dist");
     const distFile = path.join(distDir, "dependents.json");
-    writeFile(distFile, JSON.stringify(data, null, 2))
+
+    await writeFile(distFile, json)
       .then(() => core.info(MESSAGE.wroteFile(distFile)))
       .catch((error) => {
         core.error(ERROR.failedToWriteFile(distFile, error.message));
       });
 
     const uploadArtifacts = core.getInput("upload-artifacts") === "true";
-    if (!uploadArtifacts) {
-      core.info(MESSAGE.DONE);
-      return;
+    if (uploadArtifacts) {
+      core.info(MESSAGE.artifactUploadLog("started", "dependents.json"));
+      const artifact = new DefaultArtifactClient();
+      await artifact
+        .uploadArtifact("dependents.json", [distFile], distDir)
+        .then(() =>
+          core.info(MESSAGE.artifactUploadLog("succeeded", "dependents.json")),
+        )
+        .catch((error) => {
+          core.error(ERROR.failedToWriteFile(distFile, error.message));
+        });
     }
 
-    core.info(MESSAGE.artifactUploadLog("started", "dependents.json"));
-    const artifact = new DefaultArtifactClient();
-    await artifact
-      .uploadArtifact("dependents.json", [distFile], distDir)
-      .then(() =>
-        core.info(MESSAGE.artifactUploadLog("succeeded", "dependents.json")),
-      )
-      .catch((error) => {
-        core.error(ERROR.failedToWriteFile(distFile, error.message));
-      });
+    const token = await core.getIDToken();
+    const resp = await fetch(`${API_BASE_URL}/${name}/ingest`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: json,
+      method: "POST",
+    });
+
+    if (!resp.ok) {
+      const error = (await resp.json()) as { message: string };
+      throw new Error(ERROR.failedToSubmitData(resp.status, error.message));
+    }
 
     core.info(MESSAGE.DONE);
   } catch (error) {

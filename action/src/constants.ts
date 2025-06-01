@@ -1,3 +1,5 @@
+export const API_BASE_URL = "https://dependents.info";
+
 export const MESSAGE = {
   initExtraction: (repo: string) =>
     `Extracting dependents of repository ${repo}.`,
@@ -18,6 +20,8 @@ export const ERROR = {
     `Failed to write file at ${filePath}: ${msg ?? "unknown error"}.`,
   failedToFetch: (url: string, statusCode?: number) =>
     `Failed to fetch ${url}: ${statusCode ?? "unknown error"}.`,
+  failedToSubmitData: (statusCode: number, message: string) =>
+    `Failed to submit data: ${statusCode} - ${message}.`,
   contentTypeMismatch: (url: string, expected: string, actual?: string) =>
     `Expected Content-Type for ${url} to be '${expected}', but got ${actual ?? "'unknown'"}.`,
   readBufferNotSupported: (url: string) =>
