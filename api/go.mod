@@ -1,4 +1,4 @@
-module dependents-img
+module dependents.info
 
 go 1.24.2
 

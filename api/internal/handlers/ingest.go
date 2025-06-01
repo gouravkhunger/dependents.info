@@ -3,13 +3,13 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"dependents-img/internal/config"
-	"dependents-img/internal/env"
-	"dependents-img/internal/models"
-	"dependents-img/internal/service/database"
-	"dependents-img/internal/service/github"
-	"dependents-img/internal/service/image"
-	"dependents-img/pkg/utils"
+	"dependents.info/internal/config"
+	"dependents.info/internal/env"
+	"dependents.info/internal/models"
+	"dependents.info/internal/service/database"
+	"dependents.info/internal/service/github"
+	"dependents.info/internal/service/image"
+	"dependents.info/pkg/utils"
 )
 
 type IngestHandler struct {

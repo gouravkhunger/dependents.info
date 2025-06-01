@@ -9,8 +9,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"dependents-img/internal/models"
-	"dependents-img/internal/test"
+	"dependents.info/internal/models"
+	"dependents.info/internal/test"
 )
 
 func TestHealthHandler_Health(t *testing.T) {

@@ -1,5 +1,5 @@
 {
-  "name": "dependents-img",
+  "name": "dependents.info",
   "version": "0.1.0",
   "private": true,
   "description": "Generates a list of the dependents of a repository to be later rendered in the README.",
@@ -17,10 +17,10 @@
   "author": "Gourav Khunger <gouravkhunger18@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gouravkhunger/dependents-img.git"
+    "url": "git+https://github.com/gouravkhunger/dependents.info.git"
   },
   "bugs": {
-    "url": "https://github.com/gouravkhunger/dependents-img/issues"
+    "url": "https://github.com/gouravkhunger/dependents.info/issues"
   },
   "dependencies": {
     "@actions/artifact": "^2.3.2",

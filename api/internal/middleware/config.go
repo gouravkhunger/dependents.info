@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"dependents-img/internal/config"
+	"dependents.info/internal/config"
 )
 
 func Config(cfg *config.Config) fiber.Handler {

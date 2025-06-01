@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/text/message"
 
-	"dependents-img/internal/models"
+	"dependents.info/internal/models"
 )
 
 //go:embed templates/image.svg

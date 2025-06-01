@@ -3,8 +3,8 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"dependents-img/internal/service/database"
-	"dependents-img/pkg/utils"
+	"dependents.info/internal/service/database"
+	"dependents.info/pkg/utils"
 )
 
 type ImageHandler struct {

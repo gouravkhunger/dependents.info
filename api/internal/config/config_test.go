@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"dependents-img/internal/env"
+	"dependents.info/internal/env"
 )
 
 func TestNew_WithEnvVars(t *testing.T) {

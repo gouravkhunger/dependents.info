@@ -8,9 +8,9 @@ import (
 
 	"github.com/joho/godotenv"
 
-	server "dependents-img/cmd"
-	"dependents-img/internal/config"
-	"dependents-img/internal/service"
+	server "dependents.info/cmd"
+	"dependents.info/internal/config"
+	"dependents.info/internal/service"
 )
 
 func main() {

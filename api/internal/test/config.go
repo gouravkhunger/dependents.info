@@ -1,8 +1,8 @@
 package test
 
 import (
-	"dependents-img/internal/config"
-	"dependents-img/internal/env"
+	"dependents.info/internal/config"
+	"dependents.info/internal/env"
 )
 
 func NewConfig() *config.Config {

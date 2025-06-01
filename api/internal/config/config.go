@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"dependents-img/internal/env"
+	"dependents.info/internal/env"
 )
 
 type contextKey string

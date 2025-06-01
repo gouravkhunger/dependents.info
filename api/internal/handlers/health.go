@@ -5,8 +5,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"dependents-img/internal/models"
-	"dependents-img/pkg/utils"
+	"dependents.info/internal/models"
+	"dependents.info/pkg/utils"
 )
 
 type HealthHandler struct{}

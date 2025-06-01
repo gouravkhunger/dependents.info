@@ -1,10 +1,10 @@
 package service
 
 import (
-	"dependents-img/internal/config"
-	"dependents-img/internal/service/database"
-	"dependents-img/internal/service/github"
-	"dependents-img/internal/service/image"
+	"dependents.info/internal/config"
+	"dependents.info/internal/service/database"
+	"dependents.info/internal/service/github"
+	"dependents.info/internal/service/image"
 )
 
 type Services struct {

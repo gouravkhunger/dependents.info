@@ -3,11 +3,11 @@ package cmd
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"dependents-img/internal/config"
-	"dependents-img/internal/middleware"
-	"dependents-img/internal/routes"
-	"dependents-img/internal/service"
-	"dependents-img/pkg/utils"
+	"dependents.info/internal/config"
+	"dependents.info/internal/middleware"
+	"dependents.info/internal/routes"
+	"dependents.info/internal/service"
+	"dependents.info/pkg/utils"
 )
 
 func Build(cfg *config.Config, services *service.Services) *fiber.App {

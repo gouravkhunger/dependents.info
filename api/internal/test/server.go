@@ -3,8 +3,8 @@ package test
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"dependents-img/internal/config"
-	"dependents-img/internal/middleware"
+	"dependents.info/internal/config"
+	"dependents.info/internal/middleware"
 )
 
 func NewServer(cfg *config.Config) *fiber.App {

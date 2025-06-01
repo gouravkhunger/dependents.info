@@ -6,8 +6,8 @@ import (
 
 	"github.com/coreos/go-oidc/v3/oidc"
 
-	"dependents-img/internal/config"
-	"dependents-img/pkg/utils"
+	"dependents.info/internal/config"
+	"dependents.info/pkg/utils"
 )
 
 type OIDCService struct {

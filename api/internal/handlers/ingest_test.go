@@ -8,10 +8,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"dependents-img/internal/models"
-	"dependents-img/internal/service/database"
-	"dependents-img/internal/service/image"
-	"dependents-img/internal/test"
+	"dependents.info/internal/models"
+	"dependents.info/internal/service/database"
+	"dependents.info/internal/service/image"
+	"dependents.info/internal/test"
 )
 
 func TestIngestHandler_Ingest(t *testing.T) {
