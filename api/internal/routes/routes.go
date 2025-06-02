@@ -16,7 +16,6 @@ func Setup(app *fiber.App, services *service.Services) {
 		services.DatabaseService,
 	)
 
-	app.Static("/", "./static")
 	app.Get("/health", healthHandler.Health)
 	app.Post("/:owner/:repo/ingest", ingestHandler.Ingest)
 	app.Get("/:owner/:repo/image.svg", imageHandler.SVGImage)

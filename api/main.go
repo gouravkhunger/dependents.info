@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"log"
 	"os"
@@ -13,13 +14,16 @@ import (
 	"dependents.info/internal/service"
 )
 
+//go:embed static/*
+var static embed.FS
+
 func main() {
 	log.SetFlags(0)
 	godotenv.Load()
 
 	cfg := config.New()
 	services := service.BuildAll(cfg)
-	app := server.Build(cfg, services)
+	app := server.Build(cfg, static, services)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)

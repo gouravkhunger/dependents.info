@@ -13,7 +13,7 @@ func TestIngestRequest_Validation(t *testing.T) {
 		{
 			name: "empty request is valid",
 			req: IngestRequest{
-				Total: 0,
+				Total:      0,
 				Dependents: []Dependent{},
 			},
 			wantErr: false,
