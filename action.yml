@@ -3,6 +3,10 @@ author: "Gourav Khunger"
 
 description: "Generates a list of the dependents of a repository to be later rendered in the README."
 
+branding:
+  icon: "users"
+  color: "white"
+
 inputs:
   upload-artifacts:
     description: "Whether to upload the outputs as artifacts (true/false)"
