@@ -117,7 +117,7 @@
       import { createHighlighter } from 'https://esm.sh/shiki@3.0.0'
       import { addCopyButton } from "https://esm.sh/shiki-transformer-copy-button@0.0.5";
 
-const githubAction = `name: Test Action
+const githubAction = `name: Dependents Action
 
 on:
   push:
@@ -131,7 +131,7 @@ jobs:
       id-token: write
     steps:
       - name: Run custom action
-        uses: gouravkhunger/dependents.info@latest
+        uses: gouravkhunger/dependents.info@main
 `
 
       const htmlContent = (name) => `<a href="https://github.com/${name || "owner/repo"}/network/dependents">
