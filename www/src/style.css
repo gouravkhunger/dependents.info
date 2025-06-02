@@ -1,0 +1,70 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --spacing-75ch: 75ch;
+}
+
+@layer base {
+  body {
+    font-family: "SF Mono", "Segoe UI Mono", "Roboto Mono", Menlo, Courier, monospace;
+    @apply mx-auto flex flex-col bg-white;
+  }
+
+  p {
+    @apply text-black leading-relaxed;
+  }
+
+  code {
+    @apply text-black bg-gray-100 px-1.5 py-1 rounded;
+  }
+}
+
+.container {
+  @apply mx-auto px-4 py-8 sm:px-6 lg:px-8;
+}
+
+.input-error {
+  @apply outline-red-600 rounded px-2 py-1;
+}
+
+/* https://github.com/joshnuss/shiki-transformer-copy-button */
+pre:has(code) {
+  position: relative;
+}
+
+pre button.copy {
+  @apply absolute top-4 right-4 flex p-0 size-8 cursor-pointer;
+
+  & span {
+    @apply w-full aspect-square bg-no-repeat bg-center bg-cover;
+  }
+
+  & .ready {
+    background-image: url(/icons/copy.svg);
+    @apply p-1.25 bg-origin-content rounded-md outline-none;
+  }
+
+  & .ready:hover {
+    @apply p-1.25 bg-gray-600 bg-origin-content;
+  }
+
+  & .success {
+    background-image: url(/icons/copy-success.svg);
+    @apply hidden p-1.25 bg-origin-content rounded-md outline-none;
+  }
+
+  & .success:hover {
+    @apply p-1.25 bg-gray-600 bg-origin-content;
+  }
+
+  &.copied {
+    & .success {
+      display: block;
+    }
+
+    & .ready {
+      display: none;
+    }
+  }
+}

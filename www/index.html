@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <article class="prose container max-w-75ch prose-pre:py-4 prose-code:before:content-none prose-code:after:content-none">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="mb-0 max-sm:text-2xl">dependents.info</h1>
+        <a href="https://github.com/gouravkhunger/dependents.info" target="_blank" rel="noopener noreferrer">
+          <img src="/icons/github.svg" class="size-6 sm:size-8 !m-0" />
+        </a>
+      </div>
+      <p>
+        easily generate an image of github network dependents to showcase in
+        your project's readme.md file.
+      </p>
+      <p>
+        simply add a github action to your repository and use the image link for your repo.
+      </p>
+      <h3>demo</h3>
+      <p>here's a demo of the generated image:</p>
+      <a href="https://github.com/gouravkhunger/jekyll-url-metadata/network/dependents">
+        <img src="https://dependents.info/gouravkhunger/jekyll-url-metadata/image.svg" />
+      </a>
+      <h2>quickstart</h2>
+      <h3>github action</h3>
+      <p>
+        add this file to your repository's <code>.github/workflows</code> folder.
+      </p>
+      <code>dependents.yml</code> 
+      <div id="gh-action">
+        <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">
+          <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-black" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+          </svg>
+          <span>Loading...</span>
+        </div>
+      </div>
+      <p>
+        once you push this file, the action will process the dependents for the repository
+        and the backend will generate the image.
+      </p>
+      <blockquote>
+        tip: instead of defining run on <code>push</code>, you can use a
+        <a href="https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule" target="_blank" rel="noopener noreferrer">cron job</a>
+        to schedule the action.
+      </blockquote>
+      <h3>embed image</h3>
+      <blockquote>
+        <b>note:</b> the image is only available for repositories that run the action successfully
+      </blockquote>
+      <p>
+        enter your github repository name in the format <code>owner/code</code>
+        to generate a copyable embed code.
+      </p>
+      <label for="repo-input">github repo:</label>
+      <input
+        name="repo"
+        type="text"
+        id="repo-input"
+        autocomplete="off"
+        placeholder="owner/repo"
+        class="px-2 py-1 h-8 border border-gray-300 rounded w-60"
+      />
+      <div id="embed-code">
+        <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">
+          <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-black" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+          </svg>
+          <span>Loading...</span>
+        </div>
+      </div>
+      <p>
+        paste this code anywhere in the readme and the auto-generated dependents
+        image will be embedded!
+      </p>
+      <p>
+        the image is self updating so when the github action submits new data,
+        it will be reflected in the readme automatically.
+      </p>
+    </article>
+    <footer class="prose container max-w-75ch flex flex-col justify-center items-center">
+      <span>&copy; 2025 — Gourav Khunger @ <a href="https://gourav.sh" target="_blank">gourav.sh</a></span>
+      <span>
+        <a href="https://github.com/gouravkhunger" target="_blank" rel="noopener noreferrer">github</a>
+        /
+        <a href="https://www.linkedin.com/in/gouravkhunger/" target="_blank" rel="noopener noreferrer">linkedin</a>
+      </span>
+    </footer>
+    <script type="module">
+      import { createHighlighter } from 'https://esm.sh/shiki@3.0.0'
+      import { addCopyButton } from "https://esm.sh/shiki-transformer-copy-button@0.0.5";
+
+const githubAction = `name: Test Action
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Run custom action
+        uses: gouravkhunger/dependents.info@latest
+`
+
+      const htmlContent = (name) => `<a href="https://github.com/${name || "owner/repo"}/network/dependents">
+  <img src="https://dependents.info/${name || "owner/repo"}/image.svg" />
+</a>
+
+Made with [dependents.info](https://dependents.info).`;
+
+      const highlighter = await createHighlighter({
+        themes: ["github-dark"],
+        langs: ["yaml", "html"],
+      });
+
+      const actionCode = highlighter.codeToHtml(githubAction, {
+        lang: "yaml",
+        theme: "github-dark",
+        transformers: [addCopyButton()],
+      });
+      document.querySelector("#gh-action").innerHTML = actionCode;
+
+      const embedCode = (name) => highlighter.codeToHtml(htmlContent(name), {
+        lang: "html",
+        theme: "github-dark",
+        transformers: [addCopyButton()],
+      });
+      document.querySelector("#embed-code").innerHTML = embedCode();
+
+      window.embedCode = embedCode;
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
