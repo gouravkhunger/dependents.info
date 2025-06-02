@@ -1,4 +1,4 @@
-{{define "svg"}}<svg viewbox="0 0 685 72" width="685" height="72" xmlns="http://www.w3.org/2000/svg">
+{{define "svg"}}{{$length := len .Dependents}}<svg viewBox="0 0 {{if eq $length 0}}0 0{{else}}685 72{{end}}" width="{{if eq $length 0}}0{{else}}685{{end}}" height="{{if eq $length 0}}0{{else}}72{{end}}" xmlns="http://www.w3.org/2000/svg">
   <foreignObject width="100%" height="100%">
     <div xmlns="http://www.w3.org/1999/xhtml">
       <style>
@@ -29,7 +29,7 @@
         {{range $i, $dependent := .Dependents}}
         <img src="{{$dependent.Image}}" width="64" height="64"/>
         {{end}}
-        {{if gt .Total 0}}
+        {{if and (gt $length 0) (gt .Total 0)}}
         <h4>+ {{formatNumber .Total}}</h4>
         {{end}}
       </div>
