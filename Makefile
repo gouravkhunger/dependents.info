@@ -17,23 +17,19 @@ www-dev:
 
 www-build:
 	@cd $(WWW_DIR) && npm run build
+	@mkdir -p $(API_DIR)/static
+	@cp -r $(WWW_DIR)/dist/* $(API_DIR)/static/
 
 api-fmt:
 	@cd $(API_DIR) && gofmt -w .
 
-api-dev:
-	@cd $(WWW_DIR) && npm run build
-	@mkdir -p $(API_DIR)/static
-	@cp -r $(WWW_DIR)/dist/* $(API_DIR)/static/
+api-dev: www-build
 	@cd $(API_DIR) && go run main.go
 
-api-build:
-	@cd $(WWW_DIR) && npm run build
-	@mkdir -p $(API_DIR)/static
-	@cp -r $(WWW_DIR)/dist/* $(API_DIR)/static/
+api-build: www-build
 	@cd $(API_DIR) && go build -o bin/api main.go
 
-api-test:
+api-test: www-build
 	@cd $(API_DIR) && go test ./...
 
 action-build:
