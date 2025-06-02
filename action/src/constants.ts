@@ -1,4 +1,5 @@
-export const API_BASE_URL = "https://dependents.info";
+export const API_BASE_URL =
+  process.env.API_BASE_URL ?? "https://dependents.info";
 
 export const MESSAGE = {
   initExtraction: (repo: string) =>

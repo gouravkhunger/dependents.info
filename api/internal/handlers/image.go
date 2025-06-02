@@ -27,6 +27,5 @@ func (h *ImageHandler) SVGImage(c *fiber.Ctx) error {
 	}
 
 	c.Set("Cache-Control", "public, max-age=86400, must-revalidate")
-
-	return c.Type("svg").SendString(svg)
+	return c.Status(fiber.StatusOK).Type("svg").SendString(svg)
 }

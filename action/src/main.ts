@@ -47,11 +47,14 @@ export async function run(): Promise<void> {
         });
     }
 
-    const token = await core.getIDToken(API_BASE_URL);
+    let token;
+    if (process.env.GITHUB_ACTIONS === "true") {
+      token = await core.getIDToken(API_BASE_URL);
+    }
     const resp = await fetch(`${API_BASE_URL}/${name}/ingest`, {
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        ...((token && { Authorization: `Bearer ${token}` }) || {}),
       },
       body: json,
       method: "POST",

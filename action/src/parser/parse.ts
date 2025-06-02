@@ -25,7 +25,6 @@ export const parseDependentsPage = (doc: string): DependentsPage => {
       .text()
       .trim();
     const repo = $(el).find('[data-hovercard-type="repository"]').text().trim();
-    const name = `${owner}/${repo}`;
 
     const starsText = $(el).find(".octicon-star").parent().text().trim();
     const stars = parseInt(starsText.replace(/,/g, ""), 10) || 0;
@@ -33,7 +32,7 @@ export const parseDependentsPage = (doc: string): DependentsPage => {
     const imageSrc = $(el).find("img").attr("src") || "";
     const image = removeQueryParams(imageSrc, "s");
 
-    dependents.push({ name, stars, image });
+    dependents.push({ owner, repo, stars, image });
   });
 
   const nextPageLink =

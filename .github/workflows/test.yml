@@ -1,4 +1,4 @@
-name: Test Action
+name: Dependents Action
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  dependents:
     runs-on: ubuntu-latest
     permissions:
       id-token: write

@@ -24,7 +24,6 @@ func TestIngestRequest_Validation(t *testing.T) {
 				Total: 8,
 				Dependents: []Dependent{
 					{
-						Name:  "foo/bar",
 						Image: "data:image/png;base64,r4nd0m=",
 					},
 				},
@@ -37,7 +36,6 @@ func TestIngestRequest_Validation(t *testing.T) {
 				Total: 10,
 				Dependents: []Dependent{
 					{
-						Name:  "owner/repo",
 						Image: "data:image/jpeg;base64,r4nd0m=",
 					},
 				},
@@ -50,7 +48,6 @@ func TestIngestRequest_Validation(t *testing.T) {
 				Total: -1,
 				Dependents: []Dependent{
 					{
-						Name:  "foo-bar",
 						Image: "data:image/png;base64,r4nd0m=",
 					},
 				},
@@ -63,7 +60,6 @@ func TestIngestRequest_Validation(t *testing.T) {
 				Total: 10,
 				Dependents: []Dependent{
 					{
-						Name:  "foo/bar",
 						Image: "r4nd0m=",
 					},
 				},
@@ -76,7 +72,6 @@ func TestIngestRequest_Validation(t *testing.T) {
 				Total: -20,
 				Dependents: []Dependent{
 					{
-						Name:  "foo/bar",
 						Image: "r4nd0m=",
 					},
 				},

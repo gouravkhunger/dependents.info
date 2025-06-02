@@ -65,7 +65,8 @@ describe("parseDependentsPage function", () => {
     expect(dependents).toEqual([
       {
         stars: 28,
-        name: "owner/repo",
+        repo: "repo",
+        owner: "owner",
         image: "https://avatars.githubusercontent.com/u/46792249?v=4",
       },
     ]);

@@ -8,10 +8,16 @@ branding:
   color: "white"
 
 inputs:
+  unique-owners:
+    description: "Whether to disable unique users (true/false)"
+    required: false
+    default: true
+    type: boolean
   upload-artifacts:
     description: "Whether to upload the outputs as artifacts (true/false)"
     required: false
-    default: "false"
+    default: false
+    type: boolean
 
 outputs:
   dependents:

@@ -1,5 +1,6 @@
 export type Dependents = {
-  name: string;
+  owner: string;
+  repo: string;
   stars: number;
   image: string;
 }[];

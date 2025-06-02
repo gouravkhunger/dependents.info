@@ -18,7 +18,6 @@ type IngestRequest struct {
 }
 
 type Dependent struct {
-	Name  string `json:"name" validate:"required,contains=/"`
 	Image string `json:"image" validate:"required,startswith=data:image/,contains=base64"`
 }
 
@@ -29,8 +28,6 @@ var errorMessages = map[string]string{
 	"Dependents.required":        "Dependents list is required",
 	"Dependent.Image.required":   "Each dependent must have an image",
 	"Dependent.Image.startswith": "Image must start with 'data:image/,'",
-	"Dependent.Name.required":    "Each dependent must have a repository name",
-	"Dependent.Name.contains":    "Repository name must be in the format 'owner/repo'",
 }
 
 func (r *IngestRequest) Validate() error {

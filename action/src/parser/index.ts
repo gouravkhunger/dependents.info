@@ -24,13 +24,23 @@ export async function processRepo(name: string): Promise<ProcessedDependents> {
     }
   }
 
-  const transformedData = dependents
-    .sort((a, b) => b.stars - a.stars)
-    .slice(0, 10)
-    .map(async (dep) => ({
-      name: dep.name,
-      image: await imageUrlToBase64(dep.image),
-    }));
+  let data;
+  const useUniqueOwners = core.getInput("unique-owners") === "true";
+  const sortedData = dependents.sort((a, b) => b.stars - a.stars);
+
+  if (useUniqueOwners) {
+    data = Array.from(
+      new Map(sortedData.map((obj) => [obj.owner, obj])).values(),
+    );
+  } else {
+    data = sortedData;
+  }
+
+  const transformedData = data.slice(0, 10).map(async (dep) => ({
+    repo: dep.repo,
+    owner: dep.owner,
+    image: await imageUrlToBase64(dep.image),
+  }));
 
   return {
     total: total ?? dependents.length,

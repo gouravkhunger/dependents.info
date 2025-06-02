@@ -37,9 +37,7 @@ func TestIngestHandler_Ingest(t *testing.T) {
 			name: "invalid request validation",
 			requestBody: models.IngestRequest{
 				Total: 0,
-				Dependents: []models.Dependent{
-					{Name: "test"},
-				},
+				Dependents: []models.Dependent{{}},
 			},
 			expectedMsg:    "Invalid JSON payload",
 			expectedStatus: fiber.StatusBadRequest,
@@ -50,7 +48,6 @@ func TestIngestHandler_Ingest(t *testing.T) {
 				Total: 0,
 				Dependents: []models.Dependent{
 					{
-						Name:  "owner/repo",
 						Image: "invalid_base64",
 					},
 				},
@@ -64,7 +61,6 @@ func TestIngestHandler_Ingest(t *testing.T) {
 				Total: 10,
 				Dependents: []models.Dependent{
 					{
-						Name:  "owner/repo",
 						Image: "data:image/png;base64,r4nd0m==",
 					},
 				},

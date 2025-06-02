@@ -7,7 +7,7 @@
     <title>dependents.info | visualize github network dependents</title>
 
     <meta name="title" content="dependents.info | visualize github network dependents">
-    <meta name="description" content="easily generate an image of GitHub network dependents to showcase in your project's README.md file.">
+    <meta name="description" content="easily generate an image of GitHub network dependents to showcase in your project's readme.md file.">
     <meta name="keywords" content="github, network dependents, visualization, readme image">
     <meta name="author" content="Gourav Khunger">
 
@@ -15,13 +15,13 @@
     <meta property="og:url" content="https://dependents.info">
     <!-- <meta property="og:image" content="https://dependents.info/og-image.webp"> -->
     <meta property="og:title" content="dependents.info | visualize github network dependents">
-    <meta property="og:description" content="easily generate an image of GitHub network dependents to showcase in your project's README.md file.">
+    <meta property="og:description" content="easily generate an image of GitHub network dependents to showcase in your project's readme.md file.">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://dependents.info">
     <!-- <meta property="twitter:image" content="https://dependents.info/og-image.webp"> -->
     <meta property="twitter:title" content="dependents.info | visualize github network dependents">
-    <meta property="twitter:description" content="easily generate an image of GitHub network dependents to showcase in your project's README.md file.">
+    <meta property="twitter:description" content="easily generate an image of GitHub network dependents to showcase in your project's readme.md file.">
 
     <link rel="canonical" href="https://dependents.info">
     <!-- <link rel="icon" href="https://dependents.info/favicon.ico" type="image/png"> -->
@@ -36,7 +36,7 @@
       </div>
       <p>
         easily generate an image of github network dependents to showcase in
-        your project's readme.md file.
+        your project's <code>readme.md</code> file.
       </p>
       <p>
         simply add a github action to your repository and use the image link for your repo.
@@ -72,7 +72,7 @@
       </blockquote>
       <h3>embed image</h3>
       <blockquote>
-        <b>note:</b> the image is only available for repositories that run the action successfully
+        <b>note:</b> the image is only available for repositories that run the action successfully.
       </blockquote>
       <p>
         enter your github repository name in the format <code>owner/code</code>
@@ -125,13 +125,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  dependents:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
     steps:
-      - name: Run custom action
-        uses: gouravkhunger/dependents.info@main
+      - uses: gouravkhunger/dependents.info@main
 `
 
       const htmlContent = (name) => `<a href="https://github.com/${name || "owner/repo"}/network/dependents">
