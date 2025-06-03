@@ -4,6 +4,9 @@
   "private": true,
   "description": "Generates a list of the dependents of a repository to be later rendered in the README.",
   "main": "./dist/index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
