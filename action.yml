@@ -18,6 +18,11 @@ inputs:
     required: false
     default: true
     type: boolean
+  exclude-owner:
+    description: "Whether to exclude repositories from the same owner that depend on this repository (true/false)"
+    required: false
+    default: true
+    type: boolean
   upload-artifacts:
     description: "Whether to upload the outputs as artifacts (true/false)"
     required: false

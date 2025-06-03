@@ -14,12 +14,18 @@ export async function processRepo(name: string): Promise<ProcessedDependents> {
   const maxPages = parseInt(core.getInput("max-pages"), 10);
   const safeMaxPages = Math.max(0, Math.min(maxPages, 100));
 
+  const owner = process.env.GITHUB_REPOSITORY_OWNER || "";
+  const excludeOwner = core.getInput("exclude-owner") === "true";
+
   let count = 0;
   while (pageLink) {
     count++;
     const response = await get(pageLink);
     const page = parseDependentsPage(response);
-    dependents.push(...page.dependents);
+    const dependentsToAdd = excludeOwner
+      ? page.dependents.filter((dep) => dep.owner !== owner)
+      : page.dependents;
+    dependents.push(...dependentsToAdd);
     pageLink = page.nextPageLink;
     core.info(MESSAGE.processedPage(count, name));
     if (typeof total === "undefined") {
