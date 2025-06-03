@@ -1,6 +1,6 @@
 {{define "svg"}}{{$length := len .Dependents}}<svg viewBox="0 0 {{if eq $length 0}}0 0{{else}}685 72{{end}}" width="{{if eq $length 0}}0{{else}}685{{end}}" height="{{if eq $length 0}}0{{else}}72{{end}}" xmlns="http://www.w3.org/2000/svg">
   <foreignObject width="100%" height="100%">
-    <div xmlns="http://www.w3.org/1999/xhtml">
+    <div xmlns="http://www.w3.org/1999/xhtml">{{if gt $length 0}}
       <style>
         .container {
           display: flex;
@@ -24,9 +24,9 @@
         .container img:not(:first-child) { margin-left: -16px; }
       </style>
       <div class="container">
-        {{range $i, $dependent := .Dependents}}<img src="{{$dependent.Image}}" width="64" height="64"/>{{end}}
-        {{if and (gt $length 0) (gt .Total 0)}}<h4>+ <span>{{formatNumber .Total}}</span></h4>{{end}}
+        {{range $i, $dependent := .Dependents}}<img src="{{$dependent.Image}}" width="64" height="64"/>
+        {{end}}{{if and (gt $length 0) (gt .Total 0)}}<h4>+ <span>{{formatNumber .Total}}</span></h4>{{end}}
       </div>
-    </div>
+    {{end}}</div>
   </foreignObject>
 </svg>{{end}}

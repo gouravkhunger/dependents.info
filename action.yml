@@ -8,6 +8,11 @@ branding:
   color: "white"
 
 inputs:
+  max-pages:
+    description: "Maximum number of pages to process (default: 50, max: 100)"
+    required: false
+    default: 50
+    type: integer
   unique-owners:
     description: "Whether to disable unique users (true/false)"
     required: false

@@ -13,8 +13,8 @@ describe("parseDependentsPage function", () => {
   it("should parse empty dependents from empty HTML", () => {
     const html = "";
     const { dependents, nextPageLink } = parseDependentsPage(html);
-    expect(dependents).toEqual([]);
-    expect(nextPageLink).toBe("");
+    expect(dependents).toHaveLength(0);
+    expect(nextPageLink).toBeUndefined();
   });
 
   it("should parse next page link from GitHub dependents page HTML snippet", () => {
@@ -27,10 +27,48 @@ describe("parseDependentsPage function", () => {
       </div>
     `;
     const { dependents, nextPageLink } = parseDependentsPage(html);
-    expect(dependents).toEqual([]);
+    expect(dependents).toHaveLength(0);
     expect(nextPageLink).toBe(
       "https://github.com/owner/repo/network/dependents?dependents_after=someString",
     );
+  });
+
+  it("should parse next page link when both previous and next buttons are present", () => {
+    const html = `
+      <div class="paginate-container">
+        <div class="BtnGroup" data-test-selector="pagination">
+        <a rel="nofollow" class="btn BtnGroup-item" href="https://github.com/owner/repo/network/dependents?dependents_before=next">Previous</a>
+        <a rel="nofollow" class="btn BtnGroup-item" href="https://github.com/owner/repo/network/dependents?dependents_after=prev">Next</a></div>
+      </div>
+    `;
+    const { nextPageLink } = parseDependentsPage(html);
+    expect(nextPageLink).toBe(
+      "https://github.com/owner/repo/network/dependents?dependents_after=prev",
+    );
+  });
+
+  it("should set nextPageLink to undefined when no next page is available", () => {
+    const html = `
+      <div class="paginate-container">
+        <div class="BtnGroup" data-test-selector="pagination">
+          <a rel="nofollow" class="btn BtnGroup-item" href="https://github.com/owner/repo/network/dependents?dependents_before=next">Previous</a>
+          <button class="btn BtnGroup-item" disabled="disabled">Next</button></div>
+      </div>
+    `;
+    const { nextPageLink } = parseDependentsPage(html);
+    expect(nextPageLink).toBeUndefined();
+  });
+
+  it("should set nextPageLink to undefined when no links are present", () => {
+    const html = `
+      <div class="paginate-container">
+        <div class="BtnGroup" data-test-selector="pagination">
+          <button class="btn BtnGroup-item" disabled="disabled">Previous</button>
+          <button class="btn BtnGroup-item" disabled="disabled">Next</button></div>
+      </div>
+    `;
+    const { nextPageLink } = parseDependentsPage(html);
+    expect(nextPageLink).toBeUndefined();
   });
 
   it("should parse dependents from GitHub dependents page HTML", () => {
@@ -70,7 +108,7 @@ describe("parseDependentsPage function", () => {
         image: "https://avatars.githubusercontent.com/u/46792249?v=4",
       },
     ]);
-    expect(nextPageLink).toBe("");
+    expect(nextPageLink).toBe(undefined);
   });
 });
 

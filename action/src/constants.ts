@@ -6,6 +6,8 @@ export const MESSAGE = {
     `Extracting dependents of repository ${repo}.`,
   processedPage: (count: number, repo: string) =>
     `Processed page ${count} for repository ${repo}.`,
+  maxPagesReached: (maxPages: number, repo: string) =>
+    `Reached maximum pages limit of ${maxPages} for repository ${repo}.`,
   dependentsCount: (count: number, repo: string) =>
     `Found ${count} dependents for repository ${repo}.`,
   wroteFile: (filePath: string) => `File written successfully at ${filePath}.`,

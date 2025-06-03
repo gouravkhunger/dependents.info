@@ -36,7 +36,9 @@ export const parseDependentsPage = (doc: string): DependentsPage => {
   });
 
   const nextPageLink =
-    $('[data-test-selector="pagination"]').find("a").attr("href") || "";
+    $('[data-test-selector="pagination"] a')
+      .filter((_, el) => $(el).text().trim() === "Next")
+      .attr("href") || undefined;
 
   return { dependents, nextPageLink };
 };

@@ -11,6 +11,9 @@ export async function processRepo(name: string): Promise<ProcessedDependents> {
   let total: number | undefined = undefined;
   let pageLink: string | undefined = buildDependentsUrl(name);
 
+  const maxPages = parseInt(core.getInput("max-pages"), 10);
+  const safeMaxPages = Math.max(0, Math.min(maxPages, 100));
+
   let count = 0;
   while (pageLink) {
     count++;
@@ -21,6 +24,10 @@ export async function processRepo(name: string): Promise<ProcessedDependents> {
     core.info(MESSAGE.processedPage(count, name));
     if (typeof total === "undefined") {
       total = parseTotalDependents(response, name);
+    }
+    if (count >= safeMaxPages) {
+      core.info(MESSAGE.maxPagesReached(safeMaxPages, name));
+      break;
     }
   }
 
