@@ -41,6 +41,26 @@ once you push this file, the action will process the dependents for the reposito
 
 > tip: instead of running the action on `push`, you can use a [cron job](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule) to schedule the action.
 
+#### configuration (optional)
+
+add the following options to your `dependents.yml` file if you want to customize the action's behavior:
+
+```yml
+  - uses: gouravkhunger/dependents.info@main
+    with:
+      max-pages: 50
+      unique-owners: true
+      exclude-owner: true
+      upload-artifacts: false
+```
+
+| option             | type      | description                                                                 | default |
+|--------------------|-----------|-----------------------------------------------------------------------------|---------|
+| `max-pages`        | `number`  | Maximum number of network dependents pages to process (max: 100)            | `50`    |
+| `unique-owners`    | `boolean` | Whether to disable unique users in the generated image                      | `true`  |
+| `exclude-owner`    | `boolean` | Whether to exclude repos from the same owner that depend on this repository | `true`  |
+| `upload-artifacts` | `boolean` | Whether to upload the outputs as action's build artifacts                   | `false` |
+
 ### embed image
 
 > **note**: the image is only available for repositories that run the action successfully.
