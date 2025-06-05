@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /health
+Disallow: /*/ingest$
+Allow: /

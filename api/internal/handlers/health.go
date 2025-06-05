@@ -21,6 +21,7 @@ func (h *HealthHandler) Health(c *fiber.Ctx) error {
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
 	}
 
+	c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
 	return utils.SendResponse(c, fiber.StatusOK, models.APIResponse{
 		Success: true,
 		Data:    response,

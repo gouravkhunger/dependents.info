@@ -26,6 +26,6 @@ func (h *ImageHandler) SVGImage(c *fiber.Ctx) error {
 		return utils.SendError(c, fiber.StatusNotFound, "SVG image not found", err)
 	}
 
-	c.Set("Cache-Control", "public, max-age=86400, must-revalidate")
+	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")
 	return c.Status(fiber.StatusOK).Type("svg").SendString(svg)
 }

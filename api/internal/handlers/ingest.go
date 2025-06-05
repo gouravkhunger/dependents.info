@@ -67,6 +67,7 @@ func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to store SVG", err)
 	}
 
+	c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
 	return utils.SendResponse(c, fiber.StatusOK, models.APIResponse{
 		Success: true,
 		Message: "Dependents data ingested successfully",
