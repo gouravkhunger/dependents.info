@@ -12,16 +12,18 @@ const repoInputElement = document.querySelector<HTMLInputElement>("#repo-input")
 repoInputElement.addEventListener("input", (e) => {
   const input = e.target as HTMLInputElement;
   const name = input.value.trim();
+  input.dataset.state = "";
   if (!/^[a-zA-Z0-9-]+\/[a-zA-Z0-9._-]+$/.test(name)) {
     embedCodeElement.innerHTML = window.embedCode();
     if (name === "") {
-      input.classList.remove("input-error");
+      input.dataset.state = "";
     } else {
-      input.classList.add("input-error");
+      input.dataset.state = "error";
     }
     return;
   } else {
-    input.classList.remove("input-error");
+    input.dataset.state = "";
   }
+  input.dataset.state = "valid";
   embedCodeElement.innerHTML = window.embedCode(name);
 });

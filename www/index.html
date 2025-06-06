@@ -34,7 +34,7 @@
     <link rel="canonical" href="https://dependents.info" />
   </head>
   <body>
-    <article class="prose container max-w-75ch prose-pre:py-4 prose-code:before:content-none prose-code:after:content-none">
+    <article class="prose container">
       <div class="flex justify-between items-center mb-8">
         <h1 class="mb-0 flex items-center gap-2 sm:gap-4 max-sm:text-2xl">
           <img src="/images/logo.webp" alt="dependents.info logo" class="size-10 sm:size-16 !m-0" />
@@ -106,25 +106,25 @@
           <tr>
             <td class="sm:whitespace-nowrap"><code>max-pages</code></td>
             <td class="max-sm:hidden"><code>number</code></td>
-            <td>Maximum number of network dependents pages to process (max: 100)</td>
+            <td>maximum number of network dependents pages to process (max: 100).</td>
             <td><code>50</code></td>
           </tr>
           <tr>
             <td class="sm:whitespace-nowrap"><code>unique-owners</code></td>
             <td class="max-sm:hidden"><code>boolean</code></td>
-            <td>Whether to disable unique users in the generated image</td>
+            <td>whether to disable unique users in the generated image.</td>
             <td><code>true</code></td>
           </tr>
           <tr>
             <td class="sm:whitespace-nowrap"><code>exclude-owner</code></td>
             <td class="max-sm:hidden"><code>boolean</code></td>
-            <td>Whether to exclude repos from the same owner that depend on this repository</td>
+            <td>whether to exclude repos from the same owner that depend on this repository.</td>
             <td><code>true</code></td>
           </tr>
           <tr>
             <td class="sm:whitespace-nowrap"><code>upload-artifacts</code></td>
             <td class="max-sm:hidden"><code>boolean</code></td>
-            <td>Whether to upload the outputs as action's build artifacts</td>
+            <td>whether to upload the outputs as action's build artifacts.</td>
             <td><code>false</code></td>
           </tr>
         </tbody>
@@ -144,7 +144,6 @@
         id="repo-input"
         autocomplete="off"
         placeholder="owner/repo"
-        class="px-2 py-1 h-8 border border-gray-300 rounded w-60"
       />
       <div id="embed-code">
         <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">
@@ -176,7 +175,7 @@
       </span>
     </footer>
     <script type="module">
-      import { createHighlighter } from 'https://esm.sh/shiki@3.0.0'
+      import { createHighlighter } from "https://esm.sh/shiki@3.0.0";
       import { addCopyButton } from "https://esm.sh/shiki-transformer-copy-button@0.0.5";
 
 const githubAction = `name: Dependents Action
