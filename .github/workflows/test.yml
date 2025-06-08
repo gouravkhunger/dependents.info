@@ -14,5 +14,3 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run custom action
         uses: ./
-        with:
-          upload-artifacts: true

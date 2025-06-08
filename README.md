@@ -51,15 +51,15 @@ add the following options to your `dependents.yml` file if you want to customize
       max-pages: 50
       unique-owners: true
       exclude-owner: true
-      upload-artifacts: false
+      upload-artifacts: true
 ```
 
-| option             | type      | description                                                                 | default |
-|--------------------|-----------|-----------------------------------------------------------------------------|---------|
+| option             | type      | description                                                                  | default |
+|--------------------|-----------|------------------------------------------------------------------------------|---------|
 | `max-pages`        | `number`  | maximum number of network dependents pages to process (max: 100).            | `50`    |
 | `unique-owners`    | `boolean` | whether to disable unique users in the generated image.                      | `true`  |
 | `exclude-owner`    | `boolean` | whether to exclude repos from the same owner that depend on this repository. | `true`  |
-| `upload-artifacts` | `boolean` | whether to upload the outputs as action's build artifacts.                   | `false` |
+| `upload-artifacts` | `boolean` | whether to upload the outputs as action's build artifacts.                   | `true`  |
 
 ### embed image
 
