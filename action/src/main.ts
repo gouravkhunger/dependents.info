@@ -47,7 +47,7 @@ export async function run(): Promise<void> {
         });
     }
 
-    let token;
+    let token: string | undefined;
     if (process.env.GITHUB_ACTIONS === "true") {
       token = await core.getIDToken(API_BASE_URL);
     }
@@ -61,8 +61,15 @@ export async function run(): Promise<void> {
     });
 
     if (!resp.ok) {
-      const error = (await resp.json()) as { message: string };
-      throw new Error(ERROR.failedToSubmitData(resp.status, error.message));
+      const contentType = resp.headers.get("Content-Type");
+      if (contentType && contentType.includes("application/json")) {
+        const error = (await resp.json()) as { message: string };
+        throw new Error(ERROR.failedToSubmitData(resp.status, error.message));
+      } else {
+        const text = await resp.text();
+        core.error(ERROR.failedToSubmitData(resp.status, text));
+        throw new Error(ERROR.failedToSubmitData(resp.status, "unknown error"));
+      }
     }
 
     core.info(MESSAGE.DONE);
