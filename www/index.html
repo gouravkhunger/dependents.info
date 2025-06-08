@@ -125,7 +125,7 @@
             <td class="sm:whitespace-nowrap"><code>upload-artifacts</code></td>
             <td class="max-sm:hidden"><code>boolean</code></td>
             <td>whether to upload the outputs as action's build artifacts.</td>
-            <td><code>false</code></td>
+            <td><code>true</code></td>
           </tr>
         </tbody>
       </table>
@@ -198,7 +198,7 @@ jobs:
     max-pages: 50
     unique-owners: true
     exclude-owner: true
-    upload-artifacts: false`;
+    upload-artifacts: true`;
 
       const htmlContent = (name) => `<a href="https://github.com/${name || "owner/repo"}/network/dependents">
   <img src="https://dependents.info/${name || "owner/repo"}/image.svg" />
