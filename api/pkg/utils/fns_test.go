@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"strconv"
 	"testing"
 )
 
@@ -40,6 +41,48 @@ func TestValidateRepository(t *testing.T) {
 		})
 	}
 }
+
+func TestFormatNumber(t *testing.T) {
+	tests := []struct {
+		input    int
+		expected string
+	}{
+		{input: 500, expected: "500"},
+		{input: 999, expected: "999"},
+		{input: 1_000, expected: "1K"},
+		{input: 1_200, expected: "1.2K"},
+		{input: 12_660, expected: "12.7K"},
+		{input: 15_420, expected: "15.4K"},
+		{input: 19_890, expected: "19.9K"},
+		{input: 29_990, expected: "30K"},
+		{input: 100_623, expected: "101K"},
+		{input: 818_020, expected: "818K"},
+		{input: 948_563, expected: "949K"},
+		{input: 999_490, expected: "999K"},
+		{input: 999_563, expected: "1M"},
+		{input: 999_999, expected: "1M"},
+		{input: 1_000_000, expected: "1M"},
+		{input: 1_250_000, expected: "1.3M"},
+		{input: 9_999_999, expected: "10M"},
+		{input: 12_500_000, expected: "12.5M"},
+		{input: 999_999_599, expected: "1B"},
+		{input: 999_999_999, expected: "1B"},
+		{input: 1_000_000_000, expected: "1B"},
+		{input: 2_345_000_000, expected: "2.3B"},
+		{input: 2_350_000_000, expected: "2.4B"},
+	}
+
+	for _, tt := range tests {
+		name := strconv.Itoa(tt.input)
+		t.Run(name, func(t *testing.T) {
+			result := FormatNumber(tt.input)
+			if result != tt.expected {
+				t.Errorf("FormatNumber(%q) = %v; want %v", name, result, tt.expected)
+			}
+		})
+	}
+}
+
 func TestExtractBearerToken(t *testing.T) {
 	tests := []struct {
 		name      string

@@ -65,7 +65,7 @@ add the following options to your `dependents.yml` file if you want to customize
 
 > **note**: the image is only available for repositories that run the action successfully.
 
-copy the following code snippet below and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the image.
+copy the following code snippet and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the image.
 
 ```html
 <a href="https://github.com/owner/repo/network/dependents">
@@ -75,7 +75,19 @@ copy the following code snippet below and **replace `owner/repo`** with your rep
 Made with [dependents.info](https://dependents.info).
 ```
 
-the image is self updating so when the github action submits new data, it will be reflected in the readme automatically.
+### embed badge
+
+> **note**: the badge is only available for repositories that run the action successfully.
+
+copy the following code snippet and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the badge.
+
+```html
+<a href="https://github.com/owner/repo/network/dependents">
+  <img src="https://dependents.info/owner/repo/badge" />
+</a>
+```
+
+the badge and the image are self updating so when the github action submits new data, it will be reflected in the readme automatically.
 
 > **note**: in addition to cloudflare's cache lasting up to a day, the image could be cached by github for an extended 7 day period. please refer to [the docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls#removing-an-image-from-camos-cache) on how to manually purge them if required.
 

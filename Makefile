@@ -9,8 +9,8 @@ clean:
 
 install:
 	@cd $(API_DIR) && go mod tidy
-	@cd $(WWW_DIR) && npm install -s
-	@cd $(ACTION_DIR) && npm install -s
+	@cd $(WWW_DIR) && npm install
+	@cd $(ACTION_DIR) && npm install
 
 www-dev:
 	@cd $(WWW_DIR) && npm run dev
@@ -30,6 +30,7 @@ api-build: www-build
 	@cd $(API_DIR) && go build -o bin/api main.go
 
 api-test: www-build
+	@rm -rf /tmp/dependents-test
 	@cd $(API_DIR) && go test ./...
 
 action-build:

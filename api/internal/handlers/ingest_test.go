@@ -36,7 +36,7 @@ func TestIngestHandler_Ingest(t *testing.T) {
 		{
 			name: "invalid request validation",
 			requestBody: models.IngestRequest{
-				Total: 0,
+				Total:      0,
 				Dependents: []models.Dependent{{}},
 			},
 			expectedMsg:    "Invalid JSON payload",

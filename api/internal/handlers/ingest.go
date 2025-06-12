@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 
 	"dependents.info/internal/config"
@@ -61,6 +63,10 @@ func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 	svgBytes, err := h.imageService.RenderSVG(req)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to render SVG", err)
+	}
+
+	if err := h.databaseService.Save("total:"+name, []byte(strconv.Itoa(req.Total))); err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to store total dependents", err)
 	}
 
 	if err := h.databaseService.Save("svg:"+name, svgBytes); err != nil {
