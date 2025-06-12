@@ -6,25 +6,19 @@ import (
 	"fmt"
 	"text/template"
 
-	"golang.org/x/text/message"
-
 	"dependents.info/internal/models"
+	"dependents.info/pkg/utils"
 )
 
 //go:embed templates/image.svg
 var svgTemplate embed.FS
 
-var p *message.Printer
 var tmpl *template.Template
 var funcMap *template.FuncMap
 
 func init() {
-	p = message.NewPrinter(message.MatchLanguage("en"))
-
 	funcMap = &template.FuncMap{
-		"formatNumber": func(n int) string {
-			return p.Sprintf("%d", n)
-		},
+		"formatNumber": utils.FormatNumber,
 	}
 
 	var err error

@@ -49,7 +49,7 @@ export async function processRepo(name: string): Promise<ProcessedDependents> {
     data = sortedData;
   }
 
-  const transformedData = data.slice(0, 10).map(async (dep) => ({
+  const transformedData = data.slice(0, 11).map(async (dep) => ({
     repo: dep.repo,
     owner: dep.owner,
     image: await imageUrlToBase64(dep.image),
