@@ -30,6 +30,7 @@ api-build: www-build
 	@cd $(API_DIR) && go build -o bin/api main.go
 
 api-test: www-build
+	@rm -rf /tmp/dependents-test
 	@cd $(API_DIR) && go test ./...
 
 action-build:

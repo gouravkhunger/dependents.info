@@ -10,6 +10,7 @@ import (
 func Setup(app *fiber.App, services *service.Services) {
 	healthHandler := handlers.NewHealthHandler()
 	imageHandler := handlers.NewImageHandler(services.DatabaseService)
+	badgeHandler := handlers.NewBadgeHandler(services.DatabaseService)
 	ingestHandler := handlers.NewIngestHandler(
 		services.GitHubOIDCService,
 		services.ImageService,
@@ -17,6 +18,8 @@ func Setup(app *fiber.App, services *service.Services) {
 	)
 
 	app.Get("/health", healthHandler.Health)
+	app.Get("/:owner/:repo/badge", badgeHandler.Badge)
 	app.Post("/:owner/:repo/ingest", ingestHandler.Ingest)
 	app.Get("/:owner/:repo/image.svg", imageHandler.SVGImage)
+	app.Get("/:owner/:repo/badge", badgeHandler.Badge)
 }
