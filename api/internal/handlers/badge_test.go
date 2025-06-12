@@ -30,7 +30,7 @@ func TestBadgeHandler_Badge(t *testing.T) {
 
 	cfg := test.NewConfig()
 	dbService := database.NewBadgerService(cfg.DatabasePath)
-	dbService.Save("total:owner/repo", []byte("42"))
+	dbService.Save("total:owner/repo", []byte("69"))
 	defer dbService.Close()
 
 	for _, tt := range tests {

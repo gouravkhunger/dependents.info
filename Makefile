@@ -9,8 +9,8 @@ clean:
 
 install:
 	@cd $(API_DIR) && go mod tidy
-	@cd $(WWW_DIR) && npm install -s
-	@cd $(ACTION_DIR) && npm install -s
+	@cd $(WWW_DIR) && npm install
+	@cd $(ACTION_DIR) && npm install
 
 www-dev:
 	@cd $(WWW_DIR) && npm run dev
