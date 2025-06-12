@@ -54,17 +54,17 @@
       <h2>demo</h2>
       <p>
         here's a demo of the generated
-        <a href="https://shields.io/" rel="noopener noreferrer">shields.io</a>
+        <a href="https://shields.io/" target="_blank" rel="noopener noreferrer">shields.io</a>
         badge and the image:
       </p>
-      <a href="https://github.com/gouravkhunger/jekyll-auto-authors/network/dependents">
+      <a target="_blank" href="https://github.com/gouravkhunger/jekyll-auto-authors/network/dependents" rel="noopener noreferrer">
         <img class="!m-0" src="https://dependents.info/gouravkhunger/jekyll-auto-authors/badge" />
       </a>
-      <a href="https://github.com/gouravkhunger/jekyll-auto-authors/network/dependents">
+      <a target="_blank" href="https://github.com/gouravkhunger/jekyll-auto-authors/network/dependents" rel="noopener noreferrer">
         <img src="https://dependents.info/gouravkhunger/jekyll-auto-authors/image.svg" />
       </a>
       <h2>quickstart</h2>
-      <h3>github action</h3>
+      <h3 id="github-action">github action</h3>
       <p>
         add this file to your repository's <code>.github/workflows</code> folder.
       </p>
@@ -138,7 +138,7 @@
       </table>
       <h3>embed image</h3>
       <blockquote>
-        <b>note:</b> the image is only available for repositories that run the action successfully.
+        <b>note:</b> the image is only available for repositories that run the <a href="#github-action">github action</a> successfully.
       </blockquote>
       <p>
         enter your github repository name in the format <code>owner/repo</code>
@@ -166,6 +166,9 @@
         image will be embedded!
       </p>
       <h3>embed badge</h3>
+      <blockquote>
+        <b>note:</b> the badge is only available for repositories that run the <a href="#github-action">github action</a> successfully.
+      </blockquote>
       <div id="badge-code">
         <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">
           <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-black" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -175,6 +178,9 @@
           <span>Loading...</span>
         </div>
       </div>
+      <p>
+        paste this code where you want the badge to appear in the readme.
+      </p>
       <p>
         the badge and the image are self updating so when the github action submits new data,
         it will be reflected in the readme automatically.
