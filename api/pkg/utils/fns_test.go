@@ -56,6 +56,7 @@ func TestFormatNumber(t *testing.T) {
 		{input: 19_890, expected: "19.9K"},
 		{input: 29_990, expected: "30K"},
 		{input: 100_623, expected: "101K"},
+		{input: 818_020, expected: "818K"},
 		{input: 948_563, expected: "949K"},
 		{input: 999_490, expected: "999K"},
 		{input: 999_563, expected: "1M"},

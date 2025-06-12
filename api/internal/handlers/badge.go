@@ -29,20 +29,23 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	}
 
 	totalInt, _ := strconv.Atoi(total)
-	url := "https://img.shields.io/badge/users-" + utils.FormatNumber(totalInt) + "-" + h.color(total)
-	req := fiber.Get(url)
-	statusCode, body, errs := req.Bytes()
+	url := "https://img.shields.io/badge/dependents-" + utils.FormatNumber(totalInt) + "-" + color(total)
+
+	statusCode, body, errs := fiber.Get(url).Bytes()
+
 	if len(errs) > 0 {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", errs[0])
 	}
+
 	if statusCode != fiber.StatusOK {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", nil)
 	}
+
 	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")
 	return c.Status(fiber.StatusOK).Type("svg").Send(body)
 }
 
-func (h *BadgeHandler) color(v string) string {
+func color(v string) string {
 	total, _ := strconv.Atoi(v)
 	switch {
 	case total <= 0:

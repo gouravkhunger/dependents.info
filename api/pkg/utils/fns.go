@@ -9,8 +9,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+var units = []struct {
+	value  int
+	suffix string
+}{
+	{1_000_000_000, "B"},
+	{1_000_000, "M"},
+	{1_000, "K"},
+}
+
 func round(x float64) float64 {
-    return math.Floor(x + 0.5)
+	return math.Floor(x + 0.5)
 }
 
 func digits(x float64) int {
@@ -18,8 +27,8 @@ func digits(x float64) int {
 }
 
 func limitFn(x int) int {
-	digits :=  int(math.Log10(float64(x))) + 1
-	return int(math.Pow(10, float64(digits + 1))) - 1
+	digits := int(math.Log10(float64(x))) + 1
+	return int(math.Pow(10, float64(digits+1))) - 1
 }
 
 func ValidateRepository(value string) bool {
@@ -28,22 +37,13 @@ func ValidateRepository(value string) bool {
 }
 
 func FormatNumber(value int) string {
-	units := []struct {
-		value  int
-		suffix string
-	}{
-		{1_000_000_000, "B"},
-		{1_000_000, "M"},
-		{1_000, "K"},
-	}
-
 	for i, u := range units {
 		if value >= u.value {
 			limit := limitFn(u.value)
 			div := float64(value) / float64(u.value)
 			var res float64
 			if value < limit {
-				res = round(div * 10) / 10
+				res = round(div*10) / 10
 			} else {
 				res = round(div)
 			}
