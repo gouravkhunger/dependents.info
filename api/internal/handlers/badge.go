@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"dependents.info/internal/models"
 	"dependents.info/internal/service/database"
 	"dependents.info/pkg/utils"
 )
@@ -29,13 +28,18 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 		return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
 	}
 
-	// req := fiber.Get("https://img.shields.io/badge/users-" + total + "-" + h.color(total) + ".svg")
-
+	totalInt, _ := strconv.Atoi(total)
+	url := "https://img.shields.io/badge/users-" + utils.FormatNumber(totalInt) + "-" + h.color(total)
+	req := fiber.Get(url)
+	statusCode, body, errs := req.Bytes()
+	if len(errs) > 0 {
+		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", errs[0])
+	}
+	if statusCode != fiber.StatusOK {
+		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", nil)
+	}
 	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")
-	return utils.SendResponse(c, fiber.StatusOK, models.APIResponse{
-		Success: true,
-		Message: "Service is healthy!",
-	})
+	return c.Status(fiber.StatusOK).Type("svg").Send(body)
 }
 
 func (h *BadgeHandler) color(v string) string {
