@@ -16,7 +16,7 @@ import (
 
 type IngestHandler struct {
 	githubOIDCService *github.OIDCService
-	renderService      *render.RenderService
+	renderService     *render.RenderService
 	databaseService   *database.BadgerService
 }
 
@@ -28,7 +28,7 @@ func NewIngestHandler(
 	return &IngestHandler{
 		databaseService:   dbService,
 		githubOIDCService: githubOIDC,
-		renderService:      renderService,
+		renderService:     renderService,
 	}
 }
 

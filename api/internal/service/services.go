@@ -10,7 +10,7 @@ import (
 type Services struct {
 	GitHubOIDCService *github.OIDCService
 	DatabaseService   *database.BadgerService
-	RenderService      *render.RenderService
+	RenderService     *render.RenderService
 }
 
 func BuildAll(cfg *config.Config) *Services {
@@ -21,6 +21,6 @@ func BuildAll(cfg *config.Config) *Services {
 	return &Services{
 		GitHubOIDCService: oidcService,
 		DatabaseService:   dbService,
-		RenderService:      imageService,
+		RenderService:     imageService,
 	}
 }
