@@ -1,27 +1,45 @@
 package handlers
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 
 	"dependents.info/internal/models"
+	"dependents.info/internal/service/database"
 	"dependents.info/internal/service/render"
 	"dependents.info/pkg/utils"
 )
 
 type RepoHandler struct {
-	renderService *render.RenderService
+	renderService   *render.RenderService
+	databaseService *database.BadgerService
 }
 
-func NewRepoHandler(renderService *render.RenderService) *RepoHandler {
+func NewRepoHandler(databaseService *database.BadgerService, renderService *render.RenderService) *RepoHandler {
 	return &RepoHandler{
-		renderService: renderService,
+		renderService:   renderService,
+		databaseService: databaseService,
 	}
 }
 
 func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
+	owner := c.Params("owner")
+	repo := c.Params("repo")
+
+	var total string
+	err := h.databaseService.Get("total:"+owner+"/"+repo, &total)
+
+	if err != nil {
+		c.Set("X-Robots-Tag", "noindex, nofollow")
+		return c.Redirect("https://github.com/"+owner+"/"+repo, fiber.StatusTemporaryRedirect)
+	}
+
+	totalInt, _ := strconv.Atoi(total)
 	data := models.RepoPage{
-		Owner: c.Params("owner"),
-		Repo:  c.Params("repo"),
+		Total: totalInt,
+		Owner: owner,
+		Repo:  repo,
 	}
 
 	page, err := h.renderService.RenderPage(data)

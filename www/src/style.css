@@ -26,7 +26,7 @@
 
 .container {
   @apply mx-auto p-4 max-w-75ch;
-  @apply prose-pre:rounded-lg prose-code:before:content-none prose-code:after:content-none;
+  @apply prose-img:mx-auto prose-pre:rounded-lg prose-code:before:content-none prose-code:after:content-none;
 }
 
 #repo-input {
@@ -35,20 +35,20 @@
   @apply px-2 py-1 h-8 w-60 rounded-md outline-none transition-colors duration-200;
 }
 
-.ellipses {
-  @apply truncate shrink;
+.ellipses { @apply truncate shrink; }
+.repo-name { @apply text-xl sm:text-2xl; }
+.cta-links { @apply flex justify-center gap-4; }
+.brand { @apply text-xs sm:text-sm no-underline hover:underline; }
+.repo-image { @apply w-full aspect-[2/1] rounded-xl border-2 border-gray-300; }
+
+.button {
+  @apply no-underline bg-slate-800 text-white hover:bg-slate-700;
+  @apply px-3 py-1 rounded-md transition-colors duration-200 max-sm:text-sm;
 }
 
-.brand {
-  @apply text-xs sm:text-sm;
-}
-
-.repo-name {
-  @apply text-xl sm:text-2xl;
-}
-
-.repo-image {
-  @apply rounded-2xl border-2 border-gray-300;
+.button-outline {
+  @apply px-3 py-1 rounded-md transition-colors duration-200 max-sm:text-sm;
+  @apply no-underline border-2 border-gray-300 text-gray-700 hover:bg-gray-100;
 }
 
 /* https://github.com/joshnuss/shiki-transformer-copy-button */

@@ -9,9 +9,12 @@ import (
 
 func Setup(app *fiber.App, services *service.Services) {
 	healthHandler := handlers.NewHealthHandler()
-	repoHandler := handlers.NewRepoHandler(services.RenderService)
 	imageHandler := handlers.NewImageHandler(services.DatabaseService)
 	badgeHandler := handlers.NewBadgeHandler(services.DatabaseService)
+	repoHandler := handlers.NewRepoHandler(
+		services.DatabaseService,
+		services.RenderService,
+	)
 	ingestHandler := handlers.NewIngestHandler(
 		services.GitHubOIDCService,
 		services.DatabaseService,

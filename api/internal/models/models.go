@@ -22,6 +22,7 @@ type Dependent struct {
 }
 
 type RepoPage struct {
+	Total int
 	Owner string
 	Repo  string
 }
