@@ -10,7 +10,7 @@ import (
 
 	"dependents.info/internal/models"
 	"dependents.info/internal/service/database"
-	"dependents.info/internal/service/image"
+	"dependents.info/internal/service/render"
 	"dependents.info/internal/test"
 )
 
@@ -71,14 +71,14 @@ func TestIngestHandler_Ingest(t *testing.T) {
 	}
 
 	cfg := test.NewConfig()
-	imageService := image.NewImageService()
+	renderService := render.NewRenderService()
 	dbService := database.NewBadgerService(cfg.DatabasePath)
 	defer dbService.Close()
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			app := test.NewServer(cfg)
-			h := NewIngestHandler(nil, imageService, dbService)
+			h := NewIngestHandler(nil, dbService, renderService)
 			app.Post("/ingest", h.Ingest)
 
 			var reqBody []byte

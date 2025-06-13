@@ -1,5 +1,7 @@
 # dependents.info
 
+[![GitHub Network Dependents Count](https://dependents.info/gouravkhunger/dependents.info/badge)](https://dependents.info/gouravkhunger/dependents.info)
+
 easily generate an image of github network dependents to showcase in your project's `readme.md` file.
 
 simply add a github action to your repository and use the image link for your repo.
@@ -8,7 +10,7 @@ simply add a github action to your repository and use the image link for your re
 
 here's a demo of the generated image for the gem [`jekyll-auto-authors`](https://github.com/gouravkhunger/jekyll-auto-authors):
 
-<a href="https://github.com/gouravkhunger/jekyll-auto-authors/network/dependents">
+<a href="https://dependents.info/gouravkhunger/jekyll-auto-authors">
   <img src="https://dependents.info/gouravkhunger/jekyll-auto-authors/image.svg" />
 </a>
 
@@ -82,7 +84,7 @@ Made with [dependents.info](https://dependents.info).
 copy the following code snippet and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the badge.
 
 ```html
-<a href="https://github.com/owner/repo/network/dependents">
+<a href="https://dependents.info/owner/repo">
   <img src="https://dependents.info/owner/repo/badge" />
 </a>
 ```

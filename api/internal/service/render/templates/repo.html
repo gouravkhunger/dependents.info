@@ -1,0 +1,114 @@
+{{define "repo"}}<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>dependents.info | {{.Owner}}/{{.Repo}}</title>
+
+    <meta name="author" content="Gourav Khunger" />
+    <meta name="title" content="dependents.info | {{.Owner}}/{{.Repo}}" />
+    <meta name="keywords" content="github, network dependents, visualization, readme image" />
+    <meta name="description" content="github network dependents and repository users count badge and image for {{.Owner}}/{{.Repo}}" />
+
+    <link rel="icon" type="image/x-icon" href="https://dependents.info/images/favicons/favicon.ico" />
+    <link rel="apple-touch-icon" href="https://dependents.info/images/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="https://dependents.info/images/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="https://dependents.info/images/favicons/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="https://dependents.info/images/favicons/android-chrome-192x192.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dependents.info" />
+    <meta property="og:image:alt" content="dependents.info thumbnail" />
+    <meta property="og:title" content="dependents.info | {{.Owner}}/{{.Repo}}" />
+    <meta property="og:image" content="https://dependents.info/images/social-preview.png" />
+    <meta property="og:description" content="github network dependents and repository users count badge and image for {{.Owner}}/{{.Repo}}" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://dependents.info" />
+    <meta property="twitter:title" content="dependents.info | {{.Owner}}/{{.Repo}}" />
+    <meta property="twitter:image" content="https://dependents.info/images/social-preview.png" />
+    <meta property="twitter:description" content="github network dependents and repository users count badge and image for {{.Owner}}/{{.Repo}}" />
+
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="canonical" href="https://dependents.info" />
+    <link rel="stylesheet" crossorigin href="/assets/css/index.css">
+  </head>
+  <body>
+    <article class="prose container mt-4">
+      <div class="flex justify-between items-center gap-2 mb-8">
+        <div class="mb-0 min-w-0 flex items-center gap-2 sm:gap-4">
+          <a href="/" class="shrink-0">
+            <img src="/images/logo.webp" alt="dependents.info logo" class="size-10 sm:size-16 !m-0" />
+          </a>
+          <div class="flex flex-col min-w-0">
+            <a href="/" class="brand ellipses">dependents.info</a>
+            <h1 class="!m-0 repo-name ellipses" title="{{.Owner}}/{{.Repo}}">{{.Owner}}/{{.Repo}}</h1>
+          </div>
+        </div>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          class="size-6 shrink-0 sm:size-8"
+          href="https://github.com/{{.Owner}}/{{.Repo}}"
+        >
+          <img src="/icons/github.svg" class="!m-0" />
+        </a>
+      </div>
+      <img
+        class="repo-image"
+        alt="Social preview for GitHub repo {{.Owner}}/{{.Repo}}"
+        src="https://opengraph.github.com/dependents/{{.Owner}}/{{.Repo}}"
+      />
+      <p>found <b>{{formatNumber .Total}} projects</b> (network dependents) using this github repository!</p>
+      <p>here's a preview of the generated badge and image:</p>
+      <a target="_blank" href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents" rel="noopener noreferrer">
+        <img
+          class="mb-0"
+          src="/{{.Owner}}/{{.Repo}}/badge"
+          alt="Total network dependents badge for GitHub repo {{.Owner}}/{{.Repo}}"
+        />
+      </a>
+      <a target="_blank" href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents" rel="noopener noreferrer">
+        <img
+          src="/{{.Owner}}/{{.Repo}}/image.svg"
+          alt="Network dependents preview for GitHub repo {{.Owner}}/{{.Repo}}"
+        />
+      </a>
+      <div class="cta-links">
+        <a
+          target="_blank"
+          aria-label="Share on X"
+          rel="noopener noreferrer"
+          class="button-outline flex items-center gap-2"
+          onclick="window.open(this.href, 'twitter-share', 'width=550,height=435');return false;"
+          href="https://x.com/intent/tweet?text=Check%20out%20how%20many%20projects%20use%20the%20%23GitHub%20repository%20{{.Owner}}/{{.Repo}}%20on%20dependents.info!%0A%0Ahttps://dependents.info/{{.Owner}}/{{.Repo}}"
+        >
+          <img src="/icons/x.svg" alt="X logo" class="!m-0 size-6" />
+          share on x
+        </a>
+        <a
+          href="/#quickstart"
+          aria-label="Get your own"
+          class="button flex items-center gap-2"
+        >
+          <img src="/images/logo.webp" alt="Get your own" class="!m-0 size-6" />
+          get your own
+        </a>
+      </div>
+    </article>
+    <footer class="prose container my-2 max-w-75ch flex flex-col justify-center items-center">
+      <span>
+        <a href="https://status.dependents.info" rel="noopener noreferrer">status</a>
+      </span>
+      <span class="text-black">&copy; 2025 — Gourav Khunger</span>
+      <span>
+        <a href="https://github.com/gouravkhunger" target="_blank" rel="noopener noreferrer">github</a>
+        /
+        <a href="https://www.linkedin.com/in/gouravkhunger/" target="_blank" rel="noopener noreferrer">linkedin</a>
+        /
+        <a href="https://gourav.sh" target="_blank">gourav.sh</a>
+      </span>
+    </footer>
+  </body>
+</html>{{end}}

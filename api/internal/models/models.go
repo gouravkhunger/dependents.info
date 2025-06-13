@@ -21,6 +21,12 @@ type Dependent struct {
 	Image string `json:"image" validate:"required,startswith=data:image/,contains=base64"`
 }
 
+type RepoPage struct {
+	Total int
+	Owner string
+	Repo  string
+}
+
 var errorMessages = map[string]string{
 	"default":                    "Invalid request format",
 	"Total.required":             "Total number of dependents is required",
