@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 
+	"dependents.info/internal/models"
 	"dependents.info/internal/service/render"
 	"dependents.info/pkg/utils"
 )
@@ -18,8 +19,12 @@ func NewRepoHandler(renderService *render.RenderService) *RepoHandler {
 }
 
 func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
-	// name := c.Params("owner") + "/" + c.Params("repo")
-	page, err := h.renderService.RenderPage()
+	data := models.RepoPage{
+		Owner: c.Params("owner"),
+		Repo:  c.Params("repo"),
+	}
+
+	page, err := h.renderService.RenderPage(data)
 
 	if err != nil {
 		return utils.SendError(c, fiber.StatusNotFound, "Failed to generate repository page", err)

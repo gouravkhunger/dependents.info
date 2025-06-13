@@ -35,6 +35,22 @@
   @apply px-2 py-1 h-8 w-60 rounded-md outline-none transition-colors duration-200;
 }
 
+.ellipses {
+  @apply truncate shrink;
+}
+
+.brand {
+  @apply text-xs sm:text-sm;
+}
+
+.repo-name {
+  @apply text-xl sm:text-2xl;
+}
+
+.repo-image {
+  @apply rounded-2xl border-2 border-gray-300;
+}
+
 /* https://github.com/joshnuss/shiki-transformer-copy-button */
 pre:has(code) {
   @apply relative flex p-0;

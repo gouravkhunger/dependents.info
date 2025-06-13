@@ -50,9 +50,9 @@ func (i *RenderService) RenderSVG(d models.IngestRequest) ([]byte, error) {
 	return w.Bytes(), err
 }
 
-func (i *RenderService) RenderPage() ([]byte, error) {
+func (i *RenderService) RenderPage(d models.RepoPage) ([]byte, error) {
 	w := bytes.NewBuffer(nil)
 
-	err := repoTmpl.ExecuteTemplate(w, "repo", nil)
+	err := repoTmpl.ExecuteTemplate(w, "repo", d)
 	return w.Bytes(), err
 }
