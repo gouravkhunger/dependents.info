@@ -22,6 +22,10 @@
   code {
     @apply text-black bg-slate-200 px-1.5 py-1 rounded;
   }
+
+  summary {
+    @apply text-gray-900 font-semibold cursor-pointer hover:underline;
+  }
 }
 
 .container {
