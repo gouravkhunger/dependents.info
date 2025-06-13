@@ -62,10 +62,10 @@
         <a href="https://shields.io/" target="_blank" rel="noopener noreferrer">shields.io</a>
         badge and the image:
       </p>
-      <a target="_blank" href="https://github.com/gouravkhunger/jekyll-auto-authors/network/dependents" rel="noopener noreferrer">
+      <a href="/gouravkhunger/jekyll-auto-authors">
         <img class="!m-0" src="https://dependents.info/gouravkhunger/jekyll-auto-authors/badge" />
       </a>
-      <a target="_blank" href="https://github.com/gouravkhunger/jekyll-auto-authors/network/dependents" rel="noopener noreferrer">
+      <a href="/gouravkhunger/jekyll-auto-authors">
         <img src="https://dependents.info/gouravkhunger/jekyll-auto-authors/image.svg" />
       </a>
       <h2 id="quickstart">quickstart</h2>
@@ -233,13 +233,11 @@ jobs:
     exclude-owner: true
     upload-artifacts: true`;
 
-      const htmlContent = (name) => `<a href="https://github.com/${name || "owner/repo"}/network/dependents">
+      const htmlContent = (name) => `<a href="https://dependents.info/${name || "owner/repo"}">
   <img src="https://dependents.info/${name || "owner/repo"}/image.svg" />
-</a>
+</a>`;
 
-Made with [dependents.info](https://dependents.info).`;
-
-      const mdContent = (name) =>`<a href="https://github.com/${name || "owner/repo"}/network/dependents">
+      const mdContent = (name) =>`<a href="https://dependents.info/${name || "owner/repo"}">
   <img src="https://dependents.info/${name || "owner/repo"}/badge" />
 </a>`;
 

@@ -60,17 +60,21 @@
         alt="Social preview for GitHub repo {{.Owner}}/{{.Repo}}"
         src="https://opengraph.github.com/dependents/{{.Owner}}/{{.Repo}}"
       />
-      <p>discovered <b>{{formatNumber .Total}} users</b> (network dependents) for this github repository!</p>
+      <p>found <b>{{formatNumber .Total}} projects</b> (network dependents) using this github repository!</p>
       <p>here's a preview of the generated badge and image:</p>
-      <img
-        class="mb-0"
-        src="/{{.Owner}}/{{.Repo}}/badge"
-        alt="Total network dependents badge for GitHub repo {{.Owner}}/{{.Repo}}"
-      />
-      <img
-        src="/{{.Owner}}/{{.Repo}}/image.svg"
-        alt="Network dependents preview for GitHub repo {{.Owner}}/{{.Repo}}"
-      />
+      <a target="_blank" href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents" rel="noopener noreferrer">
+        <img
+          class="mb-0"
+          src="/{{.Owner}}/{{.Repo}}/badge"
+          alt="Total network dependents badge for GitHub repo {{.Owner}}/{{.Repo}}"
+        />
+      </a>
+      <a target="_blank" href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents" rel="noopener noreferrer">
+        <img
+          src="/{{.Owner}}/{{.Repo}}/image.svg"
+          alt="Network dependents preview for GitHub repo {{.Owner}}/{{.Repo}}"
+        />
+      </a>
       <div class="cta-links">
         <a
           target="_blank"
@@ -78,7 +82,7 @@
           rel="noopener noreferrer"
           class="button-outline flex items-center gap-2"
           onclick="window.open(this.href, 'twitter-share', 'width=550,height=435');return false;"
-          href="https://x.com/intent/tweet?text=Check%20out%20how%20many%20people%20use%20the%20%23GitHub%20repository%20{{.Owner}}/{{.Repo}}%20on%20dependents.info!%0A%0Ahttps://dependents.info/{{.Owner}}/{{.Repo}}"
+          href="https://x.com/intent/tweet?text=Check%20out%20how%20many%20projects%20use%20the%20%23GitHub%20repository%20{{.Owner}}/{{.Repo}}%20on%20dependents.info!%0A%0Ahttps://dependents.info/{{.Owner}}/{{.Repo}}"
         >
           <img src="/icons/x.svg" alt="X logo" class="!m-0 size-6" />
           share on x
