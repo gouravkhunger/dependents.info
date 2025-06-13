@@ -13,8 +13,8 @@ func Setup(app *fiber.App, services *service.Services) {
 	badgeHandler := handlers.NewBadgeHandler(services.DatabaseService)
 	ingestHandler := handlers.NewIngestHandler(
 		services.GitHubOIDCService,
-		services.ImageService,
 		services.DatabaseService,
+		services.RenderService,
 	)
 
 	app.Get("/health", healthHandler.Health)

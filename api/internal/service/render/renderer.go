@@ -1,4 +1,4 @@
-package image
+package render
 
 import (
 	"bytes"
@@ -28,7 +28,7 @@ func init() {
 	}
 }
 
-func (i *ImageService) RenderSVG(d models.IngestRequest) ([]byte, error) {
+func (i *RenderService) RenderSVG(d models.IngestRequest) ([]byte, error) {
 	w := bytes.NewBuffer(nil)
 
 	data := &models.IngestRequest{

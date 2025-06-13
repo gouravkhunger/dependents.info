@@ -10,25 +10,25 @@ import (
 	"dependents.info/internal/models"
 	"dependents.info/internal/service/database"
 	"dependents.info/internal/service/github"
-	"dependents.info/internal/service/image"
+	"dependents.info/internal/service/render"
 	"dependents.info/pkg/utils"
 )
 
 type IngestHandler struct {
 	githubOIDCService *github.OIDCService
-	imageService      *image.ImageService
+	renderService      *render.RenderService
 	databaseService   *database.BadgerService
 }
 
 func NewIngestHandler(
 	githubOIDC *github.OIDCService,
-	imageService *image.ImageService,
 	dbService *database.BadgerService,
+	renderService *render.RenderService,
 ) *IngestHandler {
 	return &IngestHandler{
 		databaseService:   dbService,
 		githubOIDCService: githubOIDC,
-		imageService:      imageService,
+		renderService:      renderService,
 	}
 }
 
@@ -60,7 +60,7 @@ func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 		return utils.SendError(c, fiber.StatusBadRequest, "Invalid JSON payload", err)
 	}
 
-	svgBytes, err := h.imageService.RenderSVG(req)
+	svgBytes, err := h.renderService.RenderSVG(req)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to render SVG", err)
 	}
