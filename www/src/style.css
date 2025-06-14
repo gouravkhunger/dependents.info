@@ -41,7 +41,7 @@
 
 .ellipses { @apply truncate shrink; }
 .repo-name { @apply text-xl sm:text-2xl; }
-.cta-links { @apply flex justify-center gap-4; }
+.cta-links { @apply flex flex-wrap justify-center gap-4; }
 .brand { @apply text-xs sm:text-sm no-underline hover:underline; }
 .repo-image { @apply w-full aspect-[2/1] rounded-xl border-2 border-gray-300; }
 
