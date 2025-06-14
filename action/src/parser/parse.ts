@@ -7,7 +7,7 @@ import { removeQueryParams } from "@/utils";
 export const parseTotalDependents = (doc: string, repo: string): number => {
   const $ = cheerio.load(doc);
   const anchor = $(
-    `a[href="/${repo}/network/dependents?dependent_type=REPOSITORY"]`,
+    `a[href*="/${repo}/network/dependents?dependent_type=REPOSITORY"]`,
   );
   const dependents = anchor.text().trim().split(" ")[0];
   if (!dependents) throw new Error(ERROR.failedToParseTotalDependents(repo));
