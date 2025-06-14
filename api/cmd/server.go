@@ -19,7 +19,6 @@ func Build(cfg *config.Config, static embed.FS, services *service.Services) *fib
 
 	app.Use(middleware.Logger())
 	app.Use(middleware.CORS())
-	app.Use(middleware.ETAG())
 	app.Use(middleware.Static(static))
 	app.Use(middleware.Config(cfg))
 

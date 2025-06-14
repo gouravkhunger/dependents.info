@@ -32,7 +32,7 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 
 	if err != nil {
 		c.Set("X-Robots-Tag", "noindex, nofollow")
-		return c.Redirect("https://github.com/"+owner+"/"+repo, fiber.StatusTemporaryRedirect)
+		return c.Redirect("https://github.com/"+owner+"/"+repo+"/network/dependents", fiber.StatusTemporaryRedirect)
 	}
 
 	totalInt, _ := strconv.Atoi(total)
