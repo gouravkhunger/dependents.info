@@ -55,6 +55,9 @@
           <img src="/icons/github.svg" class="!m-0" />
         </a>
       </div>
+      <blockquote id="repo-description" data-nosnippet>
+        Loading repository description...
+      </blockquote>
       <img
         class="repo-image"
         alt="Social preview for GitHub repo {{.Owner}}/{{.Repo}}"
@@ -110,5 +113,16 @@
         <a href="https://gourav.sh" target="_blank">gourav.sh</a>
       </span>
     </footer>
+    <script>
+      fetch("https://api.github.com/repos/{{.Owner}}/{{.Repo}}")
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("repo-description").innerText = data.description || "Repository description unavailable.";
+        })
+        .catch(error => {
+          console.error("Error fetching repository description:", error);
+          document.getElementById("repo-description").innerText = "Failed to load repository description.";
+        });
+    </script>
   </body>
 </html>{{end}}
