@@ -8,7 +8,7 @@ import { buildDependentsUrl, imageUrlToBase64 } from "@/utils";
 
 export async function processRepo(
   name: string,
-  id: string,
+  id: string = "",
 ): Promise<ProcessedDependents> {
   const dependents: Dependents = [];
   let total: number | undefined = undefined;
