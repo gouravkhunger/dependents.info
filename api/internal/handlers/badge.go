@@ -20,8 +20,14 @@ func NewBadgeHandler(databaseService *database.BadgerService) *BadgeHandler {
 }
 
 func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
-	var total string
+	id := c.Query("id")
 	name := c.Params("owner") + "/" + c.Params("repo")
+
+	if id != "" {
+		name += ":" + id
+	}
+
+	var total string
 	err := h.databaseService.Get("total:"+name, &total)
 
 	if err != nil {

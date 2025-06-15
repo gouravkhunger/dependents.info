@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>dependents.info | {{.Owner}}/{{.Repo}}</title>
+    <title>dependents.info | {{.Owner}}/{{.Repo}}{{if .Id}} | package: {{.Id}}{{end}}</title>
 
     <meta name="author" content="Gourav Khunger" />
-    <meta name="title" content="dependents.info | {{.Owner}}/{{.Repo}}" />
     <meta name="keywords" content="github, network dependents, visualization, readme image" />
-    <meta name="description" content="github network dependents and repository users count badge and image for {{.Owner}}/{{.Repo}}" />
+    <meta name="title" content="dependents.info | {{.Owner}}/{{.Repo}}{{if .Id}} | package: {{.Id}}{{end}}" />
+    <meta name="description" content="github network dependents and repository users count badge and image for {{.Owner}}/{{.Repo}}{{if .Id}} having package {{.Id}}{{end}}" />
 
     <link rel="icon" type="image/x-icon" href="https://dependents.info/images/favicons/favicon.ico" />
     <link rel="apple-touch-icon" href="https://dependents.info/images/favicons/apple-touch-icon.png" />
@@ -20,19 +20,20 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dependents.info" />
     <meta property="og:image:alt" content="dependents.info thumbnail" />
-    <meta property="og:title" content="dependents.info | {{.Owner}}/{{.Repo}}" />
     <meta property="og:image" content="https://dependents.info/images/social-preview.png" />
-    <meta property="og:description" content="github network dependents and repository users count badge and image for {{.Owner}}/{{.Repo}}" />
+    <meta property="og:title" content="dependents.info | {{.Owner}}/{{.Repo}}{{if .Id}} | package: {{.Id}}{{end}}" />
+    <meta property="og:description" content="github network dependents and repository users count badge and image for {{.Owner}}/{{.Repo}}{{if .Id}} having package {{.Id}}{{end}}" />
 
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://dependents.info" />
-    <meta property="twitter:title" content="dependents.info | {{.Owner}}/{{.Repo}}" />
     <meta property="twitter:image" content="https://dependents.info/images/social-preview.png" />
-    <meta property="twitter:description" content="github network dependents and repository users count badge and image for {{.Owner}}/{{.Repo}}" />
+    <meta property="twitter:title" content="dependents.info | {{.Owner}}/{{.Repo}}{{if .Id}} | package: {{.Id}}{{end}}" />
+    <meta property="twitter:description" content="github network dependents and repository users count badge and image for {{.Owner}}/{{.Repo}}{{if .Id}} having package {{.Id}}{{end}}" />
 
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="canonical" href="https://dependents.info" />
     <link rel="stylesheet" crossorigin href="/assets/css/index.css">
+
+    <link rel="canonical" href="https://dependents.info/{{.Owner}}/{{.Repo}}" />
   </head>
   <body>
     <article class="prose container mt-4">
@@ -63,19 +64,32 @@
         alt="Social preview for GitHub repo {{.Owner}}/{{.Repo}}"
         src="https://opengraph.github.com/dependents/{{.Owner}}/{{.Repo}}"
       />
-      <p>found <b>{{formatNumber .Total}} projects</b> (network dependents) using this github repository!</p>
+      {{if .Id}}
+      <h2>package: {{.Id}}</h2>
+      {{end}}
+      <p>
+        found <b>{{formatNumber .Total}} projects</b> (network dependents) using this github {{if .Id}}package{{else}}repository's default package{{end}}!
+      </p>
       <p>here's a preview of the generated badge and image:</p>
-      <a target="_blank" href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents" rel="noopener noreferrer">
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents{{if .Id}}?package_id={{.Id}}{{end}}"
+      >
         <img
           class="mb-0"
-          src="/{{.Owner}}/{{.Repo}}/badge"
-          alt="Total network dependents badge for GitHub repo {{.Owner}}/{{.Repo}}"
+          src="/{{.Owner}}/{{.Repo}}/badge{{if .Id}}?id={{.Id}}{{end}}"
+          alt="Total network dependents badge for GitHub repo {{.Owner}}/{{.Repo}}{{if .Id}} package: {{.Id}}{{end}}"
         />
       </a>
-      <a target="_blank" href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents" rel="noopener noreferrer">
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents{{if .Id}}?package_id={{.Id}}{{end}}"
+      >
         <img
-          src="/{{.Owner}}/{{.Repo}}/image.svg"
-          alt="Network dependents preview for GitHub repo {{.Owner}}/{{.Repo}}"
+          src="/{{.Owner}}/{{.Repo}}/image.svg{{if .Id}}?id={{.Id}}{{end}}"
+          alt="Network dependents preview for GitHub repo {{.Owner}}/{{.Repo}}{{if .Id}} package: {{.Id}}{{end}}"
         />
       </a>
       <div class="cta-links">

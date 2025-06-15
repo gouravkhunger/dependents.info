@@ -33,6 +33,7 @@ func NewIngestHandler(
 }
 
 func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
+	id := c.Query("id")
 	config := config.FromContext(c.UserContext())
 	name := c.Params("owner") + "/" + c.Params("repo")
 
@@ -63,6 +64,10 @@ func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 	svgBytes, err := h.renderService.RenderSVG(req)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to render SVG", err)
+	}
+
+	if id != "" {
+		name += ":" + id
 	}
 
 	if err := h.databaseService.Save("total:"+name, []byte(strconv.Itoa(req.Total))); err != nil {
