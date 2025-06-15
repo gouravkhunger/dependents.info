@@ -18,8 +18,14 @@ func NewImageHandler(databaseService *database.BadgerService) *ImageHandler {
 }
 
 func (h *ImageHandler) SVGImage(c *fiber.Ctx) error {
-	var svg string
+	id := c.Query("id")
 	name := c.Params("owner") + "/" + c.Params("repo")
+
+	if id != "" {
+		name += ":" + id
+	}
+
+	var svg string
 	err := h.databaseService.Get("svg:"+name, &svg)
 
 	if err != nil {

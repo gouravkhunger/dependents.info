@@ -6,10 +6,14 @@ import { parseDependentsPage, parseTotalDependents } from "@/parser/parse";
 import type { Dependents, ProcessedDependents } from "@/types";
 import { buildDependentsUrl, imageUrlToBase64 } from "@/utils";
 
-export async function processRepo(name: string): Promise<ProcessedDependents> {
+export async function processRepo(
+  name: string,
+  id: string = "",
+): Promise<ProcessedDependents> {
   const dependents: Dependents = [];
   let total: number | undefined = undefined;
-  let pageLink: string | undefined = buildDependentsUrl(name);
+
+  let pageLink: string | undefined = buildDependentsUrl(name, id);
 
   const maxPages = parseInt(core.getInput("max-pages"), 10);
   const safeMaxPages = Math.max(0, Math.min(maxPages, 100));

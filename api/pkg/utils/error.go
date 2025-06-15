@@ -9,6 +9,5 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 	if e, ok := err.(*fiber.Error); ok {
 		code = e.Code
 	}
-	c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
 	return SendError(c, code, "Internal server error", err)
 }

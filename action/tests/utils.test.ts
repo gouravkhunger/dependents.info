@@ -1,6 +1,37 @@
-import { imageUrlToBase64, removeQueryParams, validateRepoName } from "@/utils";
+import { API_BASE_URL, ERROR } from "@/constants";
+import {
+  buildAPIUrl,
+  buildDependentsUrl,
+  imageUrlToBase64,
+  removeQueryParams,
+  validateRepoName,
+} from "@/utils";
 
 describe("utility functions", () => {
+  it("buildAPIUrl should build the correct GitHub dependents URL", () => {
+    expect(() => buildAPIUrl("invalid/repo/name", "")).toThrow(
+      ERROR.INVALID_REPO_FORMAT,
+    );
+    expect(buildAPIUrl("owner/repo", "")).toBe(
+      `${API_BASE_URL}/owner/repo/ingest`,
+    );
+    expect(buildAPIUrl("owner/repo", "random_id")).toBe(
+      `${API_BASE_URL}/owner/repo/ingest?id=random_id`,
+    );
+  });
+
+  it("buildDependentsUrl should build the correct GitHub dependents URL", () => {
+    expect(() => buildDependentsUrl("invalid/repo/name", "")).toThrow(
+      ERROR.INVALID_REPO_FORMAT,
+    );
+    expect(buildDependentsUrl("owner/repo", "")).toBe(
+      "https://github.com/owner/repo/network/dependents",
+    );
+    expect(buildDependentsUrl("owner/repo", "random_id")).toBe(
+      "https://github.com/owner/repo/network/dependents?package_id=random_id",
+    );
+  });
+
   it("validateRepoName should validate github repo names correctly", () => {
     expect(validateRepoName("")).toBe(false);
     expect(validateRepoName("  ")).toBe(false);

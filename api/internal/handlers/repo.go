@@ -24,14 +24,20 @@ func NewRepoHandler(databaseService *database.BadgerService, renderService *rend
 }
 
 func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
-	owner := c.Params("owner")
+	id := c.Query("id")
 	repo := c.Params("repo")
+	owner := c.Params("owner")
+	name := owner + "/" + repo
+
+	if id != "" {
+		name += ":" + id
+	}
 
 	var total string
-	err := h.databaseService.Get("total:"+owner+"/"+repo, &total)
+	err := h.databaseService.Get("total:"+name, &total)
 
 	if err != nil {
-		c.Set("X-Robots-Tag", "noindex, nofollow")
+		c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
 		return c.Redirect("https://github.com/"+owner+"/"+repo+"/network/dependents", fiber.StatusTemporaryRedirect)
 	}
 
@@ -40,12 +46,17 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 		Total: totalInt,
 		Owner: owner,
 		Repo:  repo,
+		Id:    id,
 	}
 
 	page, err := h.renderService.RenderPage(data)
 
 	if err != nil {
 		return utils.SendError(c, fiber.StatusNotFound, "Failed to generate repository page", err)
+	}
+
+	if id != "" {
+		c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
 	}
 
 	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")

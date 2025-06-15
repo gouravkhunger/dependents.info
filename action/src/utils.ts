@@ -1,15 +1,23 @@
+import { API_BASE_URL, ERROR } from "@/constants";
 import { getImageBuffer } from "@/http/client";
 
-export const buildDependentsUrl = (repoName: string): string => {
-  if (!validateRepoName(repoName)) {
-    throw new Error("Invalid repository name format");
+export const buildAPIUrl = (name: string, id: string): string => {
+  if (!validateRepoName(name)) {
+    throw new Error(ERROR.INVALID_REPO_FORMAT);
   }
-  return `https://github.com/${repoName}/network/dependents`;
+  return `${API_BASE_URL}/${name}/ingest${id ? `?id=${id}` : ""}`;
 };
 
-export const validateRepoName = (repoName: string): boolean => {
+export const buildDependentsUrl = (name: string, id: string): string => {
+  if (!validateRepoName(name)) {
+    throw new Error(ERROR.INVALID_REPO_FORMAT);
+  }
+  return `https://github.com/${name}/network/dependents${id ? `?package_id=${id}` : ""}`;
+};
+
+export const validateRepoName = (name: string): boolean => {
   const regex = /^[a-zA-Z0-9-]+\/[a-zA-Z0-9._-]+$/;
-  return regex.test(repoName);
+  return regex.test(name);
 };
 
 export const removeQueryParams = (url: string, ...params: string[]): string => {

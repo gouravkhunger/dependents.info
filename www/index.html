@@ -63,10 +63,10 @@
         badge and the image:
       </p>
       <a href="/gouravkhunger/jekyll-auto-authors">
-        <img class="!m-0" src="https://dependents.info/gouravkhunger/jekyll-auto-authors/badge" />
+        <img class="!m-0" src="/gouravkhunger/jekyll-auto-authors/badge" />
       </a>
       <a href="/gouravkhunger/jekyll-auto-authors">
-        <img src="https://dependents.info/gouravkhunger/jekyll-auto-authors/image.svg" />
+        <img src="/gouravkhunger/jekyll-auto-authors/image" />
       </a>
       <h2 id="quickstart">quickstart</h2>
       <h3 id="github-action">github action</h3>
@@ -92,7 +92,7 @@
         <a href="https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule" target="_blank" rel="noopener noreferrer">cron job</a>
         to schedule the action.
       </blockquote>
-      <details>
+      <details id="configuration">
         <summary>
           <span class="ml-2">configuration (optional)</span>
         </summary>
@@ -121,19 +121,28 @@
             <tr>
               <td class="sm:whitespace-nowrap"><code>max-pages</code></td>
               <td class="max-sm:hidden"><code>number</code></td>
-              <td>maximum number of network dependents pages to process (max: 100).</td>
+              <td>number of network dependents pages to process (max: 100).</td>
               <td><code>50</code></td>
+            </tr>
+            <tr>
+              <td class="sm:whitespace-nowrap"><code>package-id</code></td>
+              <td class="max-sm:hidden"><code>string</code></td>
+              <td>
+                use if repo hosts <a href="#multiple-packages">multiple packages</a>.
+                action processes only one at a time.
+              </td>
+              <td><code>""</code></td>
             </tr>
             <tr>
               <td class="sm:whitespace-nowrap"><code>unique-owners</code></td>
               <td class="max-sm:hidden"><code>boolean</code></td>
-              <td>whether to disable unique users in the generated image.</td>
+              <td>disables duplicate users in the generated image.</td>
               <td><code>true</code></td>
             </tr>
             <tr>
               <td class="sm:whitespace-nowrap"><code>exclude-owner</code></td>
               <td class="max-sm:hidden"><code>boolean</code></td>
-              <td>whether to exclude repos from the same owner that depend on this repository.</td>
+              <td>exclude repos from the same owner that depend on this repository.</td>
               <td><code>true</code></td>
             </tr>
             <tr>
@@ -153,14 +162,27 @@
         enter your github repository name in the format <code>owner/repo</code>
         to generate a copyable embed code.
       </p>
-      <label for="repo-input">github repo:</label>
-      <input
-        name="repo"
-        type="text"
-        id="repo-input"
-        autocomplete="off"
-        placeholder="owner/repo"
-      />
+      <div>
+        <label for="repo-input">github repo:</label>
+        <input
+          name="repo"
+          type="text"
+          id="repo-input"
+          autocomplete="off"
+          placeholder="owner/repo"
+        />
+      <div class="mt-4">
+        <label for="package-id">
+          <a href="#multiple-packages">package id</a> (optional):
+        </label>
+        <input
+          type="text"
+          id="package-id"
+          name="packageId"
+          autocomplete="off"
+          placeholder="packageIDHere"
+        />
+      </div>
       <div id="embed-code">
         <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">
           <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-black" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -197,6 +219,19 @@
       <blockquote>
         <b>note:</b> in addition to cloudflare's cache lasting up to a day, the image could be cached by github for an extended 7 day period. please refer to <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls#removing-an-image-from-camos-cache" target="_blank" rel="noopener noreferrer">the docs</a> on how to manually purge it if required.
       </blockquote>
+      <h2 id="multiple-packages">multiple packages</h2>
+      <p>
+        if your repository hosts multiple packages, you can use the <a href="#configuration"><code>package-id</code></a> option to specify which package to process. other packages can be processed by adding new steps in the same workflow file.
+      </p>
+      <p>
+        the <code>package-id</code> string can be found by going to
+        repository's home page > insights > dependency graph > dependents > select package > copy the text after <code class="whitespace-nowrap">?package_id=</code>
+        in the url.
+      </p>
+      <p>
+        the same package id should be added to the end of every dependents.info url embedded in the readme with
+        <code class="whitespace-nowrap">?id=idHere</code>
+      </p>
     </article>
     <footer class="prose container my-2 max-w-75ch flex flex-col justify-center items-center">
       <span>
@@ -235,14 +270,15 @@ jobs:
     max-pages: 50
     unique-owners: true
     exclude-owner: true
-    upload-artifacts: true`;
+    upload-artifacts: true
+    package-id: UGFja2SomeStringzcyMDE`;
 
-      const htmlContent = (name) => `<a href="https://dependents.info/${name || "owner/repo"}">
-  <img src="https://dependents.info/${name || "owner/repo"}/image.svg" />
+      const htmlContent = (name, id) => `<a href="https://dependents.info/${name || "owner/repo"}${id ? `?id=${id}` : ""}">
+  <img src="https://dependents.info/${name || "owner/repo"}/image${id ? `?id=${id}` : ""}" />
 </a>`;
 
-      const mdContent = (name) =>`<a href="https://dependents.info/${name || "owner/repo"}">
-  <img src="https://dependents.info/${name || "owner/repo"}/badge" />
+      const mdContent = (name, id) =>`<a href="https://dependents.info/${name || "owner/repo"}${id ? `?id=${id}` : ""}">
+  <img src="https://dependents.info/${name || "owner/repo"}/badge${id ? `?id=${id}` : ""}" />
 </a>`;
 
       const highlighter = await createHighlighter({
@@ -264,14 +300,14 @@ jobs:
       });
       document.querySelector("#action-configuration").innerHTML = configurationCode;
 
-      const embedCode = (name) => highlighter.codeToHtml(htmlContent(name), {
+      const embedCode = (name, id) => highlighter.codeToHtml(htmlContent(name, id), {
         lang: "html",
         theme: "github-dark",
         transformers: [addCopyButton()],
       });
       document.querySelector("#embed-code").innerHTML = embedCode();
 
-      const badgeCode = (name) => highlighter.codeToHtml(mdContent(name), {
+      const badgeCode = (name, id) => highlighter.codeToHtml(mdContent(name, id), {
         lang: "html",
         theme: "github-dark",
         transformers: [addCopyButton()],
