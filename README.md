@@ -11,7 +11,7 @@ simply add a github action to your repository and use the image link for your re
 here's a demo of the generated image for the gem [`jekyll-auto-authors`](https://github.com/gouravkhunger/jekyll-auto-authors):
 
 <a href="https://dependents.info/gouravkhunger/jekyll-auto-authors">
-  <img src="https://dependents.info/gouravkhunger/jekyll-auto-authors/image.svg" />
+  <img src="https://dependents.info/gouravkhunger/jekyll-auto-authors/image" />
 </a>
 
 ## quickstart
@@ -71,7 +71,7 @@ copy the following code snippet and **replace `owner/repo`** with your repositor
 
 ```html
 <a href="https://github.com/owner/repo/network/dependents">
-  <img src="https://dependents.info/owner/repo/image.svg" />
+  <img src="https://dependents.info/owner/repo/image" />
 </a>
 
 Made with [dependents.info](https://dependents.info).

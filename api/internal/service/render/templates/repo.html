@@ -88,7 +88,7 @@
         href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents{{if .Id}}?package_id={{.Id}}{{end}}"
       >
         <img
-          src="/{{.Owner}}/{{.Repo}}/image.svg{{if .Id}}?id={{.Id}}{{end}}"
+          src="/{{.Owner}}/{{.Repo}}/image{{if .Id}}?id={{.Id}}{{end}}"
           alt="Network dependents preview for GitHub repo {{.Owner}}/{{.Repo}}{{if .Id}} package: {{.Id}}{{end}}"
         />
       </a>

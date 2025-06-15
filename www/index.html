@@ -63,10 +63,10 @@
         badge and the image:
       </p>
       <a href="/gouravkhunger/jekyll-auto-authors">
-        <img class="!m-0" src="https://dependents.info/gouravkhunger/jekyll-auto-authors/badge" />
+        <img class="!m-0" src="/gouravkhunger/jekyll-auto-authors/badge" />
       </a>
       <a href="/gouravkhunger/jekyll-auto-authors">
-        <img src="https://dependents.info/gouravkhunger/jekyll-auto-authors/image.svg" />
+        <img src="/gouravkhunger/jekyll-auto-authors/image" />
       </a>
       <h2 id="quickstart">quickstart</h2>
       <h3 id="github-action">github action</h3>
@@ -238,7 +238,7 @@ jobs:
     upload-artifacts: true`;
 
       const htmlContent = (name) => `<a href="https://dependents.info/${name || "owner/repo"}">
-  <img src="https://dependents.info/${name || "owner/repo"}/image.svg" />
+  <img src="https://dependents.info/${name || "owner/repo"}/image" />
 </a>`;
 
       const mdContent = (name) =>`<a href="https://dependents.info/${name || "owner/repo"}">
