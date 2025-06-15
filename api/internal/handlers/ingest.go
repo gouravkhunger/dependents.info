@@ -34,14 +34,14 @@ func NewIngestHandler(
 
 func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 	id := c.Query("id")
-	config := config.FromContext(c.UserContext())
+	cfg := config.FromContext(c.UserContext())
 	name := c.Params("owner") + "/" + c.Params("repo")
 
-	if config == nil {
+	if cfg == nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Configuration not found in context", nil)
 	}
 
-	if config.Environment == env.EnvProduction {
+	if cfg.Environment == env.EnvProduction {
 		token, err := utils.ExtractBearerToken(c.Get("Authorization"))
 		if err != nil {
 			return utils.SendError(c, fiber.StatusUnauthorized, "Invalid Authorization header", err)

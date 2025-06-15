@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"embed"
 	"fmt"
 	"math"
+	"os"
 	"regexp"
 	"strings"
 
@@ -59,6 +61,19 @@ func FormatNumber(value int) string {
 	}
 
 	return fmt.Sprintf("%d", value)
+}
+
+func LoadStylesFile(static *embed.FS) {
+	files, _ := static.ReadDir("static/assets")
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".css") {
+			os.Setenv("STYLES_FILE", file.Name())
+			break
+		}
+	}
+	if stylesFile := os.Getenv("STYLES_FILE"); stylesFile == "" {
+		panic("No CSS file found in static/assets directory")
+	}
 }
 
 func ExtractBearerToken(authHeader string) (string, error) {

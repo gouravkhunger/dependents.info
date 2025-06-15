@@ -8,18 +8,6 @@ export default {
   },
   build: {
     target: "esnext",
-    rollupOptions: {
-      output: {
-        assetFileNames: ({ names }) => {
-          for (const name of names) {
-            if (/\.css$/.test(name)) {
-              return "assets/css/[name][extname]";
-            }
-          }
-          return "assets/[name]-[hash][extname]";
-        }
-      }
-    }
   },
   plugins: [tailwindcss()],
 } satisfies UserConfig

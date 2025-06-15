@@ -12,6 +12,7 @@ import (
 	server "dependents.info/cmd"
 	"dependents.info/internal/config"
 	"dependents.info/internal/service"
+	"dependents.info/pkg/utils"
 )
 
 //go:embed static/*
@@ -20,10 +21,11 @@ var static embed.FS
 func main() {
 	log.SetFlags(0)
 	godotenv.Load()
+	utils.LoadStylesFile(&static)
 
 	cfg := config.New()
 	services := service.BuildAll(cfg)
-	app := server.Build(cfg, static, services)
+	app := server.Build(cfg, &static, services)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)

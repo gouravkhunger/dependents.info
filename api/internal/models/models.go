@@ -22,10 +22,11 @@ type Dependent struct {
 }
 
 type RepoPage struct {
-	Id    string
-	Total int
-	Owner string
-	Repo  string
+	Total      int
+	Id         string
+	Repo       string
+	Owner      string
+	StylesFile string
 }
 
 var errorMessages = map[string]string{

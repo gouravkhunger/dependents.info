@@ -12,14 +12,14 @@ import (
 	"dependents.info/pkg/utils"
 )
 
-func Build(cfg *config.Config, static embed.FS, services *service.Services) *fiber.App {
+func Build(cfg *config.Config, static *embed.FS, services *service.Services) *fiber.App {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: utils.ErrorHandler,
 	})
 
 	app.Use(middleware.Logger())
 	app.Use(middleware.CORS())
-	app.Use(middleware.Static(static))
+	app.Use(middleware.Static(*static))
 	app.Use(middleware.Config(cfg))
 
 	routes.Setup(app, services)

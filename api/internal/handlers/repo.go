@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
+	"dependents.info/internal/config"
 	"dependents.info/internal/models"
 	"dependents.info/internal/service/database"
 	"dependents.info/internal/service/render"
@@ -28,6 +29,7 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 	repo := c.Params("repo")
 	owner := c.Params("owner")
 	name := owner + "/" + repo
+	cfg := config.FromContext(c.UserContext())
 
 	if id != "" {
 		name += ":" + id
@@ -43,10 +45,11 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 
 	totalInt, _ := strconv.Atoi(total)
 	data := models.RepoPage{
-		Total: totalInt,
-		Owner: owner,
-		Repo:  repo,
-		Id:    id,
+		StylesFile: cfg.StylesFile,
+		Total:      totalInt,
+		Owner:      owner,
+		Repo:       repo,
+		Id:         id,
 	}
 
 	page, err := h.renderService.RenderPage(data)

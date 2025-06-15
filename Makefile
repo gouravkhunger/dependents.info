@@ -17,8 +17,9 @@ www-dev:
 
 www-build:
 	@cd $(WWW_DIR) && npm run build
-	@mkdir -p $(API_DIR)/static
-	@cp -r $(WWW_DIR)/dist/* $(API_DIR)/static/
+	@rm -rf $(API_DIR)/static
+	@mkdir $(API_DIR)/static
+	@cp -r $(WWW_DIR)/dist/* $(API_DIR)/static
 
 api-fmt:
 	@cd $(API_DIR) && gofmt -w .
