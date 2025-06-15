@@ -6,10 +6,11 @@ import * as core from "@actions/core";
 
 import { API_BASE_URL, ERROR, MESSAGE } from "@/constants";
 import { processRepo } from "@/parser";
-import { validateRepoName } from "@/utils";
+import { buildAPIUrl, validateRepoName } from "@/utils";
 
 export async function run(): Promise<void> {
   try {
+    const id = core.getInput("package-id").trim();
     const name = process.env.GITHUB_REPOSITORY ?? "";
 
     if (!validateRepoName(name)) {
@@ -18,14 +19,15 @@ export async function run(): Promise<void> {
 
     core.info(MESSAGE.initExtraction(name));
 
-    const data = await processRepo(name);
+    const data = await processRepo(name, id);
     const json = JSON.stringify(data, null, 2);
 
     core.info(MESSAGE.dependentsCount(data.total, name));
     core.setOutput("dependents", data);
 
+    const distFileName = `dependents${id ? `.${id}` : ""}.json`;
     const distDir = path.join(__dirname, "..", "dist");
-    const distFile = path.join(distDir, "dependents.json");
+    const distFile = path.join(distDir, distFileName);
 
     await writeFile(distFile, json)
       .then(() => core.info(MESSAGE.wroteFile(distFile)))
@@ -35,13 +37,13 @@ export async function run(): Promise<void> {
 
     const uploadArtifacts = core.getInput("upload-artifacts") === "true";
     if (uploadArtifacts) {
-      core.info(MESSAGE.artifactUploadLog("started", "dependents.json"));
+      core.info(MESSAGE.artifactUploadLog("started", distFileName));
       const artifact = new DefaultArtifactClient();
       await artifact
-        .uploadArtifact("dependents.json", [distFile], distDir)
-        .then(() =>
-          core.info(MESSAGE.artifactUploadLog("succeeded", "dependents.json")),
-        )
+        .uploadArtifact(distFileName, [distFile], distDir)
+        .then(() => {
+          core.info(MESSAGE.artifactUploadLog("succeeded", distFileName));
+        })
         .catch((error) => {
           core.error(ERROR.failedToWriteFile(distFile, error.message));
         });
@@ -51,7 +53,7 @@ export async function run(): Promise<void> {
     if (process.env.GITHUB_ACTIONS === "true") {
       token = await core.getIDToken(API_BASE_URL);
     }
-    const resp = await fetch(`${API_BASE_URL}/${name}/ingest`, {
+    const resp = await fetch(buildAPIUrl(name, id), {
       headers: {
         "Content-Type": "application/json",
         ...((token && { Authorization: `Bearer ${token}` }) || {}),

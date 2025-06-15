@@ -8,6 +8,10 @@ branding:
   color: "white"
 
 inputs:
+  package-id:
+    description: "GitHub package ID to process (if the repository publishes multiple)"
+    required: false
+    type: string
   max-pages:
     description: "Maximum number of pages to process (default: 50, max: 100)"
     required: false
