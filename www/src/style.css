@@ -19,6 +19,12 @@
     @apply text-black leading-relaxed;
   }
 
+  input {
+    @apply border-2 border-gray-300 focus:border-blue-500;
+    @apply data-[state=error]:border-red-600 data-[state=valid]:border-green-600;
+    @apply px-2 py-1 h-8 w-60 rounded-md outline-none transition-colors duration-200;
+  }
+
   code {
     @apply text-black bg-slate-200 px-1.5 py-1 rounded;
   }
@@ -31,12 +37,6 @@
 .container {
   @apply mx-auto p-4 max-w-75ch;
   @apply prose-img:mx-auto prose-pre:rounded-lg prose-code:before:content-none prose-code:after:content-none;
-}
-
-#repo-input {
-  @apply border-2 border-gray-300 focus:border-blue-500;
-  @apply data-[state=error]:border-red-600 data-[state=valid]:border-green-600;
-  @apply px-2 py-1 h-8 w-60 rounded-md outline-none transition-colors duration-200;
 }
 
 .ellipses { @apply truncate shrink; }

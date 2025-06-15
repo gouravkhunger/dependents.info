@@ -48,20 +48,22 @@ once you push this file, the action will process the dependents for the reposito
 add the following options to your `dependents.yml` file if you want to customize the action's behavior:
 
 ```yml
-  - uses: gouravkhunger/dependents.info@main
-    with:
-      max-pages: 50
-      unique-owners: true
-      exclude-owner: true
-      upload-artifacts: true
+- uses: gouravkhunger/dependents.info@main
+  with:
+    max-pages: 50
+    unique-owners: true
+    exclude-owner: true
+    upload-artifacts: true
+    package-id: UGFja2SomeStringzcyMDE
 ```
 
-| option             | type      | description                                                                  | default |
-|--------------------|-----------|------------------------------------------------------------------------------|---------|
-| `max-pages`        | `number`  | maximum number of network dependents pages to process (max: 100).            | `50`    |
-| `unique-owners`    | `boolean` | whether to disable unique users in the generated image.                      | `true`  |
-| `exclude-owner`    | `boolean` | whether to exclude repos from the same owner that depend on this repository. | `true`  |
-| `upload-artifacts` | `boolean` | whether to upload the outputs as action's build artifacts.                   | `true`  |
+| option             | type      | description                                                               | default |
+|--------------------|-----------|---------------------------------------------------------------------------|---------|
+| `max-pages`        | `number`  | number of network dependents pages to process (max: 100).                 | `50`    |
+| `package-id`       | `string`  | use if repo hosts [multiple packages](#multiple-packages). action processes only one at a time. | `""`    |
+| `unique-owners`    | `boolean` | disables duplicate users in the generated image.                          | `true`  |
+| `exclude-owner`    | `boolean` | exclude repos from the same owner that depend on this repository.         | `true`  |
+| `upload-artifacts` | `boolean` | whether to upload the outputs as action's build artifacts.                | `true`  |
 
 ### embed image
 
@@ -70,11 +72,17 @@ add the following options to your `dependents.yml` file if you want to customize
 copy the following code snippet and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the image.
 
 ```html
-<a href="https://github.com/owner/repo/network/dependents">
+<a href="https://dependents.info/owner/repo">
   <img src="https://dependents.info/owner/repo/image" />
 </a>
+```
 
-Made with [dependents.info](https://dependents.info).
+if you've used the `package-id` option in the action, this should be:
+
+```html
+<a href="https://dependents.info/owner/repo?id=idHere">
+  <img src="https://dependents.info/owner/repo/image?id=idHere" />
+</a>
 ```
 
 ### embed badge
@@ -89,9 +97,25 @@ copy the following code snippet and **replace `owner/repo`** with your repositor
 </a>
 ```
 
+if you've used the `package-id` option in the action, this should be:
+
+```html
+<a href="https://dependents.info/owner/repo?id=idHere">
+  <img src="https://dependents.info/owner/repo/image?id=idHere" />
+</a>
+```
+
 the badge and the image are self updating so when the github action submits new data, it will be reflected in the readme automatically.
 
 > **note**: in addition to cloudflare's cache lasting up to a day, the image could be cached by github for an extended 7 day period. please refer to [the docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls#removing-an-image-from-camos-cache) on how to manually purge them if required.
+
+## multiple packages
+
+a github repository can host multiple packages, which should be defined with the `package-id` option in the action. other packages can be processed by adding new steps in the same workflow file.
+
+the `package-id` string can be found by going to repository's home page > insights > dependency graph > dependents > select package > copy the text after `?package_id=` in the url.
+
+the same package id should be added to the end of every embedded dependents.info url in the readme with `?id=idHere`.
 
 ## stack
 
