@@ -117,6 +117,13 @@ if you've used the `package-id` option in the action, this should be:
 </a>
 ```
 
+available query params (optional):
+
+- `color`: hex, rgb, rgba, hsl, hsla or css named color.
+- `style`: [`flat` (default), `flat-square`, `plastic`, `for-the-badge`, `social`]
+
+usage: `/badge?color=red&style=flat-square`
+
 the badge and the image are self updating so when the github action submits new data, it will be reflected in the readme automatically.
 
 > **note**: in addition to cloudflare's cache lasting up to a day, the image could be cached by github for an extended 7 day period. please refer to [the docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls#removing-an-image-from-camos-cache) on how to manually purge them if required.
