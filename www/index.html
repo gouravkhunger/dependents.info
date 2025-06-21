@@ -95,7 +95,7 @@
       </div>
       <p>
         once you push this file, the action will process the dependents for the repository
-        and the backend will generate the image.
+        and the backend will generate the badge and the image.
       </p>
       <blockquote>
         tip: instead of running the action on <code>push</code>, you can use a
@@ -163,6 +163,41 @@
             </tr>
           </tbody>
         </table>
+      </details>
+      <details>
+        <summary>
+          <span class="ml-2">why github action?</span>
+        </summary>
+        <p>
+          the github action does the heavy lifting of fetching the dependents from your repository's network
+          dependents page.
+        </p>
+        <p>
+          doing it in a github action makes it much easier to do that from their hosted runners, avoid ip bans,
+          and adhere to the purpose of "archival" of public information as per the 
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://docs.github.com/en/site-policy/acceptable-use-policies/github-acceptable-use-policies#7-information-usage-restrictions"
+          >tos</a>.
+        </p>
+        <p>
+          the permission <code>id-token</code> with value <code>write</code> is required for the action to request a
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect"
+          >gitHub oidc</a>
+          token at the runtime which is then sent to the backend along with the scraped data.
+        </p>
+        <p>
+          the backend uses the token to verify the <code>repository</code> claim directly from github to compare
+          where the data is coming from. mismatched fields will fail the request.
+        </p>
+        <p>
+          this check ensures that the data backend accepts from a repository comes from it's github action itself.
+          only the action can alter the data in production.
+        </p>
       </details>
       <h3>embed image</h3>
       <blockquote>

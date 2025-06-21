@@ -65,6 +65,18 @@ add the following options to your `dependents.yml` file if you want to customize
 | `exclude-owner`    | `boolean` | exclude repos from the same owner that depend on this repository.         | `true`  |
 | `upload-artifacts` | `boolean` | whether to upload the outputs as action's build artifacts.                | `true`  |
 
+#### why github action?
+
+the github action does the heavy lifting of fetching the dependents from your repository's network dependents page.
+
+doing it in a github action makes it much easier to do that from their hosted runners, avoid ip bans, and adhere to the purpose of "archival" of public information as per the [tos](https://docs.github.com/en/site-policy/acceptable-use-policies/github-acceptable-use-policies#7-information-usage-restrictions).
+
+the permission `id-token` with value `write` is required for the action to request a [gitHub oidc](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect) token at the runtime which is then sent to the backend along with the scraped data.
+
+the backend uses the token to verify the `repository` claim directly from github to compare where the data is coming from. mismatched fields will fail the request.
+
+this check ensures that the data backend accepts from a repository comes from it's github action itself. only the action can alter the data in production.
+
 ### embed image
 
 > **note**: the image is only available for repositories that run the action successfully.
