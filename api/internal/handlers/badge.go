@@ -35,7 +35,7 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	}
 
 	totalInt, _ := strconv.Atoi(total)
-	u := "https://img.shields.io/badge/dependents-" + utils.FormatNumber(totalInt) + "-" + getColor(total)
+	u := "https://img.shields.io/badge/dependents-" + utils.FormatNumber(totalInt) + "-" + color(total)
 	url := utils.SetParams(u, map[string]string{
 		"style": c.Query("style"),
 		"color": c.Query("color"),
@@ -55,7 +55,7 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).Type("svg").Send(body)
 }
 
-func getColor(v string) string {
+func color(v string) string {
 	total, _ := strconv.Atoi(v)
 	switch {
 	case total <= 0:
