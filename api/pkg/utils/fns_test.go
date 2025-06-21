@@ -83,6 +83,59 @@ func TestFormatNumber(t *testing.T) {
 	}
 }
 
+func TestSetParams(t *testing.T) {
+	tests := []struct {
+		input    string
+		params   map[string]string
+		expected string
+	}{
+		{
+			input:    "https://example.com",
+			params:   map[string]string{},
+			expected: "https://example.com",
+		},
+		{
+			input:    "https://example.com",
+			params:   map[string]string{"foo": "bar"},
+			expected: "https://example.com?foo=bar",
+		},
+		{
+			input:    "https://example.com/path",
+			params:   map[string]string{"a": "1", "b": "2"},
+			expected: "https://example.com/path?a=1&b=2",
+		},
+		{
+			input:    "https://example.com/path?x=5",
+			params:   map[string]string{"y": "10", "z": ""},
+			expected: "https://example.com/path?x=5&y=10",
+		},
+		{
+			input:    "https://example.com/path?x=5",
+			params:   map[string]string{},
+			expected: "https://example.com/path?x=5",
+		},
+		{
+			input:    "https://example.com/path",
+			params:   map[string]string{"q": ""},
+			expected: "https://example.com/path",
+		},
+		{
+			input:    "https://example.com/path?foo=bar",
+			params:   map[string]string{"foo": "baz"},
+			expected: "https://example.com/path?foo=baz",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			result := SetParams(tt.input, tt.params)
+			if result != tt.expected {
+				t.Errorf("SetParams(%q, %v) = %q; want %q", tt.input, tt.params, result, tt.expected)
+			}
+		})
+	}
+}
+
 func TestExtractBearerToken(t *testing.T) {
 	tests := []struct {
 		name      string

@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"math"
+	"net/url"
 	"os"
 	"regexp"
 	"strings"
@@ -74,6 +75,18 @@ func LoadStylesFile(static *embed.FS) {
 	if stylesFile := os.Getenv("STYLES_FILE"); stylesFile == "" {
 		panic("No CSS file found in static/assets directory")
 	}
+}
+
+func SetParams(s string, params map[string]string) string {
+	url, _ := url.Parse(s)
+	q := url.Query()
+	for key, value := range params {
+		if value != "" {
+			q.Set(key, value)
+		}
+	}
+	url.RawQuery = q.Encode()
+	return url.String()
 }
 
 func ExtractBearerToken(authHeader string) (string, error) {
