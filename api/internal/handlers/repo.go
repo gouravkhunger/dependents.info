@@ -39,8 +39,12 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 	err := h.databaseService.Get("total:"+name, &total)
 
 	if err != nil {
+		url := "https://github.com/" + owner + "/" + repo + "/network/dependents"
+		if id != "" {
+			url += "?package_id=" + id
+		}
 		c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
-		return c.Redirect("https://github.com/"+owner+"/"+repo+"/network/dependents", fiber.StatusTemporaryRedirect)
+		return c.Redirect(url, fiber.StatusTemporaryRedirect)
 	}
 
 	totalInt, _ := strconv.Atoi(total)
