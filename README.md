@@ -71,7 +71,11 @@ the github action does the heavy lifting of fetching the dependents from your re
 
 doing it in a github action makes it much easier to do that from their hosted runners, avoid ip bans, and adhere to the purpose of "archival" of public information as per the [tos](https://docs.github.com/en/site-policy/acceptable-use-policies/github-acceptable-use-policies#7-information-usage-restrictions).
 
-the permission `id-token` with value `write` is required for the action to request a [gitHub oidc](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect) token at the runtime which is then sent to the backend along with the scraped data.
+the permission `id-token` with value `write` is required for the action to request a [github oidc](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect) token at the runtime which is then sent to the backend along with the scraped data.
+
+while the `id-token` permission is required to request the oidc token, it in itself is not a security concern to your repository. here's more info from the [github docs](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect#adding-permissions-settings):
+
+> You won't be able to request the OIDC JWT ID token if the permissions for `id-token` is not set to `write`, however this value doesn't imply granting write access to any resources, only being able to fetch and set the OIDC token for an action or step to enable authenticating with a short-lived access token.
 
 the backend uses the token to verify the `repository` claim directly from github to compare where the data is coming from. mismatched fields will fail the request.
 
@@ -158,7 +162,7 @@ this project is built as a monorepo hosting three packages in specific folders:
 
 the project uses [node.js](https://nodejs.org) `>=20` and [go](https://go.dev) version `>=1.24`.
 
-the [makefile](https://github.com/gouravkhunger/dependents.info/blob/main/Makefile) is a convinient way to run the project locally.
+the [makefile](https://github.com/gouravkhunger/dependents.info/blob/main/Makefile) is a convenient way to run the project locally.
 
 ```bash
 git clone https://github.com/gouravkhunger/dependents.info

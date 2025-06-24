@@ -34,7 +34,7 @@
     <link rel="canonical" href="https://dependents.info" />
   </head>
   <body>
-    <article class="prose container mt-4">
+    <article class="prose container">
       <div class="flex justify-between items-center gap-2 mb-8">
         <h1 class="mb-0 flex min-w-0 items-center gap-2 sm:gap-4 max-sm:text-2xl">
           <img src="/images/logo.webp" alt="dependents.info logo" class="size-10 sm:size-16 !m-0" />
@@ -187,9 +187,20 @@
             target="_blank"
             rel="noopener noreferrer"
             href="https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect"
-          >gitHub oidc</a>
+          >github oidc</a>
           token at the runtime which is then sent to the backend along with the scraped data.
         </p>
+        <p>
+          while the <code>id-token</code> permission is required to request the oidc token, it in itself is not a security concern to your repository. here's more info from the
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect#adding-permissions-settings"
+          >github docs</a>:
+        </p>
+        <blockquote>
+          You won't be able to request the OIDC JWT ID token if the permissions for <code>id-token</code> is not set to <code>write</code>, however this value doesn't imply granting write access to any resources, only being able to fetch and set the OIDC token for an action or step to enable authenticating with a short-lived access token.
+        </blockquote>
         <p>
           the backend uses the token to verify the <code>repository</code> claim directly from github to compare
           where the data is coming from. mismatched fields will fail the request.
@@ -286,7 +297,7 @@
         <code class="whitespace-nowrap">?id=idHere</code>
       </p>
     </article>
-    <footer class="prose container my-2 max-w-75ch flex flex-col justify-center items-center">
+    <footer class="prose container">
       <span>
         <a href="https://status.dependents.info" rel="noopener noreferrer">status</a>
       </span>

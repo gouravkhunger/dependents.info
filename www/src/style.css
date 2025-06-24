@@ -34,10 +34,14 @@
   summary {
     @apply text-gray-900 font-semibold cursor-pointer hover:underline;
   }
+
+  footer {
+    @apply mb-4 flex flex-col justify-center items-center;
+  }
 }
 
 .container {
-  @apply mx-auto p-4 max-w-75ch;
+  @apply mx-auto p-4 mt-2 max-w-75ch;
   @apply prose-img:mx-auto prose-pre:rounded-lg prose-code:before:content-none prose-code:after:content-none;
 }
 
