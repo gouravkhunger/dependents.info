@@ -123,7 +123,10 @@ if you've used the `package-id` option in the action, this should be:
 
 available query params (optional):
 
+- `logo`: icon name from [simple-icons](https://simpleicons.org).
+- `label`: override the default label "dependents".
 - `color`: hex, rgb, rgba, hsl, hsla or css named color.
+- `logoColor`: hex, rgb, rgba, hsl, hsla or css named color.
 - `style`: [`flat` (default), `flat-square`, `plastic`, `for-the-badge`, `social`]
 
 usage: `/badge?color=red&style=flat-square`
