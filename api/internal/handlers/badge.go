@@ -37,11 +37,12 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	totalInt, _ := strconv.Atoi(total)
 	u := "https://img.shields.io/badge/dependents-" + utils.FormatNumber(totalInt) + "-" + color(total)
 	url := utils.SetParams(u, map[string]string{
-		"logo":      c.Query("logo"),
-		"label":     c.Query("label"),
-		"style":     c.Query("style"),
-		"color":     c.Query("color"),
-		"logoColor": c.Query("logoColor"),
+		"logo":       c.Query("logo"),
+		"label":      c.Query("label"),
+		"style":      c.Query("style"),
+		"color":      c.Query("color"),
+		"logoColor":  c.Query("logoColor"),
+		"labelColor": c.Query("labelColor"),
 	})
 
 	statusCode, body, errs := fiber.Get(url).Bytes()

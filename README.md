@@ -127,6 +127,7 @@ available query params (optional):
 - `label`: override the default label "dependents".
 - `color`: hex, rgb, rgba, hsl, hsla or css named color.
 - `logoColor`: hex, rgb, rgba, hsl, hsla or css named color.
+- `labelColor`: hex, rgb, rgba, hsl, hsla or css named color.
 - `style`: [`flat` (default), `flat-square`, `plastic`, `for-the-badge`, `social`]
 
 usage: `/badge?color=red&style=flat-square`
