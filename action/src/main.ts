@@ -6,7 +6,7 @@ import * as core from "@actions/core";
 
 import { API_BASE_URL, ERROR, MESSAGE } from "@/constants";
 import { processRepo } from "@/parser";
-import { buildAPIUrl, validateRepoName } from "@/utils";
+import { buildAPIUrl, isFork, validateRepoName } from "@/utils";
 
 export async function run(): Promise<void> {
   try {
@@ -47,6 +47,15 @@ export async function run(): Promise<void> {
         .catch((error) => {
           core.error(ERROR.failedToWriteFile(distFile, error.message));
         });
+    }
+
+    const fork = await isFork();
+    const forceRun = core.getInput("force-run") === "true";
+
+    if (fork && !forceRun) {
+      core.info(MESSAGE.FORK_DETECTED);
+      core.info(MESSAGE.DONE);
+      return;
     }
 
     let token: string | undefined;

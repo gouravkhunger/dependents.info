@@ -135,6 +135,12 @@
               <td><code>50</code></td>
             </tr>
             <tr>
+              <td class="sm:whitespace-nowrap"><code>force-run</code></td>
+              <td class="max-sm:hidden"><code>boolean</code></td>
+              <td>force submit data to the backend. only affects forked repositories.</td>
+              <td><code>false</code></td>
+            </tr>
+            <tr>
               <td class="sm:whitespace-nowrap"><code>package-id</code></td>
               <td class="max-sm:hidden"><code>string</code></td>
               <td>
@@ -336,6 +342,7 @@ jobs:
       const actionConfiguration = `- uses: gouravkhunger/dependents.info@main
   with:
     max-pages: 50
+    force-run: false
     unique-owners: true
     exclude-owner: true
     upload-artifacts: true

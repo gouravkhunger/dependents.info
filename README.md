@@ -51,6 +51,7 @@ add the following options to your `dependents.yml` file if you want to customize
 - uses: gouravkhunger/dependents.info@main
   with:
     max-pages: 50
+    force-run: false
     unique-owners: true
     exclude-owner: true
     upload-artifacts: true
@@ -60,6 +61,7 @@ add the following options to your `dependents.yml` file if you want to customize
 | option             | type      | description                                                               | default |
 |--------------------|-----------|---------------------------------------------------------------------------|---------|
 | `max-pages`        | `number`  | number of network dependents pages to process (max: 100).                 | `50`    |
+| `force-run`        | `boolean` | force submit data to the backend. only affects forked repositories.       | `false` |
 | `package-id`       | `string`  | use if repo hosts [multiple packages](#multiple-packages). action processes only one at a time. | `""`    |
 | `unique-owners`    | `boolean` | disables duplicate users in the generated image.                          | `true`  |
 | `exclude-owner`    | `boolean` | exclude repos from the same owner that depend on this repository.         | `true`  |

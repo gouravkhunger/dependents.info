@@ -14,6 +14,7 @@ export const MESSAGE = {
   artifactUploadLog: (status: string, name: string) =>
     `Artifact upload ${status} for ${name}.`,
   DONE: "Action completed successfully.",
+  FORK_DETECTED: "Forked repository detected. Skipping submission.",
 } as const;
 
 export const ERROR = {

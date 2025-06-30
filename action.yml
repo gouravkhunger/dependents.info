@@ -23,7 +23,7 @@ inputs:
     default: true
     type: boolean
   exclude-owner:
-    description: "Whether to exclude repositories from the same owner that depend on this repository (true/false)"
+    description: "Whether to exclude repos from the same owner that depend on this repository (true/false)"
     required: false
     default: true
     type: boolean
@@ -31,6 +31,11 @@ inputs:
     description: "Whether to upload the outputs as artifacts (true/false)"
     required: false
     default: true
+    type: boolean
+  force-run:
+    description: "Force submit dependents data to the API. Only affects forked repositories (true/false)"
+    required: false
+    default: false
     type: boolean
 
 outputs:
