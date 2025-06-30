@@ -20,6 +20,11 @@ export const validateRepoName = (name: string): boolean => {
   return regex.test(name);
 };
 
+export const isFork = async (): Promise<boolean> =>
+  await import(process.env.GITHUB_EVENT_PATH!)
+    .then((e) => e.repository?.fork === true)
+    .catch(() => false);
+
 export const removeQueryParams = (url: string, ...params: string[]): string => {
   const urlObj = new URL(url);
   params.forEach((param) => urlObj.searchParams.delete(param));
