@@ -3,10 +3,11 @@ import path from "node:path";
 
 import { DefaultArtifactClient } from "@actions/artifact";
 import * as core from "@actions/core";
+import { context } from "@actions/github";
 
 import { API_BASE_URL, ERROR, MESSAGE } from "@/constants";
 import { processRepo } from "@/parser";
-import { buildAPIUrl, isFork, validateRepoName } from "@/utils";
+import { buildAPIUrl, validateRepoName } from "@/utils";
 
 export async function run(): Promise<void> {
   try {
@@ -49,10 +50,10 @@ export async function run(): Promise<void> {
         });
     }
 
-    const fork = await isFork();
     const forceRun = core.getInput("force-run") === "true";
+    const isFork = context.payload.repository?.fork ?? false;
 
-    if (fork && !forceRun) {
+    if (isFork && !forceRun) {
       core.info(MESSAGE.FORK_DETECTED);
       core.info(MESSAGE.DONE);
       return;
