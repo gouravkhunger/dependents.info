@@ -51,7 +51,7 @@ add the following options to your `dependents.yml` file if you want to customize
 - uses: gouravkhunger/dependents.info@main
   with:
     max-pages: 50
-    force-run: true
+    force-run: false
     unique-owners: true
     exclude-owner: true
     upload-artifacts: true
