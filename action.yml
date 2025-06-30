@@ -1,7 +1,7 @@
-name: "Dependents Info Action"
+name: "dependents.info"
 author: "Gourav Khunger"
 
-description: "Generates a list of the dependents of a repository to be later rendered in the README."
+description: "generates a badge and image of the github network dependents of a repository to be rendered in the readme."
 
 branding:
   icon: "users"
@@ -9,38 +9,38 @@ branding:
 
 inputs:
   package-id:
-    description: "GitHub package ID to process (if the repository publishes multiple)"
+    description: "gitHub package id to process (if the repository publishes multiple)"
     required: false
     type: string
   max-pages:
-    description: "Maximum number of pages to process (default: 50, max: 100)"
+    description: "maximum number of pages to process (default: 50, max: 100)"
     required: false
     default: 50
     type: integer
   unique-owners:
-    description: "Whether to disable unique users (true/false)"
+    description: "whether to disable unique users (true/false)"
     required: false
     default: true
     type: boolean
   exclude-owner:
-    description: "Whether to exclude repos from the same owner that depend on this repository (true/false)"
+    description: "whether to exclude repos from the same owner that depend on this repository (true/false)"
     required: false
     default: true
     type: boolean
   upload-artifacts:
-    description: "Whether to upload the outputs as artifacts (true/false)"
+    description: "whether to upload the outputs as artifacts (true/false)"
     required: false
     default: true
     type: boolean
   force-run:
-    description: "Force submit dependents data to the API. Only affects forked repositories (true/false)"
+    description: "force submit dependents data to the api. only affects forked repositories (true/false)"
     required: false
     default: false
     type: boolean
 
 outputs:
   dependents:
-    description: "List of dependents of the repository."
+    description: "list of dependents of the repository."
 
 runs:
   using: 'node20'
