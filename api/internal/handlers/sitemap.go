@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 
+	"dependents.info/internal/config"
 	"dependents.info/internal/service/database"
 	"dependents.info/internal/service/render"
 	"dependents.info/pkg/utils"
@@ -24,9 +25,11 @@ func NewSitemapHandler(
 }
 
 func (h *SitemapHandler) Sitemap(c *fiber.Ctx) error {
+	host := config.FromContext(c.UserContext()).Host()
+
 	urls := make([]string, 0)
 	h.databaseService.IterateKeys(func(key string) {
-		urls = append(urls, key)
+		urls = append(urls, host+utils.ToRoute(key))
 	})
 
 	sitemapBytes, err := h.renderService.RenderSitemap(urls)
@@ -35,5 +38,5 @@ func (h *SitemapHandler) Sitemap(c *fiber.Ctx) error {
 	}
 
 	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")
-	return c.Status(fiber.StatusOK).Type("svg").Send(sitemapBytes)
+	return c.Status(fiber.StatusOK).Type("xml").Send(sitemapBytes)
 }

@@ -77,6 +77,20 @@ func LoadStylesFile(static *embed.FS) {
 	}
 }
 
+func ToRoute(key string) string {
+	parts := strings.FieldsFunc(key, func(r rune) bool {
+		return r == ':'
+	})
+	if len(parts) < 2 || !strings.Contains(parts[1], "/") {
+		return ""
+	}
+	url := "/" + parts[1]
+	if len(parts) > 2 {
+		url += fmt.Sprintf("?id=%s", parts[2])
+	}
+	return url
+}
+
 func SetParams(s string, params map[string]string) string {
 	url, _ := url.Parse(s)
 	q := url.Query()

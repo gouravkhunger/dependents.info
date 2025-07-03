@@ -36,6 +36,9 @@ func TestNew_WithEnvVars(t *testing.T) {
 	if cfg.GitHubOIDCAudience != "https://custom-audience.com" {
 		t.Errorf("expected GitHubOIDCAudience to be 'https://custom-audience.com', got '%s'", cfg.GitHubOIDCAudience)
 	}
+	if cfg.Host() != "https://dependents.info" {
+		t.Errorf("expected Host() to be '%s', got '%s'", "https://dependents.info", cfg.Host())
+	}
 }
 
 func TestNew_WithDefaults(t *testing.T) {
@@ -61,6 +64,9 @@ func TestNew_WithDefaults(t *testing.T) {
 	}
 	if cfg.GitHubOIDCAudience != "https://dependents.info" {
 		t.Errorf("expected default GitHubOIDCAudience to be 'https://dependents.info', got '%s'", cfg.GitHubOIDCAudience)
+	}
+	if cfg.Host() != "http://localhost:5000" {
+		t.Errorf("expected Host() to be '%s', got '%s'", "http://localhost:5000", cfg.Host())
 	}
 }
 

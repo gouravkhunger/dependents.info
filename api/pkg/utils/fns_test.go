@@ -83,6 +83,30 @@ func TestFormatNumber(t *testing.T) {
 	}
 }
 
+func TestToRoute(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"", ""},
+		{"key", ""},
+		{"r4nd0m:", ""},
+		{":r4nd0m", ""},
+		{"key:abcde", ""},
+		{"key:owner/repo", "/owner/repo"},
+		{"key:owner/repo:r4nd0mId=", "/owner/repo?id=r4nd0mId="},
+		{"key:gouravkhunger/dependents.info", "/gouravkhunger/dependents.info"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			result := ToRoute(tt.input)
+			if result != tt.expected {
+				t.Errorf("ToURL(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
 func TestSetParams(t *testing.T) {
 	tests := []struct {
 		input    string

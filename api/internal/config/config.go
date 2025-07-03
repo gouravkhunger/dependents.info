@@ -31,6 +31,14 @@ func New() *Config {
 	}
 }
 
+func (c *Config) Host() string {
+	if c.Environment == env.EnvProduction {
+		return "https://dependents.info"
+	} else {
+		return "http://localhost:" + c.Port
+	}
+}
+
 func FromContext(ctx context.Context) *Config {
 	val := ctx.Value(ConfigContextKey)
 	if cfg, ok := val.(*Config); ok {
