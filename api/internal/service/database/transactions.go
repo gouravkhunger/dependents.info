@@ -39,15 +39,13 @@ func (b *BadgerService) Save(key string, data []byte) error {
 	})
 }
 
-func (b *BadgerService) IterateKeys(callback func(key string) error) error {
-	return b.db.View(func(txn Txn) error {
+func (b *BadgerService) IterateKeys(callback func(key string)) {
+	b.db.View(func(txn Txn) error {
 		it := txn.NewIterator(*opts)
 		defer it.Close()
 		for it.Rewind(); it.Valid(); it.Next() {
 			key := it.Item().KeyCopy(nil)
-			if err := callback(string(key)); err != nil {
-				return err
-			}
+			callback(string(key))
 		}
 		return nil
 	})
