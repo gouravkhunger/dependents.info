@@ -28,8 +28,13 @@ func (h *SitemapHandler) Sitemap(c *fiber.Ctx) error {
 	host := config.FromContext(c.UserContext()).Host()
 
 	urls := make([]string, 0)
+	seen := make(map[string]struct{})
 	h.databaseService.IterateKeys(func(key string) {
-		urls = append(urls, host+utils.ToRoute(key))
+		route := utils.ToRoute(key)
+		if _, exists := seen[route]; !exists {
+			seen[route] = struct{}{}
+			urls = append(urls, host+route)
+		}
 	})
 
 	sitemapBytes, err := h.renderService.RenderSitemap(urls)
