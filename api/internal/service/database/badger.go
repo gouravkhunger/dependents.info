@@ -8,6 +8,7 @@ import (
 )
 
 type Txn = *badger.Txn
+type IteratorOptions = *badger.IteratorOptions
 
 type BadgerService struct {
 	db     *badger.DB
