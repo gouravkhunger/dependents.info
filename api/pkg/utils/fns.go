@@ -9,7 +9,9 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/andybalholm/cascadia"
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/net/html"
 )
 
 var units = []struct {
@@ -109,4 +111,34 @@ func ExtractBearerToken(authHeader string) (string, error) {
 		return strings.TrimSpace(authHeader[len(prefix):]), nil
 	}
 	return "", fiber.ErrUnauthorized
+}
+
+func ParseTotalDependents(doc string, repo string) (string, error) {
+	node, err := html.Parse(strings.NewReader(doc))
+	if err != nil {
+		return "", fmt.Errorf("failed to parse HTML: %w", err)
+	}
+	selector, err := cascadia.Compile(
+		fmt.Sprintf(`a[href*="/%s/network/dependents?dependent_type=REPOSITORY"]`, repo),
+	)
+	if err != nil {
+		return "", fmt.Errorf("selector compile error: %w", err)
+	}
+	anchor := cascadia.Query(node, selector)
+	if anchor == nil {
+		return "", fmt.Errorf("could not find anchor for %s", repo)
+	}
+	var sb strings.Builder
+	for c := anchor.FirstChild; c != nil; c = c.NextSibling {
+		if c.Type == html.TextNode {
+			sb.WriteString(c.Data)
+		}
+	}
+	text := strings.TrimSpace(sb.String())
+	fields := strings.Fields(text)
+	if len(fields) == 0 {
+		return "", fmt.Errorf("no text found in anchor for %s", repo)
+	}
+	number := strings.ReplaceAll(fields[0], ",", "")
+	return number, nil
 }
