@@ -3,11 +3,13 @@ module dependents.info
 go 1.24.2
 
 require (
+	github.com/andybalholm/cascadia v1.3.3
 	github.com/coreos/go-oidc/v3 v3.14.1
 	github.com/dgraph-io/badger/v4 v4.7.0
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/gofiber/fiber/v2 v2.52.8
 	github.com/joho/godotenv v1.5.1
+	golang.org/x/net v0.38.0
 )
 
 require (
@@ -37,7 +39,6 @@ require (
 	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	golang.org/x/crypto v0.36.0 // indirect
-	golang.org/x/net v0.38.0 // indirect
 	golang.org/x/oauth2 v0.28.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect

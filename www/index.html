@@ -79,6 +79,9 @@
         src="https://www.youtube-nocookie.com/embed/icdxdppB6AA?si=xCjeltyNXHFqxB0P&rel=0"
       ></iframe>
       <h2 id="quickstart">quickstart</h2>
+      <blockquote>
+        the shields.io based <a href="#embed-badge">dependents badge</a> can be used directly, without having to run the github action.
+      </blockquote>
       <h3 id="github-action">github action</h3>
       <p>
         add this file to your repository's <code>.github/workflows</code> folder.
@@ -258,9 +261,9 @@
         paste this code anywhere in the readme and the auto-generated dependents
         image will be embedded!
       </p>
-      <h3>embed badge</h3>
+      <h3 id="embed-badge">embed badge</h3>
       <blockquote>
-        <b>note:</b> the badge is only available for repositories that run the <a href="#github-action">github action</a> successfully.
+        if used without setting up the <a href="#github-action">github action</a>, the badge will be cached for 7 days.
       </blockquote>
       <div id="badge-code">
         <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">

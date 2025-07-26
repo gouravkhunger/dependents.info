@@ -10,7 +10,10 @@ import (
 func Setup(app *fiber.App, services *service.Services) {
 	healthHandler := handlers.NewHealthHandler()
 	imageHandler := handlers.NewImageHandler(services.DatabaseService)
-	badgeHandler := handlers.NewBadgeHandler(services.DatabaseService)
+	badgeHandler := handlers.NewBadgeHandler(
+		services.DatabaseService,
+		services.DependentsService,
+	)
 	sitemapHandler := handlers.NewSitemapHandler(
 		services.DatabaseService,
 		services.RenderService,
@@ -29,11 +32,12 @@ func Setup(app *fiber.App, services *service.Services) {
 	app.Get("/sitemap.xml", sitemapHandler.Sitemap)
 
 	app.Get("/:owner/:repo", repoHandler.RepoPage)
+
 	app.Get("/:owner/:repo/badge", badgeHandler.Badge)
 	app.Get("/:owner/:repo/image", imageHandler.SVGImage)
 
-	app.Post("/:owner/:repo/ingest", ingestHandler.Ingest)
-
-	// TODO: remove in the future
+	app.Get("/:owner/:repo/badge.svg", badgeHandler.Badge)
 	app.Get("/:owner/:repo/image.svg", imageHandler.SVGImage)
+
+	app.Post("/:owner/:repo/ingest", ingestHandler.Ingest)
 }

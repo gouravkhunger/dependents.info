@@ -16,6 +16,8 @@ here's a demo of the generated image for the gem [`jekyll-auto-authors`](https:/
 
 ## quickstart
 
+> the shields.io based [dependents badge](#embed-badge) can be used directly, without having to run the github action.
+
 ### github action
 
 add this file to your repository's `.github/workflows` folder.
@@ -105,7 +107,7 @@ if you've used the `package-id` option in the action, this should be:
 
 ### embed badge
 
-> **note**: the badge is only available for repositories that run the action successfully.
+> if used without setting up the [github action](#github-action), the badge will be cached for 7 days.
 
 copy the following code snippet and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the badge.
 

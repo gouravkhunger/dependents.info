@@ -1,6 +1,8 @@
 package database
 
 import (
+	"time"
+
 	"github.com/dgraph-io/badger/v4"
 )
 
@@ -36,6 +38,13 @@ func (b *BadgerService) Get(key string, out *string) error {
 func (b *BadgerService) Save(key string, data []byte) error {
 	return b.db.Update(func(txn Txn) error {
 		return txn.Set([]byte(key), data)
+	})
+}
+
+func (b *BadgerService) SaveWithTTL(key string, data []byte, ttl time.Duration) error {
+	return b.db.Update(func(txn Txn) error {
+		entry := badger.NewEntry([]byte(key), data).WithTTL(ttl)
+		return txn.SetEntry(entry)
 	})
 }
 

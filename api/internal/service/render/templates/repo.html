@@ -76,11 +76,12 @@
         href="https://github.com/{{.Owner}}/{{.Repo}}/network/dependents{{if .Id}}?package_id={{.Id}}{{end}}"
       >
         <img
-          class="mb-0"
+          {{if .HasImage}}class="mb-0"{{end}}
           src="/{{.Owner}}/{{.Repo}}/badge{{if .Id}}?id={{.Id}}{{end}}"
           alt="Total network dependents badge for GitHub repo {{.Owner}}/{{.Repo}}{{if .Id}} package: {{.Id}}{{end}}"
         />
       </a>
+      {{if .HasImage}}
       <a
         target="_blank"
         rel="noopener noreferrer"
@@ -91,6 +92,7 @@
           alt="Network dependents preview for GitHub repo {{.Owner}}/{{.Repo}}{{if .Id}} package: {{.Id}}{{end}}"
         />
       </a>
+      {{end}}
       <div class="cta-links">
         <a
           target="_blank"
