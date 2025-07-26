@@ -48,6 +48,12 @@ func (b *BadgerService) SaveWithTTL(key string, data []byte, ttl time.Duration) 
 	})
 }
 
+func (b *BadgerService) Delete(key string) error {
+	return b.db.Update(func(txn Txn) error {
+		return txn.Delete([]byte(key))
+	})
+}
+
 func (b *BadgerService) IterateKeys(callback func(key string)) {
 	b.db.View(func(txn Txn) error {
 		it := txn.NewIterator(*opts)
