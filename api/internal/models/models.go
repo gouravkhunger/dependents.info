@@ -27,6 +27,7 @@ type RepoPage struct {
 	Repo       string
 	Owner      string
 	StylesFile string
+	HasImage   bool
 }
 
 var errorMessages = map[string]string{

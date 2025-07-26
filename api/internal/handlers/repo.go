@@ -47,9 +47,16 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 		return c.Redirect(url, fiber.StatusTemporaryRedirect)
 	}
 
+	var image string
+	err = h.databaseService.Get("svg:"+name, &image)
+	if err != nil {
+		image = ""
+	}
+
 	totalInt, _ := strconv.Atoi(total)
 	data := models.RepoPage{
 		StylesFile: cfg.StylesFile,
+		HasImage:   image != "",
 		Total:      totalInt,
 		Owner:      owner,
 		Repo:       repo,
