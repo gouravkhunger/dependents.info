@@ -5,16 +5,31 @@ import (
 	"io"
 	"net/http"
 
+	"dependents.info/internal/common"
 	"dependents.info/pkg/utils"
 )
 
-type DependentsService struct {}
+type DependentsService struct{}
 
 func NewDependentsService() *DependentsService {
 	return &DependentsService{}
 }
 
-func (s *DependentsService) GetTotalDependents(repo string, id string) (string, error) {
+func (s *DependentsService) NewBackgroundTask(repo string, id string, callback func(total string)) {
+	common.WG.Add(1)
+	go func() {
+		defer common.WG.Done()
+		total, err := s.getTotalDependents(repo, id)
+		if err != nil {
+			return
+		}
+		if callback != nil {
+			callback(total)
+		}
+	}()
+}
+
+func (s *DependentsService) getTotalDependents(repo string, id string) (string, error) {
 	url := "https://github.com/" + repo + "/network/dependents"
 	if id != "" {
 		url += "?package_id=" + id

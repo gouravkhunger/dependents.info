@@ -2,20 +2,27 @@ package handlers
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
 	"dependents.info/internal/service/database"
+	"dependents.info/internal/service/github"
 	"dependents.info/pkg/utils"
 )
 
 type BadgeHandler struct {
-	databaseService *database.BadgerService
+	dependentsService *github.DependentsService
+	databaseService   *database.BadgerService
 }
 
-func NewBadgeHandler(databaseService *database.BadgerService) *BadgeHandler {
+func NewBadgeHandler(
+	databaseService *database.BadgerService,
+	dependentsService *github.DependentsService,
+) *BadgeHandler {
 	return &BadgeHandler{
-		databaseService: databaseService,
+		databaseService:   databaseService,
+		dependentsService: dependentsService,
 	}
 }
 
@@ -31,6 +38,9 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	err := h.databaseService.Get("total:"+name, &total)
 
 	if err != nil {
+		h.dependentsService.NewBackgroundTask(name, id, func(total string) {
+			h.databaseService.SaveWithTTL("total:"+name, []byte(total), 7*24*time.Hour)
+		})
 		return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
 	}
 

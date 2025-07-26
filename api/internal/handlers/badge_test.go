@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"dependents.info/internal/service/database"
+	"dependents.info/internal/service/github"
 	"dependents.info/internal/test"
 )
 
@@ -29,6 +30,7 @@ func TestBadgeHandler_Badge(t *testing.T) {
 	}
 
 	cfg := test.NewConfig()
+	dependentsService := github.NewDependentsService()
 	dbService := database.NewBadgerService(cfg.DatabasePath)
 	dbService.Save("total:owner/repo", []byte("69"))
 	defer dbService.Close()
@@ -36,7 +38,7 @@ func TestBadgeHandler_Badge(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			app := test.NewServer(cfg)
-			h := NewBadgeHandler(dbService)
+			h := NewBadgeHandler(dbService, dependentsService)
 			app.Get("/:owner/:repo/badge", h.Badge)
 
 			req := httptest.NewRequest("GET", tt.url, nil)

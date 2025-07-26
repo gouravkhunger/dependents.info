@@ -10,7 +10,7 @@ import (
 	"github.com/joho/godotenv"
 
 	server "dependents.info/cmd"
-	common "dependents.info/internal/common"
+	"dependents.info/internal/common"
 	"dependents.info/internal/config"
 	"dependents.info/internal/service"
 	"dependents.info/pkg/utils"
