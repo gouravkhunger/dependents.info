@@ -13,6 +13,7 @@ const ConfigContextKey = contextKey("config")
 
 type Config struct {
 	Port               string
+	Password           string
 	StylesFile         string
 	DatabasePath       string
 	GitHubOIDCAudience string
@@ -23,6 +24,7 @@ type Config struct {
 func New() *Config {
 	return &Config{
 		Port:               getEnv("PORT", "5000"),
+		Password:           getEnv("PASSWORD", "admin"),
 		StylesFile:         getEnv("STYLES_FILE", "index.css"),
 		DatabasePath:       getEnv("DATABASE_PATH", "/tmp/dependents"),
 		Environment:        env.EnvFromString(getEnv("ENVIRONMENT", "development")),
