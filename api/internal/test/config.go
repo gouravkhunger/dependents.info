@@ -8,6 +8,7 @@ import (
 func NewConfig() *config.Config {
 	return &config.Config{
 		Port:               "5000",
+		Password:           "admin",
 		Environment:        env.EnvDevelopment,
 		DatabasePath:       "/tmp/dependents-test",
 		GitHubOIDCAudience: "http://localhost:5000",

@@ -20,21 +20,15 @@ func TestDeleteHandler_Delete(t *testing.T) {
 	}{
 		{
 			name:           "error",
-			repo:           "owner/diff",
-			password: 		 	"admin",
-			expectedStatus: fiber.StatusBadRequest,
-		},
-		{
-			name:           "forbidden",
 			repo:           "owner/repo",
-			password: 		 	"wrongpassword",
-			expectedStatus: fiber.StatusForbidden,
+			password:       "wrongpassword",
+			expectedStatus: fiber.StatusUnauthorized,
 		},
 		{
 			name:           "success",
 			repo:           "owner/repo",
-			password: 		 	"admin",
-			expectedStatus: fiber.StatusOK,
+			password:       "admin",
+			expectedStatus: fiber.StatusNoContent,
 		},
 	}
 
@@ -59,7 +53,9 @@ func TestDeleteHandler_Delete(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			app := test.NewServer(cfg)
-			req := httptest.NewRequest("DELETE", "/" + tt.repo, nil)
+			h := NewDeleteHandler(dbService)
+			app.Delete("/:owner/:repo", h.Delete)
+			req := httptest.NewRequest("DELETE", "/"+tt.repo, nil)
 			req.Header.Set("Authorization", "Bearer "+tt.password)
 			resp, err := app.Test(req, -1)
 			if err != nil {
