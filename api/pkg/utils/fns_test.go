@@ -139,6 +139,11 @@ func TestSetParams(t *testing.T) {
 			expected: "https://example.com/path?x=5",
 		},
 		{
+			input:    "https://example.com/path?x=5",
+			params:   map[string]string{"x": "10"},
+			expected: "https://example.com/path?x=10",
+		},
+		{
 			input:    "https://example.com/path",
 			params:   map[string]string{"q": ""},
 			expected: "https://example.com/path",
