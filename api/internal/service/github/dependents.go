@@ -5,35 +5,58 @@ import (
 	"io"
 	"net/http"
 
-	"dependents.info/internal/common"
+	"dependents.info/internal/models"
+	"dependents.info/internal/service/render"
 	"dependents.info/pkg/utils"
 )
 
-type DependentsService struct{}
-
-func NewDependentsService() *DependentsService {
-	return &DependentsService{}
+type DependentsService struct {
+	renderService *render.RenderService
 }
 
-func (s *DependentsService) NewBackgroundTask(repo string, id string, callback func(total string)) {
-	common.WG.Add(1)
-	go func() {
-		defer common.WG.Done()
-		total, err := s.getTotalDependents(repo, id)
-		if err != nil {
-			return
-		}
-		if callback != nil {
-			callback(total)
-		}
-	}()
+func NewDependentsService(renderService *render.RenderService) *DependentsService {
+	return &DependentsService{
+		renderService: renderService,
+	}
 }
 
-func (s *DependentsService) getTotalDependents(repo string, id string) (string, error) {
+func (s *DependentsService) NewTask(repo string, id string, kind string, callback func(total int, svg []byte)) {
 	url := "https://github.com/" + repo + "/network/dependents"
 	if id != "" {
 		url += "?package_id=" + id
 	}
+	page, err := fetchPage(url)
+	if err != nil {
+		return
+	}
+	total, err := utils.ParseTotalDependents(page, repo)
+	if err != nil {
+		return
+	}
+	if kind == "badge" {
+		if callback != nil {
+			callback(total, nil)
+		}
+		return
+	}
+	dependents, err := utils.ParseDependents(page, repo)
+	if err != nil {
+		return
+	}
+	req := models.IngestRequest{
+		Dependents: dependents,
+		Total:      total,
+	}
+	svgBytes, err := s.renderService.RenderSVG(req)
+	if err != nil {
+		return
+	}
+	if callback != nil {
+		callback(total, svgBytes)
+	}
+}
+
+func fetchPage(url string) (string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", fmt.Errorf("failed to fetch dependents: %v", err)
@@ -43,5 +66,5 @@ func (s *DependentsService) getTotalDependents(repo string, id string) (string, 
 	if err != nil {
 		return "", fmt.Errorf("failed to read response body: %v", err)
 	}
-	return utils.ParseTotalDependents(string(body), repo)
+	return string(body), nil
 }

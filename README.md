@@ -4,7 +4,7 @@
 
 easily generate an image of github network dependents to showcase in your project's `readme.md` file.
 
-simply add a github action to your repository and use the image link for your repo.
+simply use the embed codes, or optionally add a github action for customizations, in your repository.
 
 ## demo
 
@@ -16,9 +16,68 @@ here's a demo of the generated image for the gem [`jekyll-auto-authors`](https:/
 
 ## quickstart
 
-> the shields.io based [dependents badge](#embed-badge) can be used directly, without having to run the github action.
+### embed image
 
-### github action
+> **note**: to customize the frequency of image re-generation, please setup the [github action](#github-action).
+
+copy the following code snippet and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the image.
+
+```html
+<a href="https://dependents.info/owner/repo">
+  <img src="https://dependents.info/owner/repo/image" />
+</a>
+```
+
+if your repository hosts multiple packages each with it's own tracked dependents, use this:
+
+```html
+<a href="https://dependents.info/owner/repo?id=idHere">
+  <img src="https://dependents.info/owner/repo/image?id=idHere" />
+</a>
+```
+
+by default, the image is generated from the first few dependents. use the [github action](#github-action) to control this. for example, showcase only the repositories with the most stars.
+
+### embed badge
+
+> **note**: to customize the frequency of badge re-generation, please setup the [github action](#github-action).
+
+copy the following code snippet and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the badge.
+
+```html
+<a href="https://dependents.info/owner/repo">
+  <img src="https://dependents.info/owner/repo/badge" />
+</a>
+```
+
+if your repository hosts multiple packages each with it's own tracked dependents, use this:
+
+```html
+<a href="https://dependents.info/owner/repo?id=idHere">
+  <img src="https://dependents.info/owner/repo/image?id=idHere" />
+</a>
+```
+
+available query params (optional):
+
+- `logo`: icon name from [simple-icons](https://simpleicons.org).
+- `label`: override the default label "dependents".
+- `color`: hex, rgb, rgba, hsl, hsla or css named color.
+- `logoColor`: hex, rgb, rgba, hsl, hsla or css named color.
+- `labelColor`: hex, rgb, rgba, hsl, hsla or css named color.
+- `style`: [`flat` (default), `flat-square`, `plastic`, `for-the-badge`, `social`]
+
+usage: `/badge?color=red&style=flat-square`
+
+the badge and the image are self updating. they are generated on fetch requests and cached for a period of 7 days.
+
+when using the [github action](#github-action), they update as soon as new data is ingested.
+
+> **note**: in addition to cloudflare's cache lasting up to a day, the image could be cached by github for an extended 7 day period. please refer to [the docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls#removing-an-image-from-camos-cache) on how to manually purge them if required.
+
+## github action
+
+> you can use the service with limited features even without setting up the github action.
 
 add this file to your repository's `.github/workflows` folder.
 
@@ -45,7 +104,7 @@ once you push this file, the action will process the dependents for the reposito
 
 > tip: instead of running the action on `push`, you can use a [cron job](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule) to schedule the action.
 
-#### configuration (optional)
+### configuration (optional)
 
 add the following options to your `dependents.yml` file if you want to customize the action's behavior:
 
@@ -69,7 +128,7 @@ add the following options to your `dependents.yml` file if you want to customize
 | `exclude-owner`    | `boolean` | exclude repos from the same owner that depend on this repository.         | `true`  |
 | `upload-artifacts` | `boolean` | whether to upload the outputs as action's build artifacts.                | `true`  |
 
-#### why github action?
+### why github action?
 
 the github action does the heavy lifting of fetching the dependents from your repository's network dependents page.
 
@@ -84,61 +143,6 @@ while the `id-token` permission is required to request the oidc token, it in its
 the backend uses the token to verify the `repository` claim directly from github to compare where the data is coming from. mismatched fields will fail the request.
 
 this check ensures that the data backend accepts from a repository comes from it's github action itself. only the action can alter the data in production.
-
-### embed image
-
-> **note**: the image is only available for repositories that run the action successfully.
-
-copy the following code snippet and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the image.
-
-```html
-<a href="https://dependents.info/owner/repo">
-  <img src="https://dependents.info/owner/repo/image" />
-</a>
-```
-
-if you've used the `package-id` option in the action, this should be:
-
-```html
-<a href="https://dependents.info/owner/repo?id=idHere">
-  <img src="https://dependents.info/owner/repo/image?id=idHere" />
-</a>
-```
-
-### embed badge
-
-> if used without setting up the [github action](#github-action), the badge will be cached for 7 days.
-
-copy the following code snippet and **replace `owner/repo`** with your repository's name. paste it wherever you want to embed the badge.
-
-```html
-<a href="https://dependents.info/owner/repo">
-  <img src="https://dependents.info/owner/repo/badge" />
-</a>
-```
-
-if you've used the `package-id` option in the action, this should be:
-
-```html
-<a href="https://dependents.info/owner/repo?id=idHere">
-  <img src="https://dependents.info/owner/repo/image?id=idHere" />
-</a>
-```
-
-available query params (optional):
-
-- `logo`: icon name from [simple-icons](https://simpleicons.org).
-- `label`: override the default label "dependents".
-- `color`: hex, rgb, rgba, hsl, hsla or css named color.
-- `logoColor`: hex, rgb, rgba, hsl, hsla or css named color.
-- `labelColor`: hex, rgb, rgba, hsl, hsla or css named color.
-- `style`: [`flat` (default), `flat-square`, `plastic`, `for-the-badge`, `social`]
-
-usage: `/badge?color=red&style=flat-square`
-
-the badge and the image are self updating so when the github action submits new data, it will be reflected in the readme automatically.
-
-> **note**: in addition to cloudflare's cache lasting up to a day, the image could be cached by github for an extended 7 day period. please refer to [the docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls#removing-an-image-from-camos-cache) on how to manually purge them if required.
 
 ## multiple packages
 

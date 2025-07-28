@@ -139,6 +139,11 @@ func TestSetParams(t *testing.T) {
 			expected: "https://example.com/path?x=5",
 		},
 		{
+			input:    "https://example.com/path?x=5",
+			params:   map[string]string{"x": "10"},
+			expected: "https://example.com/path?x=10",
+		},
+		{
 			input:    "https://example.com/path",
 			params:   map[string]string{"q": ""},
 			expected: "https://example.com/path",
@@ -247,26 +252,14 @@ func TestParseTotalDependents(t *testing.T) {
 				709
 												Packages
 			</a>
-			<details class="details-reset d-inline-block details-overlay js-dropdown-details position-relative">
-				<summary aria-label="Warning" class="d-block px-1">
-					<svg aria-hidden="true" height="16" viewbox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-info">
-						<path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path>
-					</svg>
-				</summary>
-				<div class="Popover mt-2 right-0 mr-n2">
-					<div class="Popover-message Popover-message--large Box color-shadow-large p-3 Popover-message--top-right ws-normal">
-						These counts are approximate and may not exactly match the dependents shown below.
-					</div>
-				</div>
-			</details>
 		</div>
 	`
 	got, err := ParseTotalDependents(html, "owner/repo")
 	if err != nil {
 		t.Fatalf("ParseTotalDependents returned error: %v", err)
 	}
-	want := "1364"
+	want := 1364
 	if got != want {
-		t.Errorf("ParseTotalDependents() = %s, want %s", got, want)
+		t.Errorf("ParseTotalDependents() = %d, want %d", got, want)
 	}
 }

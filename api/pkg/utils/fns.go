@@ -2,13 +2,18 @@ package utils
 
 import (
 	"embed"
+	"encoding/base64"
 	"fmt"
+	"io"
 	"math"
+	"net/http"
 	"net/url"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 
+	"dependents.info/internal/models"
 	"github.com/andybalholm/cascadia"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/net/html"
@@ -113,20 +118,20 @@ func ExtractBearerToken(authHeader string) (string, error) {
 	return "", fiber.ErrUnauthorized
 }
 
-func ParseTotalDependents(doc string, repo string) (string, error) {
+func ParseTotalDependents(doc string, repo string) (int, error) {
 	node, err := html.Parse(strings.NewReader(doc))
 	if err != nil {
-		return "", fmt.Errorf("failed to parse HTML: %w", err)
+		return 0, fmt.Errorf("failed to parse HTML: %w", err)
 	}
 	selector, err := cascadia.Compile(
 		fmt.Sprintf(`a[href*="/%s/network/dependents?dependent_type=REPOSITORY"]`, repo),
 	)
 	if err != nil {
-		return "", fmt.Errorf("selector compile error: %w", err)
+		return 0, fmt.Errorf("failed to compile selector: %w", err)
 	}
 	anchor := cascadia.Query(node, selector)
 	if anchor == nil {
-		return "", fmt.Errorf("could not find anchor for %s", repo)
+		return 0, fmt.Errorf("could not find anchor for %s", repo)
 	}
 	var sb strings.Builder
 	for c := anchor.FirstChild; c != nil; c = c.NextSibling {
@@ -137,8 +142,67 @@ func ParseTotalDependents(doc string, repo string) (string, error) {
 	text := strings.TrimSpace(sb.String())
 	fields := strings.Fields(text)
 	if len(fields) == 0 {
-		return "", fmt.Errorf("no text found in anchor for %s", repo)
+		return 0, fmt.Errorf("no text found in anchor for %s", repo)
 	}
-	number := strings.ReplaceAll(fields[0], ",", "")
+	numString := strings.ReplaceAll(fields[0], ",", "")
+	number, _ := strconv.Atoi(numString)
 	return number, nil
+}
+
+func ParseDependents(doc string, repo string) ([]models.Dependent, error) {
+	node, err := html.Parse(strings.NewReader(doc))
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse HTML: %w", err)
+	}
+	imgSel, _ := cascadia.Compile("img")
+	dependentSel, _ := cascadia.Compile(`[data-test-id="dg-repo-pkg-dependent"]`)
+	nodes := cascadia.QueryAll(node, dependentSel)
+	dependents := make([]models.Dependent, 0, 11)
+	for _, el := range nodes {
+		if len(dependents) > 10 {
+			break
+		}
+		var image string
+		imgNode := cascadia.Query(el, imgSel)
+		if imgNode == nil {
+			continue
+		}
+		image, err = imageNodeToUrl(imgNode)
+		if err != nil {
+			continue
+		}
+		image, err = imageUrlToBase64(image)
+		if err != nil {
+			continue
+		}
+		dependents = append(dependents, models.Dependent{
+			Image: image,
+		})
+	}
+	return dependents, nil
+}
+
+func imageNodeToUrl(n *html.Node) (string, error) {
+	for _, attr := range n.Attr {
+		if attr.Key == "src" {
+			return SetParams(attr.Val, map[string]string{"s": "75"}), nil
+		}
+	}
+	return "", fmt.Errorf("no src attribute found in image node")
+}
+
+func imageUrlToBase64(url string) (string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", fmt.Errorf("error fetching image: %w", err)
+	}
+	defer resp.Body.Close()
+	imageData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("error reading image data: %w", err)
+	}
+	base64Str := base64.StdEncoding.EncodeToString(imageData)
+	mimeType := resp.Header.Get("Content-Type")
+	dataURI := fmt.Sprintf("data:%s;base64,%s", mimeType, base64Str)
+	return dataURI, nil
 }

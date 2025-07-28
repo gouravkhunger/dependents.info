@@ -8,6 +8,7 @@ import (
 
 	"dependents.info/internal/service/database"
 	"dependents.info/internal/service/github"
+	"dependents.info/internal/service/render"
 	"dependents.info/internal/test"
 )
 
@@ -30,8 +31,9 @@ func TestBadgeHandler_Badge(t *testing.T) {
 	}
 
 	cfg := test.NewConfig()
-	dependentsService := github.NewDependentsService()
+	imageService := render.NewRenderService()
 	dbService := database.NewBadgerService(cfg.DatabasePath)
+	dependentsService := github.NewDependentsService(imageService)
 	dbService.Save("total:owner/repo", []byte("69"))
 	defer dbService.Close()
 
