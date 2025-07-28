@@ -185,7 +185,7 @@ func ParseDependents(doc string, repo string) ([]models.Dependent, error) {
 func imageNodeToUrl(n *html.Node) (string, error) {
 	for _, attr := range n.Attr {
 		if attr.Key == "src" {
-			return SetParams(attr.Val, map[string]string{"s": "75"}), nil
+			return SetParams(attr.Val, map[string]string{"s": "100"}), nil
 		}
 	}
 	return "", fmt.Errorf("no src attribute found in image node")

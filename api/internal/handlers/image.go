@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -40,6 +41,7 @@ func (h *ImageHandler) SVGImage(c *fiber.Ctx) error {
 	if err != nil {
 		h.dependentsService.NewTask(repo, id, "image", func(total int, svg []byte) {
 			h.databaseService.SaveWithTTL("svg:"+name, svg, 7*24*time.Hour)
+			h.databaseService.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
 		})
 		err = h.databaseService.Get("svg:"+name, &svg)
 		if err != nil {
