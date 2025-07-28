@@ -36,6 +36,8 @@ if your repository hosts multiple packages each with it's own tracked dependents
 </a>
 ```
 
+by default, the image is generated from the first few dependents. use the [github action](#github-action) to control this. for example, showcase only the repositories with the most stars.
+
 ### embed badge
 
 > **note**: to customize the frequency of badge re-generation, please setup the [github action](#github-action).
@@ -73,7 +75,7 @@ when using the [github action](#github-action), they update as soon as new data 
 
 > **note**: in addition to cloudflare's cache lasting up to a day, the image could be cached by github for an extended 7 day period. please refer to [the docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls#removing-an-image-from-camos-cache) on how to manually purge them if required.
 
-### github action
+## github action
 
 > you can use the service with limited features even without setting up the github action.
 
@@ -102,7 +104,7 @@ once you push this file, the action will process the dependents for the reposito
 
 > tip: instead of running the action on `push`, you can use a [cron job](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule) to schedule the action.
 
-#### configuration (optional)
+### configuration (optional)
 
 add the following options to your `dependents.yml` file if you want to customize the action's behavior:
 
@@ -126,7 +128,7 @@ add the following options to your `dependents.yml` file if you want to customize
 | `exclude-owner`    | `boolean` | exclude repos from the same owner that depend on this repository.         | `true`  |
 | `upload-artifacts` | `boolean` | whether to upload the outputs as action's build artifacts.                | `true`  |
 
-#### why github action?
+### why github action?
 
 the github action does the heavy lifting of fetching the dependents from your repository's network dependents page.
 
