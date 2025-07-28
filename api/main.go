@@ -10,7 +10,6 @@ import (
 	"github.com/joho/godotenv"
 
 	server "dependents.info/cmd"
-	"dependents.info/internal/common"
 	"dependents.info/internal/config"
 	"dependents.info/internal/service"
 	"dependents.info/pkg/utils"
@@ -39,7 +38,6 @@ func main() {
 		log.Panic(err)
 	}
 
-	common.WG.Wait()
 	services.DatabaseService.Sync()
 	services.DatabaseService.Close()
 }

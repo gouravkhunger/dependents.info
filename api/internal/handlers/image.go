@@ -38,10 +38,13 @@ func (h *ImageHandler) SVGImage(c *fiber.Ctx) error {
 	err := h.databaseService.Get("svg:"+name, &svg)
 
 	if err != nil {
-		h.dependentsService.NewBackgroundTask(repo, id, "image", func(total int, svg []byte) {
+		h.dependentsService.NewTask(repo, id, "image", func(total int, svg []byte) {
 			h.databaseService.SaveWithTTL("svg:"+name, svg, 7*24*time.Hour)
 		})
-		return utils.SendError(c, fiber.StatusNotFound, "SVG image not found", err)
+		err = h.databaseService.Get("svg:"+name, &svg)
+		if err != nil {
+			return utils.SendError(c, fiber.StatusNotFound, "SVG image not found", err)
+		}
 	}
 
 	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")

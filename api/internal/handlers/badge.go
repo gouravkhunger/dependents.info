@@ -39,10 +39,13 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	err := h.databaseService.Get("total:"+name, &total)
 
 	if err != nil {
-		h.dependentsService.NewBackgroundTask(repo, id, "badge", func(total int, svg []byte) {
+		h.dependentsService.NewTask(repo, id, "badge", func(total int, svg []byte) {
 			h.databaseService.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
 		})
-		return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
+		err = h.databaseService.Get("total:"+name, &total)
+		if err != nil {
+			return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
+		}
 	}
 
 	totalInt, _ := strconv.Atoi(total)

@@ -5,7 +5,6 @@ import (
 	"io"
 	"net/http"
 
-	"dependents.info/internal/common"
 	"dependents.info/internal/models"
 	"dependents.info/internal/service/render"
 	"dependents.info/pkg/utils"
@@ -21,44 +20,40 @@ func NewDependentsService(renderService *render.RenderService) *DependentsServic
 	}
 }
 
-func (s *DependentsService) NewBackgroundTask(repo string, id string, kind string, callback func(total int, svg []byte)) {
-	common.WG.Add(1)
-	go func() {
-		defer common.WG.Done()
-		url := "https://github.com/" + repo + "/network/dependents"
-		if id != "" {
-			url += "?package_id=" + id
-		}
-		page, err := fetchPage(url)
-		if err != nil {
-			return
-		}
-		total, err := utils.ParseTotalDependents(page, repo)
-		if err != nil {
-			return
-		}
-		if kind == "badge" {
-			if callback != nil {
-				callback(total, nil)
-			}
-			return
-		}
-		dependents, err := utils.ParseDependents(page, repo)
-		if err != nil {
-			return
-		}
-		req := models.IngestRequest{
-			Dependents: dependents,
-			Total:      total,
-		}
-		svgBytes, err := s.renderService.RenderSVG(req)
-		if err != nil {
-			return
-		}
+func (s *DependentsService) NewTask(repo string, id string, kind string, callback func(total int, svg []byte)) {
+	url := "https://github.com/" + repo + "/network/dependents"
+	if id != "" {
+		url += "?package_id=" + id
+	}
+	page, err := fetchPage(url)
+	if err != nil {
+		return
+	}
+	total, err := utils.ParseTotalDependents(page, repo)
+	if err != nil {
+		return
+	}
+	if kind == "badge" {
 		if callback != nil {
-			callback(total, svgBytes)
+			callback(total, nil)
 		}
-	}()
+		return
+	}
+	dependents, err := utils.ParseDependents(page, repo)
+	if err != nil {
+		return
+	}
+	req := models.IngestRequest{
+		Dependents: dependents,
+		Total:      total,
+	}
+	svgBytes, err := s.renderService.RenderSVG(req)
+	if err != nil {
+		return
+	}
+	if callback != nil {
+		callback(total, svgBytes)
+	}
 }
 
 func fetchPage(url string) (string, error) {
