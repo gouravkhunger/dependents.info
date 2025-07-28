@@ -54,7 +54,7 @@
         your project's <code>readme.md</code> file.
       </p>
       <p>
-        simply add a github action to your repository and use the image link for your repo.
+        simply use the embed codes, or optionally add a github action for customizations, in your repository.
       </p>
       <h2>demo</h2>
       <p>
@@ -79,10 +79,90 @@
         src="https://www.youtube-nocookie.com/embed/icdxdppB6AA?si=xCjeltyNXHFqxB0P&rel=0"
       ></iframe>
       <h2 id="quickstart">quickstart</h2>
+      <p>
+        enter your github repository name in the format <code>owner/repo</code>
+        to generate copyable embed codes.
+      </p>
+      <div>
+        <label for="repo-input">github repo:</label>
+        <input
+          name="repo"
+          type="text"
+          id="repo-input"
+          autocomplete="off"
+          placeholder="owner/repo"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="package-id">
+          <a href="#multiple-packages">package id</a> (optional):
+        </label>
+        <input
+          type="text"
+          id="package-id"
+          name="packageId"
+          autocomplete="off"
+          placeholder="packageIDHere"
+        />
+      </div>
+      <h3>embed image</h3>
       <blockquote>
-        the shields.io based <a href="#embed-badge">dependents badge</a> can be used directly, without having to run the github action.
+        <b>note:</b> to customize the frequency of image re-generation, please setup the <a href="#github-action">github action</a>.
+      </blockquote>
+      <div id="embed-code">
+        <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">
+          <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-black" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+          </svg>
+          <span>Loading...</span>
+        </div>
+      </div>
+      <p>
+        paste this code anywhere in the readme and the auto-generated dependents
+        image will be embedded!
+      </p>
+      <h3 id="embed-badge">embed badge</h3>
+      <blockquote>
+        <b>note:</b> to customize the frequency of badge re-generation, please setup the <a href="#github-action">github action</a>.
+      </blockquote>
+      <div id="badge-code">
+        <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">
+          <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-black" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+          </svg>
+          <span>Loading...</span>
+        </div>
+      </div>
+      <p>
+        available query params (optional):
+        <ul>
+          <li><code>logo</code>: icon name from <a href="https://simpleicons.org" target="_blank" rel="noopener noreferrer">simple-icons</a>.</li>
+          <li><code>label</code>: override the default label "dependents".</li>
+          <li><code>color</code>: hex, rgb, rgba, hsl, hsla or css named color.</li>
+          <li><code>logoColor</code>: hex, rgb, rgba, hsl, hsla or css named color.</li>
+          <li><code>labelColor</code>: hex, rgb, rgba, hsl, hsla or css named color.</li>
+          <li><code>style</code>: [flat (default), flat-square, plastic, for-the-badge, social]</li>
+        </ul>
+        usage: <code>/badge?color=red&style=flat-square</code>
+      </p>
+      <p>
+        paste this code where you want the badge to appear in the readme.
+      </p>
+      <p>
+        the badge and the image are self updating. they are generated on fetch requests and cached for a period of 7 days.
+      </p>
+      <p>
+        when using the <a href="#github-action">github action</a>, they update as soon as new data is ingested.
+      </p>
+      <blockquote>
+        <b>note:</b> in addition to cloudflare's cache lasting up to a day, the image could be cached by github for an extended 7 day period. please refer to <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls#removing-an-image-from-camos-cache" target="_blank" rel="noopener noreferrer">the docs</a> on how to manually purge it if required.
       </blockquote>
       <h3 id="github-action">github action</h3>
+      <blockquote>
+        you can use the service with limited features even without setting up the github action.
+      </blockquote>
       <p>
         add this file to your repository's <code>.github/workflows</code> folder.
       </p>
@@ -219,83 +299,6 @@
           only the action can alter the data in production.
         </p>
       </details>
-      <h3>embed image</h3>
-      <blockquote>
-        <b>note:</b> the image is only available for repositories that run the <a href="#github-action">github action</a> successfully.
-      </blockquote>
-      <p>
-        enter your github repository name in the format <code>owner/repo</code>
-        to generate a copyable embed code.
-      </p>
-      <div>
-        <label for="repo-input">github repo:</label>
-        <input
-          name="repo"
-          type="text"
-          id="repo-input"
-          autocomplete="off"
-          placeholder="owner/repo"
-        />
-      <div class="mt-4">
-        <label for="package-id">
-          <a href="#multiple-packages">package id</a> (optional):
-        </label>
-        <input
-          type="text"
-          id="package-id"
-          name="packageId"
-          autocomplete="off"
-          placeholder="packageIDHere"
-        />
-      </div>
-      <div id="embed-code">
-        <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">
-          <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-black" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-          </svg>
-          <span>Loading...</span>
-        </div>
-      </div>
-      <p>
-        paste this code anywhere in the readme and the auto-generated dependents
-        image will be embedded!
-      </p>
-      <h3 id="embed-badge">embed badge</h3>
-      <blockquote>
-        if used without setting up the <a href="#github-action">github action</a>, the badge will be cached for 7 days.
-      </blockquote>
-      <div id="badge-code">
-        <div role="status" class="mt-6 flex flex-col justify-center items-center gap-2">
-          <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-black" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-          </svg>
-          <span>Loading...</span>
-        </div>
-      </div>
-      <p>
-        available query params (optional):
-        <ul>
-          <li><code>logo</code>: icon name from <a href="https://simpleicons.org" target="_blank" rel="noopener noreferrer">simple-icons</a>.</li>
-          <li><code>label</code>: override the default label "dependents".</li>
-          <li><code>color</code>: hex, rgb, rgba, hsl, hsla or css named color.</li>
-          <li><code>logoColor</code>: hex, rgb, rgba, hsl, hsla or css named color.</li>
-          <li><code>labelColor</code>: hex, rgb, rgba, hsl, hsla or css named color.</li>
-          <li><code>style</code>: [flat (default), flat-square, plastic, for-the-badge, social]</li>
-        </ul>
-        usage: <code>/badge?color=red&style=flat-square</code>
-      </p>
-      <p>
-        paste this code where you want the badge to appear in the readme.
-      </p>
-      <p>
-        the badge and the image are self updating so when the github action submits new data,
-        it will be reflected in the readme automatically.
-      </p>
-      <blockquote>
-        <b>note:</b> in addition to cloudflare's cache lasting up to a day, the image could be cached by github for an extended 7 day period. please refer to <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls#removing-an-image-from-camos-cache" target="_blank" rel="noopener noreferrer">the docs</a> on how to manually purge it if required.
-      </blockquote>
       <h2 id="multiple-packages">multiple packages</h2>
       <p>
         if your repository hosts multiple packages, you can use the <a href="#configuration"><code>package-id</code></a> option to specify which package to process. other packages can be processed by adding new steps in the same workflow file.
