@@ -260,6 +260,6 @@ func TestParseTotalDependents(t *testing.T) {
 	}
 	want := 1364
 	if got != want {
-		t.Errorf("ParseTotalDependents() = %s, want %s", got, want)
+		t.Errorf("ParseTotalDependents() = %d, want %d", got, want)
 	}
 }
