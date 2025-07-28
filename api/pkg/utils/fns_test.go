@@ -258,7 +258,7 @@ func TestParseTotalDependents(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ParseTotalDependents returned error: %v", err)
 	}
-	want := "1364"
+	want := 1364
 	if got != want {
 		t.Errorf("ParseTotalDependents() = %s, want %s", got, want)
 	}
