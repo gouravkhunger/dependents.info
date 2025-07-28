@@ -17,7 +17,7 @@ type DependentsService struct {
 
 func NewDependentsService(renderService *render.RenderService) *DependentsService {
 	return &DependentsService{
-		renderService:	renderService,
+		renderService: renderService,
 	}
 }
 
@@ -37,7 +37,7 @@ func (s *DependentsService) NewBackgroundTask(repo string, id string, kind strin
 		if err != nil {
 			return
 		}
-		if (kind == "badge") {
+		if kind == "badge" {
 			if callback != nil {
 				callback(total, nil)
 			}

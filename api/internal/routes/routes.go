@@ -9,8 +9,11 @@ import (
 
 func Setup(app *fiber.App, services *service.Services) {
 	healthHandler := handlers.NewHealthHandler()
-	imageHandler := handlers.NewImageHandler(services.DatabaseService)
 	deleteHandler := handlers.NewDeleteHandler(services.DatabaseService)
+	imageHandler := handlers.NewImageHandler(
+		services.DatabaseService,
+		services.DependentsService,
+	)
 	badgeHandler := handlers.NewBadgeHandler(
 		services.DatabaseService,
 		services.DependentsService,

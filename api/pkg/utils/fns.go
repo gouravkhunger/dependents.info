@@ -159,7 +159,7 @@ func ParseDependents(doc string, repo string) ([]models.Dependent, error) {
 	nodes := cascadia.QueryAll(node, dependentSel)
 	dependents := make([]models.Dependent, 0, 11)
 	for _, el := range nodes {
-		if len(dependents) > 11 {
+		if len(dependents) > 10 {
 			break
 		}
 		var image string
@@ -185,7 +185,7 @@ func ParseDependents(doc string, repo string) ([]models.Dependent, error) {
 func imageNodeToUrl(n *html.Node) (string, error) {
 	for _, attr := range n.Attr {
 		if attr.Key == "src" {
-			return SetParams(attr.Val, map[string]string{"s": "100"}), nil
+			return SetParams(attr.Val, map[string]string{"s": "75"}), nil
 		}
 	}
 	return "", fmt.Errorf("no src attribute found in image node")

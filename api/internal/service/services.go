@@ -17,8 +17,8 @@ type Services struct {
 func BuildAll(cfg *config.Config) *Services {
 	imageService := render.NewRenderService()
 	oidcService := github.NewOIDCService(cfg)
-	dependentsService := github.NewDependentsService()
 	dbService := database.NewBadgerService(cfg.DatabasePath)
+	dependentsService := github.NewDependentsService(imageService)
 
 	return &Services{
 		GitHubOIDCService: oidcService,
