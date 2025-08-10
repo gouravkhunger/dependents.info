@@ -4,45 +4,20 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"dependents.info/internal/handlers"
-	"dependents.info/internal/service"
 )
 
-func Setup(app *fiber.App, services *service.Services) {
-	healthHandler := handlers.NewHealthHandler()
-	deleteHandler := handlers.NewDeleteHandler(services.DatabaseService)
-	imageHandler := handlers.NewImageHandler(
-		services.DatabaseService,
-		services.DependentsService,
-	)
-	badgeHandler := handlers.NewBadgeHandler(
-		services.DatabaseService,
-		services.DependentsService,
-	)
-	sitemapHandler := handlers.NewSitemapHandler(
-		services.DatabaseService,
-		services.RenderService,
-	)
-	repoHandler := handlers.NewRepoHandler(
-		services.DatabaseService,
-		services.RenderService,
-	)
-	ingestHandler := handlers.NewIngestHandler(
-		services.GitHubOIDCService,
-		services.DatabaseService,
-		services.RenderService,
-	)
+func Setup(app *fiber.App, handlers *handlers.Handlers) {
+	app.Get("/health", handlers.HealthHandler.Health)
+	app.Get("/sitemap.xml", handlers.SitemapHandler.Sitemap)
 
-	app.Get("/health", healthHandler.Health)
-	app.Get("/sitemap.xml", sitemapHandler.Sitemap)
+	app.Get("/:owner/:repo", handlers.RepoHandler.RepoPage)
+	app.Delete("/:owner/:repo", handlers.DeleteHandler.Delete)
 
-	app.Get("/:owner/:repo", repoHandler.RepoPage)
-	app.Delete("/:owner/:repo", deleteHandler.Delete)
+	app.Get("/:owner/:repo/badge", handlers.BadgeHandler.Badge)
+	app.Get("/:owner/:repo/image", handlers.ImageHandler.SVGImage)
 
-	app.Get("/:owner/:repo/badge", badgeHandler.Badge)
-	app.Get("/:owner/:repo/image", imageHandler.SVGImage)
+	app.Get("/:owner/:repo/badge.svg", handlers.BadgeHandler.Badge)
+	app.Get("/:owner/:repo/image.svg", handlers.ImageHandler.SVGImage)
 
-	app.Get("/:owner/:repo/badge.svg", badgeHandler.Badge)
-	app.Get("/:owner/:repo/image.svg", imageHandler.SVGImage)
-
-	app.Post("/:owner/:repo/ingest", ingestHandler.Ingest)
+	app.Post("/:owner/:repo/ingest", handlers.IngestHandler.Ingest)
 }

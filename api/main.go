@@ -11,6 +11,7 @@ import (
 
 	server "dependents.info/cmd"
 	"dependents.info/internal/config"
+	"dependents.info/internal/handlers"
 	"dependents.info/internal/service"
 	"dependents.info/pkg/utils"
 )
@@ -25,7 +26,8 @@ func main() {
 
 	cfg := config.New()
 	services := service.BuildAll(cfg)
-	app := server.Build(cfg, &static, services)
+	handlers := handlers.BuildAll(services)
+	app := server.Build(cfg, &static, handlers)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
