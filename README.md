@@ -1,5 +1,9 @@
 # dependents.info
 
+<a href="https://dependents.info">
+  <img alt = "dependents.info logo" src="https://raw.githubusercontent.com/gouravkhunger/dependents.info/refs/heads/main/www/public/images/logo.webp" width="125px" align="right" />
+</a>
+
 [![GitHub Network Dependents Count](https://dependents.info/gouravkhunger/dependents.info/badge)](https://dependents.info/gouravkhunger/dependents.info)
 
 easily generate an image of github network dependents to showcase in your project's `readme.md` file.
