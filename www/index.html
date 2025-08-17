@@ -46,7 +46,7 @@
           class="size-6 shrink-0 sm:size-8"
           href="https://github.com/gouravkhunger/dependents.info"
         >
-          <img src="/icons/github.svg" class="!m-0" />
+          <img src="/icons/github.svg" class="!m-0" alt="GitHub logo" />
         </a>
       </div>
       <p>
@@ -63,10 +63,10 @@
         badge and the image:
       </p>
       <a href="/gouravkhunger/jekyll-auto-authors">
-        <img class="!m-0" src="/gouravkhunger/jekyll-auto-authors/badge" />
+        <img class="!m-0" src="/gouravkhunger/jekyll-auto-authors/badge" alt="Total network dependents badge for GitHub repo gouravkhunger/jekyll-auto-authors" />
       </a>
       <a href="/gouravkhunger/jekyll-auto-authors">
-        <img src="/gouravkhunger/jekyll-auto-authors/image" />
+        <img src="/gouravkhunger/jekyll-auto-authors/image" alt="Network dependents preview for GitHub repo gouravkhunger/jekyll-auto-authors" />
       </a>
       <h2>watch</h2>
       <iframe
@@ -329,78 +329,6 @@
         <a href="https://gourav.sh" target="_blank">gourav.sh</a>
       </span>
     </footer>
-    <script type="module">
-      import { createHighlighter } from "https://esm.sh/shiki@3.0.0";
-      import { addCopyButton } from "https://esm.sh/shiki-transformer-copy-button@0.0.5";
-
-      const githubAction = `name: Dependents Action
-
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-jobs:
-  dependents:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-    steps:
-      - uses: gouravkhunger/dependents.info@main
-`
-      const actionConfiguration = `- uses: gouravkhunger/dependents.info@main
-  with:
-    max-pages: 50
-    force-run: false
-    unique-owners: true
-    exclude-owner: true
-    upload-artifacts: true
-    package-id: UGFja2SomeStringzcyMDE`;
-
-      const htmlContent = (name, id) => `<a href="https://dependents.info/${name || "owner/repo"}${id ? `?id=${id}` : ""}">
-  <img src="https://dependents.info/${name || "owner/repo"}/image${id ? `?id=${id}` : ""}" />
-</a>`;
-
-      const mdContent = (name, id) =>`<a href="https://dependents.info/${name || "owner/repo"}${id ? `?id=${id}` : ""}">
-  <img src="https://dependents.info/${name || "owner/repo"}/badge${id ? `?id=${id}` : ""}" />
-</a>`;
-
-      const highlighter = await createHighlighter({
-        themes: ["github-dark"],
-        langs: ["yaml", "html"],
-      });
-
-      const actionCode = highlighter.codeToHtml(githubAction, {
-        lang: "yaml",
-        theme: "github-dark",
-        transformers: [addCopyButton()],
-      });
-      document.querySelector("#gh-action").innerHTML = actionCode;
-
-      const configurationCode = highlighter.codeToHtml(actionConfiguration, {
-        lang: "yaml",
-        theme: "github-dark",
-        transformers: [addCopyButton()],
-      });
-      document.querySelector("#action-configuration").innerHTML = configurationCode;
-
-      const embedCode = (name, id) => highlighter.codeToHtml(htmlContent(name, id), {
-        lang: "html",
-        theme: "github-dark",
-        transformers: [addCopyButton()],
-      });
-      document.querySelector("#embed-code").innerHTML = embedCode();
-
-      const badgeCode = (name, id) => highlighter.codeToHtml(mdContent(name, id), {
-        lang: "html",
-        theme: "github-dark",
-        transformers: [addCopyButton()],
-      });
-      document.querySelector("#badge-code").innerHTML = badgeCode();
-
-      window.badgeCode = badgeCode;
-      window.embedCode = embedCode;
-    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
