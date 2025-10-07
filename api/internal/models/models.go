@@ -18,6 +18,7 @@ type IngestRequest struct {
 }
 
 type Dependent struct {
+	Stars int    `json:"stars,omitempty"`
 	Image string `json:"image" validate:"required,startswith=data:image/,contains=base64"`
 }
 

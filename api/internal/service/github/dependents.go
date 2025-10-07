@@ -39,7 +39,7 @@ func (s *DependentsService) NewTask(repo string, id string, kind string, callbac
 		}
 		return
 	}
-	dependents, err := utils.ParseDependents(page, repo)
+	dependents, err := utils.ParseDependents(page)
 	if err != nil {
 		return
 	}

@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -133,37 +134,27 @@ func ParseTotalDependents(doc string, repo string) (int, error) {
 	if anchor == nil {
 		return 0, fmt.Errorf("could not find anchor for %s", repo)
 	}
-	var sb strings.Builder
-	for c := anchor.FirstChild; c != nil; c = c.NextSibling {
-		if c.Type == html.TextNode {
-			sb.WriteString(c.Data)
-		}
+	number, err := extractNumber(anchor)
+	if err != nil {
+		return 0, fmt.Errorf("failed to extract number: %w", err)
 	}
-	text := strings.TrimSpace(sb.String())
-	fields := strings.Fields(text)
-	if len(fields) == 0 {
-		return 0, fmt.Errorf("no text found in anchor for %s", repo)
-	}
-	numString := strings.ReplaceAll(fields[0], ",", "")
-	number, _ := strconv.Atoi(numString)
 	return number, nil
 }
 
-func ParseDependents(doc string, repo string) ([]models.Dependent, error) {
+func ParseDependents(doc string) ([]models.Dependent, error) {
 	node, err := html.Parse(strings.NewReader(doc))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse HTML: %w", err)
 	}
 	imgSel, _ := cascadia.Compile("img")
 	dependentSel, _ := cascadia.Compile(`[data-test-id="dg-repo-pkg-dependent"]`)
+	starsSel, _ := cascadia.Compile(".octicon-star")
 	nodes := cascadia.QueryAll(node, dependentSel)
-	dependents := make([]models.Dependent, 0, 11)
+	dependents := make([]models.Dependent, 0, 30)
 	for _, el := range nodes {
-		if len(dependents) > 10 {
-			break
-		}
 		var image string
 		imgNode := cascadia.Query(el, imgSel)
+		starsNode := cascadia.Query(el, starsSel)
 		if imgNode == nil {
 			continue
 		}
@@ -175,11 +166,36 @@ func ParseDependents(doc string, repo string) ([]models.Dependent, error) {
 		if err != nil {
 			continue
 		}
+		stars, _ := extractNumber(starsNode.Parent)
 		dependents = append(dependents, models.Dependent{
 			Image: image,
+			Stars: stars,
 		})
 	}
+	sort.Slice(dependents, func(i, j int) bool {
+		return dependents[i].Stars > dependents[j].Stars
+	})
+	if len(dependents) > 11 {
+		return dependents[:11], nil
+	}
 	return dependents, nil
+}
+
+func extractNumber(anchor *html.Node) (int, error) {
+	var sb strings.Builder
+	for c := anchor.FirstChild; c != nil; c = c.NextSibling {
+		if c.Type == html.TextNode {
+			sb.WriteString(c.Data)
+		}
+	}
+	text := strings.TrimSpace(sb.String())
+	fields := strings.Fields(text)
+	if len(fields) == 0 {
+		return 0, fmt.Errorf("no text found in anchor")
+	}
+	numString := strings.ReplaceAll(fields[0], ",", "")
+	number, _ := strconv.Atoi(numString)
+	return number, nil
 }
 
 func imageNodeToUrl(n *html.Node) (string, error) {
