@@ -28,10 +28,9 @@ func NewBadgeHandler(
 
 func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	id := c.Query("id")
-	repo := c.Params("repo")
-	owner := c.Params("owner")
+	repo := c.Params("owner") + "/" + c.Params("repo")
 
-	name := owner + "/" + repo
+	name := repo
 	if id != "" {
 		name += ":" + id
 	}
@@ -40,7 +39,7 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	err := h.databaseService.Get("total:"+name, &total)
 
 	if err != nil {
-		h.dependentsService.NewTask(owner, repo, id, "badge", func(total int, svg []byte) {
+		h.dependentsService.NewTask(repo, id, "badge", func(total int, svg []byte) {
 			h.databaseService.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
 		})
 		err = h.databaseService.Get("total:"+name, &total)

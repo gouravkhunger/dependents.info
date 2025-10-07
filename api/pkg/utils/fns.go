@@ -141,7 +141,7 @@ func ParseTotalDependents(doc string, repo string) (int, error) {
 	return number, nil
 }
 
-func ParseDependents(doc string, owner string) ([]models.Dependent, error) {
+func ParseDependents(doc string) ([]models.Dependent, error) {
 	node, err := html.Parse(strings.NewReader(doc))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse HTML: %w", err)
@@ -166,7 +166,7 @@ func ParseDependents(doc string, owner string) ([]models.Dependent, error) {
 		starsNode := cascadia.Query(el, starsSel)
 		ownerNode := cascadia.Query(el, ownerSel)
 		parsedOwner := ownerNode.FirstChild.Data
-		if parsedOwner == owner || exists(parsedOwner) {
+		if exists(parsedOwner) {
 			continue
 		}
 		image, err = imageNodeToUrl(imgNode)
