@@ -20,7 +20,8 @@ func NewDependentsService(renderService *render.RenderService) *DependentsServic
 	}
 }
 
-func (s *DependentsService) NewTask(repo string, id string, kind string, callback func(total int, svg []byte)) {
+func (s *DependentsService) NewTask(owner string, repo string, id string, kind string, callback func(total int, svg []byte)) {
+	repo = owner + "/" + repo
 	url := "https://github.com/" + repo + "/network/dependents"
 	if id != "" {
 		url += "?package_id=" + id
@@ -39,7 +40,7 @@ func (s *DependentsService) NewTask(repo string, id string, kind string, callbac
 		}
 		return
 	}
-	dependents, err := utils.ParseDependents(page)
+	dependents, err := utils.ParseDependents(page, owner)
 	if err != nil {
 		return
 	}

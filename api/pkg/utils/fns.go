@@ -141,21 +141,32 @@ func ParseTotalDependents(doc string, repo string) (int, error) {
 	return number, nil
 }
 
-func ParseDependents(doc string) ([]models.Dependent, error) {
+func ParseDependents(doc string, owner string) ([]models.Dependent, error) {
 	node, err := html.Parse(strings.NewReader(doc))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse HTML: %w", err)
 	}
 	imgSel, _ := cascadia.Compile("img")
-	dependentSel, _ := cascadia.Compile(`[data-test-id="dg-repo-pkg-dependent"]`)
 	starsSel, _ := cascadia.Compile(".octicon-star")
+	dependentSel, _ := cascadia.Compile(`[data-test-id="dg-repo-pkg-dependent"]`)
+	ownerSel, _ := cascadia.Compile(`[data-hovercard-type="user"], [data-hovercard-type="organization"]`)
 	nodes := cascadia.QueryAll(node, dependentSel)
 	dependents := make([]models.Dependent, 0, 30)
+	exists := func(parsedOwner string) bool {
+		for _, d := range dependents {
+			if d.Owner == parsedOwner {
+				return true
+			}
+		}
+		return false
+	}
 	for _, el := range nodes {
 		var image string
 		imgNode := cascadia.Query(el, imgSel)
 		starsNode := cascadia.Query(el, starsSel)
-		if imgNode == nil {
+		ownerNode := cascadia.Query(el, ownerSel)
+		parsedOwner := ownerNode.FirstChild.Data
+		if parsedOwner == owner || exists(parsedOwner) {
 			continue
 		}
 		image, err = imageNodeToUrl(imgNode)
@@ -170,6 +181,7 @@ func ParseDependents(doc string) ([]models.Dependent, error) {
 		dependents = append(dependents, models.Dependent{
 			Image: image,
 			Stars: stars,
+			Owner: parsedOwner,
 		})
 	}
 	sort.Slice(dependents, func(i, j int) bool {
@@ -199,6 +211,9 @@ func extractNumber(anchor *html.Node) (int, error) {
 }
 
 func imageNodeToUrl(n *html.Node) (string, error) {
+	if n == nil {
+		return "", fmt.Errorf("image node is nil")
+	}
 	for _, attr := range n.Attr {
 		if attr.Key == "src" {
 			return SetParams(attr.Val, map[string]string{"s": "100"}), nil
