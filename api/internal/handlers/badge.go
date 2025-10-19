@@ -56,6 +56,25 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).Type("svg").Send(body)
 }
 
+
+func (h *BadgeHandler) SelfBadge(c *fiber.Ctx) error {
+	var total string
+	seen := make(map[string]struct{})
+	h.databaseService.IterateKeys(func(key string) {
+		route := utils.ToRoute(key)
+		if _, exists := seen[route]; !exists {
+			seen[route] = struct{}{}
+		}
+	})
+	total = strconv.Itoa(len(seen))
+	body, err := getBadge(total, c.Queries())
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", err)
+	}
+	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")
+	return c.Status(fiber.StatusOK).Type("svg").Send(body)
+}
+
 func getBadge(total string, q map[string]string) ([]byte, error) {
 	totalInt, _ := strconv.Atoi(total)
 	u := "https://img.shields.io/badge/dependents-" + utils.FormatNumber(totalInt) + "-" + color(total)
