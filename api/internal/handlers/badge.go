@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -47,30 +48,54 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 			return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
 		}
 	}
+	body, err := getBadge(total, c.Queries())
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", err)
+	}
+	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")
+	return c.Status(fiber.StatusOK).Type("svg").Send(body)
+}
 
+
+func (h *BadgeHandler) SelfBadge(c *fiber.Ctx) error {
+	var total string
+	seen := make(map[string]struct{})
+	h.databaseService.IterateKeys(func(key string) {
+		route := utils.ToRoute(key)
+		if _, exists := seen[route]; !exists {
+			seen[route] = struct{}{}
+		}
+	})
+	total = strconv.Itoa(len(seen))
+	queries := c.Queries()
+	queries["label"] = "users"
+	body, err := getBadge(total, queries)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", err)
+	}
+	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")
+	return c.Status(fiber.StatusOK).Type("svg").Send(body)
+}
+
+func getBadge(total string, q map[string]string) ([]byte, error) {
 	totalInt, _ := strconv.Atoi(total)
 	u := "https://img.shields.io/badge/dependents-" + utils.FormatNumber(totalInt) + "-" + color(total)
 	url := utils.SetParams(u, map[string]string{
-		"logo":       c.Query("logo"),
-		"label":      c.Query("label"),
-		"style":      c.Query("style"),
-		"color":      c.Query("color"),
-		"logoColor":  c.Query("logoColor"),
-		"labelColor": c.Query("labelColor"),
+		"logo":       q["logo"],
+		"label":      q["label"],
+		"style":      q["style"],
+		"color":      q["color"],
+		"logoColor":  q["logoColor"],
+		"labelColor": q["labelColor"],
 	})
-
 	statusCode, body, errs := fiber.Get(url).Bytes()
-
 	if len(errs) > 0 {
-		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", errs[0])
+		return nil, errs[0]
 	}
-
 	if statusCode != fiber.StatusOK {
-		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", nil)
+		return nil, fmt.Errorf("failed to fetch badge: status code %d", statusCode)
 	}
-
-	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")
-	return c.Status(fiber.StatusOK).Type("svg").Send(body)
+	return body, nil
 }
 
 func color(v string) string {

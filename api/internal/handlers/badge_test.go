@@ -28,6 +28,11 @@ func TestBadgeHandler_Badge(t *testing.T) {
 			url:            "/invalid/repo/badge",
 			expectedStatus: fiber.StatusNotFound,
 		},
+		{
+			name:           "self",
+			url:            "/self/repo/badge",
+			expectedStatus: fiber.StatusOK,
+		},
 	}
 
 	cfg := test.NewConfig()
@@ -41,6 +46,7 @@ func TestBadgeHandler_Badge(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			app := test.NewServer(cfg)
 			h := NewBadgeHandler(dbService, dependentsService)
+			app.Get("/self/repo/badge", h.SelfBadge)
 			app.Get("/:owner/:repo/badge", h.Badge)
 
 			req := httptest.NewRequest("GET", tt.url, nil)
