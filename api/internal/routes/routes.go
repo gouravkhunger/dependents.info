@@ -9,7 +9,7 @@ import (
 func Setup(app *fiber.App, handlers *handlers.Handlers) {
 	app.Get("/health", handlers.HealthHandler.Health)
 	app.Get("/sitemap.xml", handlers.SitemapHandler.Sitemap)
-	app.Get("/gouravkhunger/dependents.info/badge", handlers.BadgeHandler.SelfBadge)
+	app.Get("/gouravkhunger/dependents.info/users", handlers.BadgeHandler.SelfBadge)
 
 	app.Get("/:owner/:repo", handlers.RepoHandler.RepoPage)
 	app.Delete("/:owner/:repo", handlers.DeleteHandler.Delete)

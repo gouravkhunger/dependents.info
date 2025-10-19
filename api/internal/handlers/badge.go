@@ -67,7 +67,9 @@ func (h *BadgeHandler) SelfBadge(c *fiber.Ctx) error {
 		}
 	})
 	total = strconv.Itoa(len(seen))
-	body, err := getBadge(total, c.Queries())
+	queries := c.Queries()
+	queries["label"] = "users"
+	body, err := getBadge(total, queries)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to fetch badge image", err)
 	}
