@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 
 import { ERROR } from "@/constants";
-import { Dependents, DependentsPage } from "@/types";
+import type { Dependents, DependentsPage } from "@/types";
 import { removeQueryParams } from "@/utils";
 
 export const parseTotalDependents = (doc: string, repo: string): number => {
