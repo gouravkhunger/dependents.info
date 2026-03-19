@@ -36,6 +36,7 @@ const actionConfiguration = `- uses: gouravkhunger/dependents.info@main
     unique-owners: true
     exclude-owner: true
     upload-artifacts: true
+    exclude-users: "user1, user2"
     package-id: UGFja2SomeStringzcyMDE`;
 
 const htmlContent = (name?: string, id?: string) => `<a href="https://dependents.info/${name || "owner/repo"}${id ? `?id=${id}` : ""}">
