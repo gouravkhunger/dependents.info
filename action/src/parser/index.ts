@@ -21,14 +21,27 @@ export async function processRepo(
   const owner = process.env.GITHUB_REPOSITORY_OWNER || "";
   const excludeOwner = core.getInput("exclude-owner") === "true";
 
+  const excludeUsersInput = core.getInput("exclude-users");
+  const excludeUsers = excludeUsersInput
+    ? excludeUsersInput
+        .split(",")
+        .map((u) => u.trim().toLowerCase())
+        .filter(Boolean)
+    : [];
+
   let count = 0;
   while (pageLink) {
     count++;
     const response = await get(pageLink);
     const page = parseDependentsPage(response);
-    const dependentsToAdd = excludeOwner
+    let dependentsToAdd = excludeOwner
       ? page.dependents.filter((dep) => dep.owner !== owner)
       : page.dependents;
+    if (excludeUsers.length > 0) {
+      dependentsToAdd = dependentsToAdd.filter(
+        (dep) => !excludeUsers.includes(dep.owner.toLowerCase()),
+      );
+    }
     dependents.push(...dependentsToAdd);
     pageLink = page.nextPageLink;
     core.info(MESSAGE.processedPage(count, name));

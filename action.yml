@@ -32,6 +32,11 @@ inputs:
     required: false
     default: true
     type: boolean
+  exclude-users:
+    description: "comma-separated list of GitHub usernames/orgs to exclude from dependents (e.g. 'user1, user2')"
+    required: false
+    default: ""
+    type: string
   force-run:
     description: "force submit dependents data to the api. only affects forked repositories (true/false)"
     required: false

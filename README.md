@@ -121,6 +121,7 @@ add the following options to your `dependents.yml` file if you want to customize
     unique-owners: true
     exclude-owner: true
     upload-artifacts: true
+    exclude-users: "user1, user2"
     package-id: UGFja2SomeStringzcyMDE
 ```
 
@@ -131,6 +132,7 @@ add the following options to your `dependents.yml` file if you want to customize
 | `package-id`       | `string`  | use if repo hosts [multiple packages](#multiple-packages). action processes only one at a time. | `""`    |
 | `unique-owners`    | `boolean` | disables duplicate users in the generated image.                          | `true`  |
 | `exclude-owner`    | `boolean` | exclude repos from the same owner that depend on this repository.         | `true`  |
+| `exclude-users`    | `string`  | comma-separated list of users to exclude from the generated image.        | `""`    |
 | `upload-artifacts` | `boolean` | whether to upload the outputs as action's build artifacts.                | `true`  |
 
 ### why github action?
