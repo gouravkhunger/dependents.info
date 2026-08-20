@@ -4,23 +4,22 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"dependents.info/internal/config"
-	"dependents.info/internal/service/database"
-	"dependents.info/internal/service/render"
+	"dependents.info/internal/service"
 	"dependents.info/pkg/utils"
 )
 
 type SitemapHandler struct {
-	renderService   *render.RenderService
-	databaseService *database.BadgerService
+	renderer service.Renderer
+	store    service.Store
 }
 
 func NewSitemapHandler(
-	dbService *database.BadgerService,
-	renderService *render.RenderService,
+	store service.Store,
+	renderer service.Renderer,
 ) *SitemapHandler {
 	return &SitemapHandler{
-		databaseService: dbService,
-		renderService:   renderService,
+		store:    store,
+		renderer: renderer,
 	}
 }
 
@@ -29,7 +28,7 @@ func (h *SitemapHandler) Sitemap(c *fiber.Ctx) error {
 
 	urls := make([]string, 0)
 	seen := make(map[string]struct{})
-	h.databaseService.IterateKeys(func(key string) {
+	h.store.IterateKeys(func(key string) {
 		route := utils.ToRoute(key)
 		if _, exists := seen[route]; !exists {
 			seen[route] = struct{}{}
@@ -37,7 +36,7 @@ func (h *SitemapHandler) Sitemap(c *fiber.Ctx) error {
 		}
 	})
 
-	sitemapBytes, err := h.renderService.RenderSitemap(urls)
+	sitemapBytes, err := h.renderer.RenderSitemap(urls)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to render sitemap", err)
 	}

@@ -4,17 +4,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"dependents.info/internal/config"
-	"dependents.info/internal/service/database"
+	"dependents.info/internal/service"
 	"dependents.info/pkg/utils"
 )
 
 type DeleteHandler struct {
-	databaseService *database.BadgerService
+	store service.Store
 }
 
-func NewDeleteHandler(databaseService *database.BadgerService) *DeleteHandler {
+func NewDeleteHandler(store service.Store) *DeleteHandler {
 	return &DeleteHandler{
-		databaseService: databaseService,
+		store: store,
 	}
 }
 
@@ -35,7 +35,7 @@ func (h *DeleteHandler) Delete(c *fiber.Ctx) error {
 
 	keys := []string{"total:" + name, "svg:" + name}
 	for _, key := range keys {
-		err = h.databaseService.Delete(key)
+		err = h.store.Delete(key)
 		if err != nil {
 			return utils.SendError(c, fiber.StatusInternalServerError, "Failed to delete "+key, err)
 		}

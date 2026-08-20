@@ -2,11 +2,8 @@ package utils
 
 import (
 	"embed"
-	"encoding/base64"
 	"fmt"
-	"io"
 	"math"
-	"net/http"
 	"net/url"
 	"os"
 	"regexp"
@@ -14,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 
-	"dependents.info/internal/models"
 	"github.com/andybalholm/cascadia"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/net/html"
@@ -141,7 +137,13 @@ func ParseTotalDependents(doc string, repo string) (int, error) {
 	return number, nil
 }
 
-func ParseDependents(doc string) ([]models.Dependent, error) {
+type DependentInfo struct {
+	Owner    string
+	Stars    int
+	ImageURL string
+}
+
+func ParseDependentNodes(doc string) ([]DependentInfo, error) {
 	node, err := html.Parse(strings.NewReader(doc))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse HTML: %w", err)
@@ -151,46 +153,41 @@ func ParseDependents(doc string) ([]models.Dependent, error) {
 	dependentSel, _ := cascadia.Compile(`[data-test-id="dg-repo-pkg-dependent"]`)
 	ownerSel, _ := cascadia.Compile(`[data-hovercard-type="user"], [data-hovercard-type="organization"]`)
 	nodes := cascadia.QueryAll(node, dependentSel)
-	dependents := make([]models.Dependent, 0, 30)
-	exists := func(parsedOwner string) bool {
-		for _, d := range dependents {
-			if d.Owner == parsedOwner {
-				return true
-			}
-		}
-		return false
-	}
+	seen := make(map[string]struct{})
+	result := make([]DependentInfo, 0, 30)
 	for _, el := range nodes {
-		var image string
 		imgNode := cascadia.Query(el, imgSel)
 		starsNode := cascadia.Query(el, starsSel)
 		ownerNode := cascadia.Query(el, ownerSel)
+		if ownerNode == nil || ownerNode.FirstChild == nil {
+			continue
+		}
 		parsedOwner := ownerNode.FirstChild.Data
-		if exists(parsedOwner) {
+		if _, ok := seen[parsedOwner]; ok {
 			continue
 		}
-		image, err = imageNodeToUrl(imgNode)
+		seen[parsedOwner] = struct{}{}
+		imageURL, err := imageNodeToUrl(imgNode)
 		if err != nil {
 			continue
 		}
-		image, err = imageUrlToBase64(image)
-		if err != nil {
+		if starsNode == nil || starsNode.Parent == nil {
 			continue
 		}
 		stars, _ := extractNumber(starsNode.Parent)
-		dependents = append(dependents, models.Dependent{
-			Image: image,
-			Stars: stars,
-			Owner: parsedOwner,
+		result = append(result, DependentInfo{
+			Owner:    parsedOwner,
+			Stars:    stars,
+			ImageURL: imageURL,
 		})
 	}
-	sort.Slice(dependents, func(i, j int) bool {
-		return dependents[i].Stars > dependents[j].Stars
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].Stars > result[j].Stars
 	})
-	if len(dependents) > 11 {
-		return dependents[:11], nil
+	if len(result) > 11 {
+		return result[:11], nil
 	}
-	return dependents, nil
+	return result, nil
 }
 
 func extractNumber(anchor *html.Node) (int, error) {
@@ -220,20 +217,4 @@ func imageNodeToUrl(n *html.Node) (string, error) {
 		}
 	}
 	return "", fmt.Errorf("no src attribute found in image node")
-}
-
-func imageUrlToBase64(url string) (string, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return "", fmt.Errorf("error fetching image: %w", err)
-	}
-	defer resp.Body.Close()
-	imageData, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", fmt.Errorf("error reading image data: %w", err)
-	}
-	base64Str := base64.StdEncoding.EncodeToString(imageData)
-	mimeType := resp.Header.Get("Content-Type")
-	dataURI := fmt.Sprintf("data:%s;base64,%s", mimeType, base64Str)
-	return dataURI, nil
 }

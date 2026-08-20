@@ -7,22 +7,21 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"dependents.info/internal/service/database"
-	"dependents.info/internal/service/github"
+	"dependents.info/internal/service"
 	"dependents.info/pkg/utils"
 )
 
 type BadgeHandler struct {
-	dependentsService *github.DependentsService
-	databaseService   *database.BadgerService
+	dependentsService service.DependentsTasker
+	store             service.Store
 }
 
 func NewBadgeHandler(
-	databaseService *database.BadgerService,
-	dependentsService *github.DependentsService,
+	store service.Store,
+	dependentsService service.DependentsTasker,
 ) *BadgeHandler {
 	return &BadgeHandler{
-		databaseService:   databaseService,
+		store:             store,
 		dependentsService: dependentsService,
 	}
 }
@@ -34,12 +33,15 @@ func (h *BadgeHandler) resolveTotal(repo, id string) (string, error) {
 	}
 
 	var total string
-	err := h.databaseService.Get("total:"+name, &total)
+	err := h.store.Get("total:"+name, &total)
 	if err != nil {
-		h.dependentsService.NewTask(repo, id, "badge", func(total int, svg []byte) {
-			h.databaseService.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
+		taskErr := h.dependentsService.NewTask(repo, id, "badge", func(total int, svg []byte) {
+			_ = h.store.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
 		})
-		err = h.databaseService.Get("total:"+name, &total)
+		if taskErr != nil {
+			return "", taskErr
+		}
+		err = h.store.Get("total:"+name, &total)
 	}
 	return total, err
 }
@@ -84,7 +86,7 @@ func (h *BadgeHandler) Shields(c *fiber.Ctx) error {
 func (h *BadgeHandler) SelfBadge(c *fiber.Ctx) error {
 	var total string
 	seen := make(map[string]struct{})
-	h.databaseService.IterateKeys(func(key string) {
+	h.store.IterateKeys(func(key string) {
 		route := utils.ToRoute(key)
 		if _, exists := seen[route]; !exists {
 			seen[route] = struct{}{}

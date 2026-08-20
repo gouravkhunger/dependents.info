@@ -6,22 +6,21 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"dependents.info/internal/service/database"
-	"dependents.info/internal/service/github"
+	"dependents.info/internal/service"
 	"dependents.info/pkg/utils"
 )
 
 type ImageHandler struct {
-	dependentsService *github.DependentsService
-	databaseService   *database.BadgerService
+	dependentsService service.DependentsTasker
+	store             service.Store
 }
 
 func NewImageHandler(
-	databaseService *database.BadgerService,
-	dependentsService *github.DependentsService,
+	store service.Store,
+	dependentsService service.DependentsTasker,
 ) *ImageHandler {
 	return &ImageHandler{
-		databaseService:   databaseService,
+		store:             store,
 		dependentsService: dependentsService,
 	}
 }
@@ -36,14 +35,17 @@ func (h *ImageHandler) SVGImage(c *fiber.Ctx) error {
 	}
 
 	var svg string
-	err := h.databaseService.Get("svg:"+name, &svg)
+	err := h.store.Get("svg:"+name, &svg)
 
 	if err != nil {
-		h.dependentsService.NewTask(repo, id, "image", func(total int, svg []byte) {
-			h.databaseService.SaveWithTTL("svg:"+name, svg, 7*24*time.Hour)
-			h.databaseService.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
+		taskErr := h.dependentsService.NewTask(repo, id, "image", func(total int, svg []byte) {
+			_ = h.store.SaveWithTTL("svg:"+name, svg, 7*24*time.Hour)
+			_ = h.store.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
 		})
-		err = h.databaseService.Get("svg:"+name, &svg)
+		if taskErr != nil {
+			return utils.SendError(c, fiber.StatusNotFound, "SVG image not found", taskErr)
+		}
+		err = h.store.Get("svg:"+name, &svg)
 		if err != nil {
 			return utils.SendError(c, fiber.StatusNotFound, "SVG image not found", err)
 		}

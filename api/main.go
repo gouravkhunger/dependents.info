@@ -40,6 +40,6 @@ func main() {
 		log.Panic(err)
 	}
 
-	services.DatabaseService.Sync()
-	services.DatabaseService.Close()
+	services.Store.Sync()
+	services.Store.Close()
 }

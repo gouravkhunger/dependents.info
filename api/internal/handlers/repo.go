@@ -9,20 +9,19 @@ import (
 
 	"dependents.info/internal/config"
 	"dependents.info/internal/models"
-	"dependents.info/internal/service/database"
-	"dependents.info/internal/service/render"
+	"dependents.info/internal/service"
 	"dependents.info/pkg/utils"
 )
 
 type RepoHandler struct {
-	renderService   *render.RenderService
-	databaseService *database.BadgerService
+	renderer service.Renderer
+	store    service.Store
 }
 
-func NewRepoHandler(databaseService *database.BadgerService, renderService *render.RenderService) *RepoHandler {
+func NewRepoHandler(store service.Store, renderer service.Renderer) *RepoHandler {
 	return &RepoHandler{
-		renderService:   renderService,
-		databaseService: databaseService,
+		renderer: renderer,
+		store:    store,
 	}
 }
 
@@ -49,7 +48,7 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 	}
 
 	var total string
-	err := h.databaseService.Get("total:"+name, &total)
+	err := h.store.Get("total:"+name, &total)
 
 	if err != nil {
 		if format != "html" {
@@ -64,7 +63,7 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 	}
 
 	var image string
-	err = h.databaseService.Get("svg:"+name, &image)
+	err = h.store.Get("svg:"+name, &image)
 	if err != nil {
 		image = ""
 	}
@@ -90,7 +89,7 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 		Id:         id,
 	}
 
-	page, err := h.renderService.RenderPage(data)
+	page, err := h.renderer.RenderPage(data)
 
 	if err != nil {
 		return utils.SendError(c, fiber.StatusNotFound, "Failed to generate repository page", err)
