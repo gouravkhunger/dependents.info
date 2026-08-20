@@ -27,10 +27,7 @@ func NewBadgeHandler(
 	}
 }
 
-func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
-	id := c.Query("id")
-	repo := c.Params("owner") + "/" + c.Params("repo")
-
+func (h *BadgeHandler) resolveTotal(repo, id string) (string, error) {
 	name := repo
 	if id != "" {
 		name += ":" + id
@@ -38,15 +35,22 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 
 	var total string
 	err := h.databaseService.Get("total:"+name, &total)
-
 	if err != nil {
 		h.dependentsService.NewTask(repo, id, "badge", func(total int, svg []byte) {
 			h.databaseService.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
 		})
 		err = h.databaseService.Get("total:"+name, &total)
-		if err != nil {
-			return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
-		}
+	}
+	return total, err
+}
+
+func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
+	id := c.Query("id")
+	repo := c.Params("owner") + "/" + c.Params("repo")
+
+	total, err := h.resolveTotal(repo, id)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
 	}
 	body, err := getBadge(total, c.Queries())
 	if err != nil {
@@ -56,6 +60,26 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).Type("svg").Send(body)
 }
 
+func (h *BadgeHandler) Shields(c *fiber.Ctx) error {
+	id := c.Query("id")
+	repo := c.Params("owner") + "/" + c.Params("repo")
+
+	total, err := h.resolveTotal(repo, id)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
+	}
+
+	totalInt, _ := strconv.Atoi(total)
+	label := c.Query("label", "dependents")
+	c.Set(fiber.HeaderCacheControl, "public, max-age=86400, must-revalidate")
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"schemaVersion": 1,
+		"label":         label,
+		"message":       utils.FormatNumber(totalInt),
+		"color":         color(total),
+		"cacheSeconds":  86400,
+	})
+}
 
 func (h *BadgeHandler) SelfBadge(c *fiber.Ctx) error {
 	var total string
