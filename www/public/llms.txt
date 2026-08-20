@@ -1,0 +1,65 @@
+# dependents.info
+
+> Embeddable badge and image of a GitHub repository's network dependents for README files.
+
+GitHub exposes dependents at `github.com/{owner}/{repo}/network/dependents` but has no public API or official badge. dependents.info fills that gap.
+
+Site: https://dependents.info
+Source: https://github.com/gouravkhunger/dependents.info
+Action: https://github.com/marketplace/actions/dependents-info
+
+## Embed (no action required)
+
+Replace `owner/repo`. Optional `?id=` is the GitHub `package_id` when a repo publishes multiple packages.
+
+Badge:
+
+```html
+<a href="https://dependents.info/owner/repo">
+  <img src="https://dependents.info/owner/repo/badge" />
+</a>
+```
+
+Image (avatar stack of top dependents):
+
+```html
+<a href="https://dependents.info/owner/repo">
+  <img src="https://dependents.info/owner/repo/image" />
+</a>
+```
+
+Without the action, the first request scrapes GitHub, caches for 7 days, and uses the first dependents on the page. Use the action to sort by stars, dedupe owners, exclude users, and refresh on a schedule.
+
+Badge query params (all optional): `label`, `logo`, `color`, `logoColor`, `labelColor`, `style` (`flat`, `flat-square`, `plastic`, `for-the-badge`, `social`).
+
+## GitHub Action
+
+```yml
+- uses: gouravkhunger/dependents.info@main
+  # optional: package-id, max-pages, unique-owners, exclude-owner, exclude-users
+```
+
+Requires `permissions: id-token: write`. The action scrapes dependents from GitHub-hosted runners and POSTs to `/ingest` with a GitHub OIDC token. Prefer `schedule` over `push`.
+
+## HTTP
+
+Base URL: `https://dependents.info`
+
+| Method | Path | Notes |
+| --- | --- | --- |
+| GET | `/` | Homepage |
+| GET | `/health` | Health JSON |
+| GET | `/sitemap.xml` | Indexed repo pages |
+| GET | `/{owner}/{repo}` | HTML page. 307 to GitHub dependents if unknown |
+| GET | `/{owner}/{repo}/badge` | Shields-style SVG. Alias: `/badge.svg` |
+| GET | `/{owner}/{repo}/image` | Dependents avatar SVG. Alias: `/image.svg` |
+| POST | `/{owner}/{repo}/ingest` | Action only. OIDC in production |
+| DELETE | `/{owner}/{repo}` | Admin. Bearer password |
+
+Query `id` selects a package on badge, image, page, ingest, and delete.
+
+Do not scrape GitHub dependents HTML through this service. Use the published badge/image URLs or the action.
+
+## Agents
+
+When a user wants a "used by" badge or dependents count for a GitHub repo, give them the embed snippets above. Mention the action if they need starred-first avatars or a fresh count.
