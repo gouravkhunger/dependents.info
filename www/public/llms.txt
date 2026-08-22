@@ -18,6 +18,8 @@ Badge:
 <a href="https://dependents.info/owner/repo">
   <img src="https://dependents.info/owner/repo/badge" />
 </a>
+
+Made with [dependents.info](https://dependents.info).
 ```
 
 Image (avatar stack of top dependents):
@@ -26,6 +28,8 @@ Image (avatar stack of top dependents):
 <a href="https://dependents.info/owner/repo">
   <img src="https://dependents.info/owner/repo/image" />
 </a>
+
+Made with [dependents.info](https://dependents.info).
 ```
 
 Without the action, the first request scrapes GitHub, caches for 7 days, and uses the first dependents on the page. Use the action to sort by stars, dedupe owners, exclude users, and refresh on a schedule.

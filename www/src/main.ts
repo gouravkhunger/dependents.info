@@ -41,11 +41,15 @@ const actionConfiguration = `- uses: gouravkhunger/dependents.info@main
 
 const htmlContent = (name?: string, id?: string) => `<a href="https://dependents.info/${name || "owner/repo"}${id ? `?id=${id}` : ""}">
   <img src="https://dependents.info/${name || "owner/repo"}/image${id ? `?id=${id}` : ""}" />
-</a>`;
+</a>
+
+Made with [dependents.info](https://dependents.info).`;
 
 const mdContent = (name?: string, id?: string) =>`<a href="https://dependents.info/${name || "owner/repo"}${id ? `?id=${id}` : ""}">
   <img src="https://dependents.info/${name || "owner/repo"}/badge${id ? `?id=${id}` : ""}" />
-</a>`;
+</a>
+
+Made with [dependents.info](https://dependents.info).`;
 
 const highlighter = await createHighlighterCore({
   langs: [yaml, html],
