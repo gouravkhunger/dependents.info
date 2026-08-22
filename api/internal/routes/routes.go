@@ -16,9 +16,10 @@ func Setup(app *fiber.App, handlers *handlers.Handlers) {
 
 	app.Get("/:owner/:repo/badge", handlers.BadgeHandler.Badge)
 	app.Get("/:owner/:repo/image", handlers.ImageHandler.SVGImage)
-	
+	app.Get("/:owner/:repo/shields.json", handlers.BadgeHandler.Shields)
+
 	app.Get("/:owner/:repo/badge.svg", handlers.BadgeHandler.Badge)
 	app.Get("/:owner/:repo/image.svg", handlers.ImageHandler.SVGImage)
-	
+
 	app.Post("/:owner/:repo/ingest", handlers.IngestHandler.Ingest)
 }

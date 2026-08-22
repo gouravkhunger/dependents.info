@@ -36,6 +36,12 @@ Without the action, the first request scrapes GitHub, caches for 7 days, and use
 
 Badge query params (all optional): `label`, `logo`, `color`, `logoColor`, `labelColor`, `style` (`flat`, `flat-square`, `plastic`, `for-the-badge`, `social`).
 
+Shields.io endpoint (uses this service as the JSON source):
+
+```
+https://img.shields.io/endpoint?url=https://dependents.info/owner/repo/shields.json
+```
+
 ## GitHub Action
 
 ```yml
@@ -57,6 +63,7 @@ Base URL: `https://dependents.info`
 | GET | `/{owner}/{repo}` | HTML page. 307 to GitHub dependents if unknown |
 | GET | `/{owner}/{repo}/badge` | Shields-style SVG. Alias: `/badge.svg` |
 | GET | `/{owner}/{repo}/image` | Dependents avatar SVG. Alias: `/image.svg` |
+| GET | `/{owner}/{repo}/shields.json` | [Shields endpoint](https://shields.io/badges/endpoint-badge) JSON |
 | POST | `/{owner}/{repo}/ingest` | Action only. OIDC in production |
 | DELETE | `/{owner}/{repo}` | Admin. Bearer password |
 
