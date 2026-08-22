@@ -19,6 +19,8 @@ here's a demo of the generated image for the gem [`jekyll-auto-authors`](https:/
   <img src="https://dependents.info/gouravkhunger/jekyll-auto-authors/image" />
 </a>
 
+Made with [dependents.info](https://dependents.info).
+
 ## quickstart
 
 ### embed image
@@ -31,6 +33,8 @@ copy the following code snippet and **replace `owner/repo`** with your repositor
 <a href="https://dependents.info/owner/repo">
   <img src="https://dependents.info/owner/repo/image" />
 </a>
+
+Made with [dependents.info](https://dependents.info).
 ```
 
 if your repository hosts multiple packages each with it's own tracked dependents, use this:
@@ -39,6 +43,8 @@ if your repository hosts multiple packages each with it's own tracked dependents
 <a href="https://dependents.info/owner/repo?id=idHere">
   <img src="https://dependents.info/owner/repo/image?id=idHere" />
 </a>
+
+Made with [dependents.info](https://dependents.info).
 ```
 
 by default, the image is generated from the first few dependents. use the [github action](#github-action) to control this. for example, showcase only the repositories with the most stars.
@@ -53,6 +59,8 @@ copy the following code snippet and **replace `owner/repo`** with your repositor
 <a href="https://dependents.info/owner/repo">
   <img src="https://dependents.info/owner/repo/badge" />
 </a>
+
+Made with [dependents.info](https://dependents.info).
 ```
 
 if your repository hosts multiple packages each with it's own tracked dependents, use this:
@@ -61,6 +69,8 @@ if your repository hosts multiple packages each with it's own tracked dependents
 <a href="https://dependents.info/owner/repo?id=idHere">
   <img src="https://dependents.info/owner/repo/image?id=idHere" />
 </a>
+
+Made with [dependents.info](https://dependents.info).
 ```
 
 available query params (optional):
