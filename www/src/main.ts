@@ -121,69 +121,18 @@ packageIdInputElement.addEventListener("input", (e) => {
   embedCodeElement.innerHTML = embedCode(invalid ? undefined : repo, id);
 });
 
-const usedByRepos = [
-  "joshnuss/svelte-persisted-store",
-  "sieblyio/binance",
-  "oekazuma/svelte-meta-tags",
-  "okineadev/vitepress-plugin-llms",
-  "SSShooter/mind-elixir-core",
-  "HatsuneMiku3939/direnv-action",
-];
-
-const usedBy = document.querySelector("#used-by");
-const usedBySection = document.querySelector<HTMLElement>("#used-by-section");
-
-if (usedBy && usedBySection) {
-  const rows = await Promise.all(
-    usedByRepos.map(async (repo) => {
-      try {
-        const res = await fetch(`https://dependents.info/${repo}.json`);
-        if (!res.ok) {
-          return null;
-        }
-        const data = (await res.json()) as { owner?: string; repo?: string; total?: number };
-        const owner = data.owner ?? repo.split("/")[0];
-        const name = data.repo ?? repo.split("/")[1];
-        const total = typeof data.total === "number" ? data.total : 0;
-        return { owner, name, total };
-      } catch {
-        return null;
-      }
-    }),
-  );
-
-  for (const row of rows) {
-    if (!row) {
-      continue;
+document.querySelectorAll<HTMLAnchorElement>(".used-by-card").forEach(async (card) => {
+  const slug = card.getAttribute("href")?.replace(/^\//, "");
+  const el = card.querySelector(".used-by-stars");
+  if (!slug || !el) return;
+  try {
+    const res = await fetch(`/${slug}.json`);
+    if (!res.ok) {
+      return;
     }
-    const slug = `${row.owner}/${row.name}`;
-    const a = document.createElement("a");
-    a.className = "used-by-card";
-    a.href = `/${slug}`;
-
-    const img = document.createElement("img");
-    img.src = `https://github.com/${row.owner}.png?size=64`;
-    img.width = 32;
-    img.height = 32;
-    img.alt = "";
-
-    const meta = document.createElement("div");
-    meta.className = "used-by-meta";
-
-    const title = document.createElement("span");
-    title.className = "used-by-name";
-    title.textContent = slug;
-
-    const stars = document.createElement("span");
-    stars.className = "used-by-stars";
-    stars.textContent = `${row.total.toLocaleString("en-US")} dependents`;
-
-    meta.append(title, stars);
-    a.append(img, meta);
-    usedBy.append(a);
-  }
-
-  if (usedBy.childElementCount > 0) {
-    usedBySection.hidden = false;
-  }
-}
+    const data = (await res.json()) as { total?: number };
+    if (typeof data.total === "number") {
+      el.textContent = `${data.total.toLocaleString("en-US")} dependents`;
+    }
+  } catch {}
+});
