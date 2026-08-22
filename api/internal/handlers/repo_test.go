@@ -73,14 +73,36 @@ func TestRepoHandler_Formats(t *testing.T) {
 		if !strings.Contains(text, "# owner/repo") {
 			t.Errorf("missing heading: %s", text)
 		}
-		if !strings.Contains(text, "42") {
-			t.Errorf("missing total: %s", text)
+		if !strings.Contains(text, "found **42 projects** (network dependents) using this github repository's default package!") {
+			t.Errorf("missing wording: %s", text)
 		}
 		if !strings.Contains(text, "/owner/repo/badge") {
 			t.Errorf("missing badge: %s", text)
 		}
 		if !strings.Contains(text, "/owner/repo/image") {
 			t.Errorf("missing image: %s", text)
+		}
+		if !strings.Contains(text, "Made with [dependents.info](http://localhost:5000).") {
+			t.Errorf("missing made with: %s", text)
+		}
+	})
+
+	t.Run("markdown with package id", func(t *testing.T) {
+		req := httptest.NewRequest("GET", "/owner/repo.md?id=pkg1", nil)
+		resp, err := app.Test(req, -1)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if resp.StatusCode != fiber.StatusOK {
+			t.Fatalf("expected 200, got %d", resp.StatusCode)
+		}
+		body, _ := io.ReadAll(resp.Body)
+		text := string(body)
+		if !strings.Contains(text, "## package: pkg1") {
+			t.Errorf("missing package heading: %s", text)
+		}
+		if !strings.Contains(text, "found **7 projects** (network dependents) using this github package!") {
+			t.Errorf("missing package wording: %s", text)
 		}
 	})
 

@@ -140,16 +140,21 @@ func repoMarkdown(host, owner, repo, id string, total int, hasImage bool) string
 		q = "?id=" + id
 	}
 	name := owner + "/" + repo
+	using := "repository's default package"
+	if id != "" {
+		using = "package"
+	}
 	var b strings.Builder
 	fmt.Fprintf(&b, "# %s\n\n", name)
 	if id != "" {
-		fmt.Fprintf(&b, "package `%s`\n\n", id)
+		fmt.Fprintf(&b, "## package: %s\n\n", id)
 	}
-	fmt.Fprintf(&b, "**%s** GitHub network dependents.\n\n", utils.FormatNumber(total))
+	fmt.Fprintf(&b, "found **%s projects** (network dependents) using this github %s!\n\n", utils.FormatNumber(total), using)
 	fmt.Fprintf(&b, "[![dependents](%s/%s/badge%s)](%s/%s%s)\n", host, name, q, host, name, q)
 	if hasImage {
 		fmt.Fprintf(&b, "\n![used by](%s/%s/image%s)\n", host, name, q)
 	}
+	fmt.Fprintf(&b, "\nMade with [dependents.info](%s).\n", host)
 	gh := "https://github.com/" + name + "/network/dependents"
 	if id != "" {
 		gh += "?package_id=" + id
