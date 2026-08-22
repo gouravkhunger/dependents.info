@@ -1,5 +1,5 @@
 import { pathsToModuleNameMapper } from "ts-jest";
-import config from "./tsconfig.json" assert { type: "json" };
+import config from "./tsconfig.json" with { type: "json" };
 
 /** @type {import("ts-jest").JestConfigWithTsJest} **/
 export default {

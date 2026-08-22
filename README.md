@@ -189,7 +189,7 @@ this project is built as a monorepo hosting three packages in specific folders:
 
 ## contributing
 
-the project uses [node.js](https://nodejs.org) `>=20` and [go](https://go.dev) version `>=1.24`.
+the project uses [node.js](https://nodejs.org) `>=24` and [go](https://go.dev) version `>=1.24`.
 
 the [makefile](https://github.com/gouravkhunger/dependents.info/blob/main/Makefile) is a convenient way to run the project locally.
 
