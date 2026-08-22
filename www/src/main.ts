@@ -120,3 +120,19 @@ packageIdInputElement.addEventListener("input", (e) => {
   badgeCodeElement.innerHTML = badgeCode(invalid ? undefined : repo, id);
   embedCodeElement.innerHTML = embedCode(invalid ? undefined : repo, id);
 });
+
+document.querySelectorAll<HTMLAnchorElement>(".used-by-card").forEach(async (card) => {
+  const slug = card.getAttribute("href")?.replace(/^\//, "");
+  const el = card.querySelector(".used-by-stars");
+  if (!slug || !el) return;
+  try {
+    const res = await fetch(`/${slug}.json`);
+    if (!res.ok) {
+      return;
+    }
+    const data = (await res.json()) as { total?: number };
+    if (typeof data.total === "number") {
+      el.textContent = `${data.total.toLocaleString("en-US")} dependents`;
+    }
+  } catch {}
+});

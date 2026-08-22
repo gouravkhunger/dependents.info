@@ -61,6 +61,32 @@
   @apply no-underline border-2 border-gray-300 text-gray-700 hover:bg-gray-100;
 }
 
+.used-by {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-2 my-4;
+}
+
+.used-by-card {
+  @apply flex items-center gap-3 no-underline text-gray-800;
+  @apply border-2 border-gray-300 rounded-md px-3 py-2;
+  @apply hover:bg-gray-100 transition-colors duration-200;
+}
+
+.used-by-card img {
+  @apply !m-0 size-8 rounded-md shrink-0;
+}
+
+.used-by-meta {
+  @apply flex flex-col min-w-0 gap-0.5;
+}
+
+.used-by-name {
+  @apply text-sm truncate;
+}
+
+.used-by-stars {
+  @apply text-xs text-gray-600;
+}
+
 /* https://github.com/joshnuss/shiki-transformer-copy-button */
 pre:has(code) {
   @apply relative flex p-0;
