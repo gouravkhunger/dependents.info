@@ -61,6 +61,8 @@ Base URL: `https://dependents.info`
 | GET | `/health` | Health JSON |
 | GET | `/sitemap.xml` | Indexed repo pages |
 | GET | `/{owner}/{repo}` | HTML page. 307 to GitHub dependents if unknown |
+| GET | `/{owner}/{repo}.json` | JSON document (404 if unknown) |
+| GET | `/{owner}/{repo}.md` | Markdown document (404 if unknown) |
 | GET | `/{owner}/{repo}/badge` | Shields-style SVG. Alias: `/badge.svg` |
 | GET | `/{owner}/{repo}/image` | Dependents avatar SVG. Alias: `/image.svg` |
 | GET | `/{owner}/{repo}/shields.json` | [Shields endpoint](https://shields.io/badges/endpoint-badge) JSON |
@@ -74,3 +76,5 @@ Do not scrape GitHub dependents HTML through this service. Use the published bad
 ## Agents
 
 When a user wants a "used by" badge or dependents count for a GitHub repo, give them the embed snippets above. Mention the action if they need starred-first avatars or a fresh count.
+
+Prefer `GET /{owner}/{repo}.json` for tool use. Use `.md` when pasting into a document.
