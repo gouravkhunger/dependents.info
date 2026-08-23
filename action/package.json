@@ -13,7 +13,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
-    "test": "NODE_NO_WARNINGS=1 npx jest",
+    "test": "vitest run",
     "build": "ncc build src/index.ts -mo dist",
     "local-action": "npx @github/local-action .. action/src/main.ts .env"
   },
@@ -34,23 +34,19 @@
     "cheerio": "^1.0.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.27.0",
-    "@github/local-action": "^3.2.1",
-    "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
-    "@jest/globals": "^30.4.1",
-    "@types/jest": "^30.0.0",
+    "@eslint/js": "^10.0.1",
+    "@github/local-action": "^7.0.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@types/node": "^24.13.3",
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "@typescript-eslint/parser": "^8.32.1",
-    "@vercel/ncc": "^0.38.3",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-jest": "^28.11.0",
-    "eslint-plugin-prettier": "^5.4.0",
-    "jest": "^30.4.2",
-    "ts-jest": "^29.4.12",
-    "ts-jest-resolver": "^2.0.1",
-    "typescript": "^5.8.3"
+    "@vercel/ncc": "^0.45.0",
+    "@vitest/eslint-plugin": "^1.6.27",
+    "eslint": "^10.9.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "jiti": "^2.7.0",
+    "prettier": "^3.9.6",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.11"
   }
 }
