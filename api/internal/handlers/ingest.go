@@ -8,27 +8,25 @@ import (
 	"dependents.info/internal/config"
 	"dependents.info/internal/env"
 	"dependents.info/internal/models"
-	"dependents.info/internal/service/database"
-	"dependents.info/internal/service/github"
-	"dependents.info/internal/service/render"
+	"dependents.info/internal/service"
 	"dependents.info/pkg/utils"
 )
 
 type IngestHandler struct {
-	githubOIDCService *github.OIDCService
-	renderService     *render.RenderService
-	databaseService   *database.BadgerService
+	oidcVerifier service.OIDCVerifier
+	renderer     service.Renderer
+	store        service.Store
 }
 
 func NewIngestHandler(
-	githubOIDC *github.OIDCService,
-	dbService *database.BadgerService,
-	renderService *render.RenderService,
+	oidcVerifier service.OIDCVerifier,
+	store service.Store,
+	renderer service.Renderer,
 ) *IngestHandler {
 	return &IngestHandler{
-		databaseService:   dbService,
-		githubOIDCService: githubOIDC,
-		renderService:     renderService,
+		store:        store,
+		oidcVerifier: oidcVerifier,
+		renderer:     renderer,
 	}
 }
 
@@ -47,7 +45,7 @@ func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 			return utils.SendError(c, fiber.StatusUnauthorized, "Invalid Authorization header", err)
 		}
 
-		if err := h.githubOIDCService.VerifyToken(c.Context(), token, name); err != nil {
+		if err := h.oidcVerifier.VerifyToken(c.Context(), token, name); err != nil {
 			return utils.SendError(c, fiber.StatusUnauthorized, "Repository ownership verification failed", err)
 		}
 	}
@@ -61,7 +59,7 @@ func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 		return utils.SendError(c, fiber.StatusBadRequest, "Invalid JSON payload", err)
 	}
 
-	svgBytes, err := h.renderService.RenderSVG(req)
+	svgBytes, err := h.renderer.RenderSVG(req)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to render SVG", err)
 	}
@@ -70,11 +68,11 @@ func (h *IngestHandler) Ingest(c *fiber.Ctx) error {
 		name += ":" + id
 	}
 
-	if err := h.databaseService.Save("total:"+name, []byte(strconv.Itoa(req.Total))); err != nil {
+	if err := h.store.Save("total:"+name, []byte(strconv.Itoa(req.Total))); err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to store total dependents", err)
 	}
 
-	if err := h.databaseService.Save("svg:"+name, svgBytes); err != nil {
+	if err := h.store.Save("svg:"+name, svgBytes); err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, "Failed to store SVG", err)
 	}
 

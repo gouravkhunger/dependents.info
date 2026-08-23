@@ -9,22 +9,88 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"dependents.info/internal/service/database"
-	"dependents.info/internal/service/render"
 	"dependents.info/internal/test"
 )
 
+func TestRepoHandler_RepoPage(t *testing.T) {
+	tests := []struct {
+		name           string
+		url            string
+		storeData      map[string][]byte
+		pageResult     []byte
+		expectedStatus int
+	}{
+		{
+			name:           "redirect when no data cached",
+			url:            "/owner/repo",
+			expectedStatus: fiber.StatusTemporaryRedirect,
+		},
+		{
+			name:           "render page with total",
+			url:            "/owner/repo",
+			storeData:      map[string][]byte{"total:owner/repo": []byte("42")},
+			pageResult:     []byte("<html>repo page</html>"),
+			expectedStatus: fiber.StatusOK,
+		},
+		{
+			name: "render page with total and svg",
+			url:  "/owner/repo",
+			storeData: map[string][]byte{
+				"total:owner/repo": []byte("42"),
+				"svg:owner/repo":   []byte("<svg/>"),
+			},
+			pageResult:     []byte("<html>repo page</html>"),
+			expectedStatus: fiber.StatusOK,
+		},
+		{
+			name:           "with package id - redirect",
+			url:            "/owner/repo?id=pkg1",
+			expectedStatus: fiber.StatusTemporaryRedirect,
+		},
+		{
+			name:           "with package id - render",
+			url:            "/owner/repo?id=pkg1",
+			storeData:      map[string][]byte{"total:owner/repo:pkg1": []byte("10")},
+			pageResult:     []byte("<html>pkg page</html>"),
+			expectedStatus: fiber.StatusOK,
+		},
+	}
+
+	cfg := test.NewConfig()
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			store := test.NewMockStore()
+			for k, v := range tt.storeData {
+				store.Save(k, v)
+			}
+
+			renderer := &test.MockRenderer{PageResult: tt.pageResult}
+			app := test.NewServer(cfg)
+			h := NewRepoHandler(store, renderer)
+			app.Get("/:owner/:repo", h.RepoPage)
+
+			req := httptest.NewRequest("GET", tt.url, nil)
+			resp, err := app.Test(req, -1)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if resp.StatusCode != tt.expectedStatus {
+				t.Errorf("expected status %d, got %d", tt.expectedStatus, resp.StatusCode)
+			}
+		})
+	}
+}
+
 func TestRepoHandler_Formats(t *testing.T) {
 	cfg := test.NewConfig()
-	cfg.DatabasePath = "/tmp/dependents-test-repo-formats"
-	dbService := database.NewBadgerService(cfg.DatabasePath)
-	dbService.Save("total:owner/repo", []byte("42"))
-	dbService.Save("svg:owner/repo", []byte("<svg/>"))
-	dbService.Save("total:owner/repo:pkg1", []byte("7"))
-	defer dbService.Close()
+	store := test.NewMockStore()
+	store.Save("total:owner/repo", []byte("42"))
+	store.Save("svg:owner/repo", []byte("<svg/>"))
+	store.Save("total:owner/repo:pkg1", []byte("7"))
 
 	app := test.NewServer(cfg)
-	h := NewRepoHandler(dbService, render.NewRenderService())
+	h := NewRepoHandler(store, &test.MockRenderer{PageResult: []byte("<html>ok</html>")})
 	app.Get("/:owner/:repo", h.RepoPage)
 
 	t.Run("json", func(t *testing.T) {

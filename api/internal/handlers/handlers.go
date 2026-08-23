@@ -14,24 +14,24 @@ type Handlers struct {
 
 func BuildAll(services *service.Services) *Handlers {
 	healthHandler := NewHealthHandler()
-	deleteHandler := NewDeleteHandler(services.DatabaseService)
-	imageHandler := NewImageHandler(services.DatabaseService, services.DependentsService)
+	deleteHandler := NewDeleteHandler(services.Store)
+	imageHandler := NewImageHandler(services.Store, services.DependentsService)
 	badgeHandler := NewBadgeHandler(
-		services.DatabaseService,
+		services.Store,
 		services.DependentsService,
 	)
 	sitemapHandler := NewSitemapHandler(
-		services.DatabaseService,
-		services.RenderService,
+		services.Store,
+		services.Renderer,
 	)
 	repoHandler := NewRepoHandler(
-		services.DatabaseService,
-		services.RenderService,
+		services.Store,
+		services.Renderer,
 	)
 	ingestHandler := NewIngestHandler(
-		services.GitHubOIDCService,
-		services.DatabaseService,
-		services.RenderService,
+		services.OIDCVerifier,
+		services.Store,
+		services.Renderer,
 	)
 
 	return &Handlers{

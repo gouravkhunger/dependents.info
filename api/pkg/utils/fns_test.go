@@ -235,6 +235,127 @@ func TestExtractBearerToken(t *testing.T) {
 	}
 }
 
+func TestParseDependentNodes(t *testing.T) {
+	doc := `<html><body>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="user">userA</a>
+			<img src="https://example.com/a.png" />
+			<span class="octicon-star"></span> 50
+		</div>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="organization">orgB</a>
+			<img src="https://example.com/b.png" />
+			<span class="octicon-star"></span> 100
+		</div>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="user">userA</a>
+			<img src="https://example.com/a2.png" />
+			<span class="octicon-star"></span> 30
+		</div>
+	</body></html>`
+
+	nodes, err := ParseDependentNodes(doc)
+	if err != nil {
+		t.Fatalf("ParseDependentNodes() error = %v", err)
+	}
+	if len(nodes) != 2 {
+		t.Fatalf("expected 2 unique nodes, got %d", len(nodes))
+	}
+	if nodes[0].Owner != "orgB" {
+		t.Errorf("expected first node owner 'orgB' (highest stars), got %q", nodes[0].Owner)
+	}
+	if nodes[0].Stars != 100 {
+		t.Errorf("expected first node stars 100, got %d", nodes[0].Stars)
+	}
+	if nodes[1].Owner != "userA" {
+		t.Errorf("expected second node owner 'userA', got %q", nodes[1].Owner)
+	}
+	for _, n := range nodes {
+		if n.ImageURL == "" {
+			t.Errorf("expected non-empty ImageURL for %s", n.Owner)
+		}
+	}
+}
+
+func TestParseDependentNodes_SkipsMalformed(t *testing.T) {
+	doc := `<html><body>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<img src="https://example.com/a.png" />
+			<span class="octicon-star"></span> 10
+		</div>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="user">userA</a>
+			<img src="https://example.com/a.png" />
+		</div>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="user">userB</a>
+			<img src="https://example.com/b.png" />
+			<span class="octicon-star"></span> 20
+		</div>
+	</body></html>`
+
+	nodes, err := ParseDependentNodes(doc)
+	if err != nil {
+		t.Fatalf("ParseDependentNodes() error = %v", err)
+	}
+	if len(nodes) != 1 || nodes[0].Owner != "userB" {
+		t.Fatalf("expected only userB, got %+v", nodes)
+	}
+}
+
+func TestParseDependentNodes_EmptyHTML(t *testing.T) {
+	nodes, err := ParseDependentNodes("<html><body></body></html>")
+	if err != nil {
+		t.Fatalf("ParseDependentNodes() error = %v", err)
+	}
+	if len(nodes) != 0 {
+		t.Errorf("expected 0 nodes, got %d", len(nodes))
+	}
+}
+
+func TestParseDependentNodes_KeepsAllOnPage(t *testing.T) {
+	var html string
+	html = `<html><body>`
+	for i := range 15 {
+		html += `<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="user">user` + strconv.Itoa(i) + `</a>
+			<img src="https://example.com/` + strconv.Itoa(i) + `.png" />
+			<span class="octicon-star"></span> ` + strconv.Itoa(i*10) + `
+		</div>`
+	}
+	html += `</body></html>`
+
+	nodes, err := ParseDependentNodes(html)
+	if err != nil {
+		t.Fatalf("ParseDependentNodes() error = %v", err)
+	}
+	if len(nodes) != 15 {
+		t.Errorf("expected 15 nodes, got %d", len(nodes))
+	}
+}
+
+func TestParseDependentNodes_BrokenFirstCardKeepsLaterSameOwner(t *testing.T) {
+	doc := `<html><body>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="user">userA</a>
+			<span class="octicon-star"></span> 10
+		</div>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="user">userA</a>
+			<img src="https://example.com/a.png" />
+			<span class="octicon-star"></span> 20
+		</div>
+	</body></html>`
+
+	nodes, err := ParseDependentNodes(doc)
+	if err != nil {
+		t.Fatalf("ParseDependentNodes() error = %v", err)
+	}
+	if len(nodes) != 1 || nodes[0].Owner != "userA" || nodes[0].Stars != 20 {
+		t.Fatalf("expected userA with 20 stars, got %+v", nodes)
+	}
+}
+
 func TestParseTotalDependents(t *testing.T) {
 	html := `
 		<div role="status" class="table-list-header-toggle states flex-auto pl-0">
