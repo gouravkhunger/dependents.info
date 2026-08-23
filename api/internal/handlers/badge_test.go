@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"io"
@@ -49,7 +50,7 @@ func TestBadgeHandler_Badge(t *testing.T) {
 			}
 
 			depService := &test.MockDependentsTasker{
-				NewTaskFn: func(repo, id, kind string, callback func(int, []byte)) error {
+				NewTaskFn: func(_ context.Context, repo, id, kind string, callback func(int, []byte)) error {
 					if tt.taskErr != nil {
 						return tt.taskErr
 					}

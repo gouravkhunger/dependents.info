@@ -32,7 +32,7 @@ type OIDCVerifier interface {
 }
 
 type DependentsTasker interface {
-	NewTask(repo string, id string, kind string, callback func(total int, svg []byte)) error
+	NewTask(ctx context.Context, repo string, id string, kind string, callback func(total int, svg []byte)) error
 }
 
 type Services struct {

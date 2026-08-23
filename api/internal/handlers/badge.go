@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"time"
@@ -26,7 +27,7 @@ func NewBadgeHandler(
 	}
 }
 
-func (h *BadgeHandler) resolveTotal(repo, id string) (string, error) {
+func (h *BadgeHandler) resolveTotal(ctx context.Context, repo, id string) (string, error) {
 	name := repo
 	if id != "" {
 		name += ":" + id
@@ -35,7 +36,7 @@ func (h *BadgeHandler) resolveTotal(repo, id string) (string, error) {
 	var total string
 	err := h.store.Get("total:"+name, &total)
 	if err != nil {
-		taskErr := h.dependentsService.NewTask(repo, id, "badge", func(total int, svg []byte) {
+		taskErr := h.dependentsService.NewTask(ctx, repo, id, "badge", func(total int, svg []byte) {
 			_ = h.store.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
 		})
 		if taskErr != nil {
@@ -50,7 +51,7 @@ func (h *BadgeHandler) Badge(c *fiber.Ctx) error {
 	id := c.Query("id")
 	repo := c.Params("owner") + "/" + c.Params("repo")
 
-	total, err := h.resolveTotal(repo, id)
+	total, err := h.resolveTotal(c.UserContext(), repo, id)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
 	}
@@ -66,7 +67,7 @@ func (h *BadgeHandler) Shields(c *fiber.Ctx) error {
 	id := c.Query("id")
 	repo := c.Params("owner") + "/" + c.Params("repo")
 
-	total, err := h.resolveTotal(repo, id)
+	total, err := h.resolveTotal(c.UserContext(), repo, id)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
 	}

@@ -38,7 +38,7 @@ func (h *ImageHandler) SVGImage(c *fiber.Ctx) error {
 	err := h.store.Get("svg:"+name, &svg)
 
 	if err != nil {
-		taskErr := h.dependentsService.NewTask(repo, id, "image", func(total int, svg []byte) {
+		taskErr := h.dependentsService.NewTask(c.UserContext(), repo, id, "image", func(total int, svg []byte) {
 			_ = h.store.SaveWithTTL("svg:"+name, svg, 7*24*time.Hour)
 			_ = h.store.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
 		})

@@ -166,7 +166,6 @@ func ParseDependentNodes(doc string) ([]DependentInfo, error) {
 		if _, ok := seen[parsedOwner]; ok {
 			continue
 		}
-		seen[parsedOwner] = struct{}{}
 		imageURL, err := imageNodeToUrl(imgNode)
 		if err != nil {
 			continue
@@ -175,6 +174,7 @@ func ParseDependentNodes(doc string) ([]DependentInfo, error) {
 			continue
 		}
 		stars, _ := extractNumber(starsNode.Parent)
+		seen[parsedOwner] = struct{}{}
 		result = append(result, DependentInfo{
 			Owner:    parsedOwner,
 			Stars:    stars,
@@ -184,9 +184,6 @@ func ParseDependentNodes(doc string) ([]DependentInfo, error) {
 	sort.Slice(result, func(i, j int) bool {
 		return result[i].Stars > result[j].Stars
 	})
-	if len(result) > 11 {
-		return result[:11], nil
-	}
 	return result, nil
 }
 

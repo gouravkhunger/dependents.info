@@ -86,12 +86,12 @@ func (m *MockRenderer) RenderSitemap(_ []string) ([]byte, error) {
 }
 
 type MockDependentsTasker struct {
-	NewTaskFn func(repo, id, kind string, callback func(int, []byte)) error
+	NewTaskFn func(ctx context.Context, repo, id, kind string, callback func(int, []byte)) error
 }
 
-func (m *MockDependentsTasker) NewTask(repo, id, kind string, callback func(int, []byte)) error {
+func (m *MockDependentsTasker) NewTask(ctx context.Context, repo, id, kind string, callback func(int, []byte)) error {
 	if m.NewTaskFn != nil {
-		return m.NewTaskFn(repo, id, kind, callback)
+		return m.NewTaskFn(ctx, repo, id, kind, callback)
 	}
 	return nil
 }

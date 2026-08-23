@@ -1,6 +1,7 @@
 package github
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
 	"io"
@@ -19,8 +20,8 @@ type renderer interface {
 type DependentsService struct {
 	renderer   renderer
 	client     *http.Client
-	fetchPage  func(url string) (string, error)
-	fetchImage func(url string) (string, error)
+	fetchPage  func(ctx context.Context, url string) (string, error)
+	fetchImage func(ctx context.Context, url string) (string, error)
 }
 
 func NewDependentsService(r renderer) *DependentsService {
@@ -33,12 +34,18 @@ func NewDependentsService(r renderer) *DependentsService {
 	return s
 }
 
-func (s *DependentsService) NewTask(repo string, id string, kind string, callback func(total int, svg []byte)) error {
+func (s *DependentsService) NewTask(ctx context.Context, repo string, id string, kind string, callback func(total int, svg []byte)) error {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	defer cancel()
+
 	url := "https://github.com/" + repo + "/network/dependents"
 	if id != "" {
 		url += "?package_id=" + id
 	}
-	page, err := s.fetchPage(url)
+	page, err := s.fetchPage(ctx, url)
 	if err != nil {
 		return fmt.Errorf("fetch page: %w", err)
 	}
@@ -52,7 +59,7 @@ func (s *DependentsService) NewTask(repo string, id string, kind string, callbac
 		}
 		return nil
 	}
-	dependents, err := s.buildDependents(page)
+	dependents, err := s.buildDependents(ctx, page)
 	if err != nil {
 		return fmt.Errorf("build dependents: %w", err)
 	}
@@ -70,7 +77,7 @@ func (s *DependentsService) NewTask(repo string, id string, kind string, callbac
 	return nil
 }
 
-func (s *DependentsService) buildDependents(page string) ([]models.Dependent, error) {
+func (s *DependentsService) buildDependents(ctx context.Context, page string) ([]models.Dependent, error) {
 	nodes, err := utils.ParseDependentNodes(page)
 	if err != nil {
 		return nil, err
@@ -89,7 +96,7 @@ func (s *DependentsService) buildDependents(page string) ([]models.Dependent, er
 		wg.Add(1)
 		go func(idx int, n utils.DependentInfo) {
 			defer wg.Done()
-			image, err := s.fetchImage(n.ImageURL)
+			image, err := s.fetchImage(ctx, n.ImageURL)
 			results <- result{
 				index: idx,
 				dep:   models.Dependent{Image: image, Stars: n.Stars, Owner: n.Owner},
@@ -112,24 +119,37 @@ func (s *DependentsService) buildDependents(page string) ([]models.Dependent, er
 		}
 	}
 
-	dependents := make([]models.Dependent, 0, len(nodes))
+	dependents := make([]models.Dependent, 0, 11)
 	for i, d := range byIndex {
-		if ok[i] {
-			dependents = append(dependents, d)
+		if !ok[i] {
+			continue
+		}
+		dependents = append(dependents, d)
+		if len(dependents) == 11 {
+			break
 		}
 	}
 	return dependents, nil
 }
 
-func (s *DependentsService) defaultFetchPage(url string) (string, error) {
+func retryableStatus(code int) bool {
+	return code >= 500 || code == http.StatusTooManyRequests
+}
+
+func (s *DependentsService) defaultFetchPage(ctx context.Context, url string) (string, error) {
 	var body string
-	err := utils.RetryWithBackoff(3, 500*time.Millisecond, func() error {
-		resp, err := s.client.Get(url)
+	err := utils.RetryWithBackoff(ctx, 3, 500*time.Millisecond, func() error {
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+		if err != nil {
+			return fmt.Errorf("failed to build request: %w", err)
+		}
+		resp, err := s.client.Do(req)
 		if err != nil {
 			return fmt.Errorf("failed to fetch page: %w", err)
 		}
 		defer resp.Body.Close()
-		if resp.StatusCode >= 500 {
+		if retryableStatus(resp.StatusCode) {
+			io.Copy(io.Discard, resp.Body)
 			return fmt.Errorf("server error: status %d", resp.StatusCode)
 		}
 		if resp.StatusCode != http.StatusOK {
@@ -146,15 +166,20 @@ func (s *DependentsService) defaultFetchPage(url string) (string, error) {
 	return body, err
 }
 
-func (s *DependentsService) defaultFetchImage(url string) (string, error) {
+func (s *DependentsService) defaultFetchImage(ctx context.Context, url string) (string, error) {
 	var dataURI string
-	err := utils.RetryWithBackoff(3, 300*time.Millisecond, func() error {
-		resp, err := s.client.Get(url)
+	err := utils.RetryWithBackoff(ctx, 3, 300*time.Millisecond, func() error {
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+		if err != nil {
+			return fmt.Errorf("failed to build request: %w", err)
+		}
+		resp, err := s.client.Do(req)
 		if err != nil {
 			return fmt.Errorf("failed to fetch image: %w", err)
 		}
 		defer resp.Body.Close()
-		if resp.StatusCode >= 500 {
+		if retryableStatus(resp.StatusCode) {
+			io.Copy(io.Discard, resp.Body)
 			return fmt.Errorf("server error: status %d", resp.StatusCode)
 		}
 		if resp.StatusCode != http.StatusOK {

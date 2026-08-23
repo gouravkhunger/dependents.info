@@ -313,7 +313,7 @@ func TestParseDependentNodes_EmptyHTML(t *testing.T) {
 	}
 }
 
-func TestParseDependentNodes_LimitsTo11(t *testing.T) {
+func TestParseDependentNodes_KeepsAllOnPage(t *testing.T) {
 	var html string
 	html = `<html><body>`
 	for i := range 15 {
@@ -329,8 +329,30 @@ func TestParseDependentNodes_LimitsTo11(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ParseDependentNodes() error = %v", err)
 	}
-	if len(nodes) != 11 {
-		t.Errorf("expected max 11 nodes, got %d", len(nodes))
+	if len(nodes) != 15 {
+		t.Errorf("expected 15 nodes, got %d", len(nodes))
+	}
+}
+
+func TestParseDependentNodes_BrokenFirstCardKeepsLaterSameOwner(t *testing.T) {
+	doc := `<html><body>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="user">userA</a>
+			<span class="octicon-star"></span> 10
+		</div>
+		<div data-test-id="dg-repo-pkg-dependent">
+			<a data-hovercard-type="user">userA</a>
+			<img src="https://example.com/a.png" />
+			<span class="octicon-star"></span> 20
+		</div>
+	</body></html>`
+
+	nodes, err := ParseDependentNodes(doc)
+	if err != nil {
+		t.Fatalf("ParseDependentNodes() error = %v", err)
+	}
+	if len(nodes) != 1 || nodes[0].Owner != "userA" || nodes[0].Stars != 20 {
+		t.Fatalf("expected userA with 20 stars, got %+v", nodes)
 	}
 }
 

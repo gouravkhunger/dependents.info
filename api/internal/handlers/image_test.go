@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"errors"
 	"io"
 	"net/http/httptest"
@@ -16,7 +17,7 @@ func TestImageHandler_SVGImage(t *testing.T) {
 		name           string
 		url            string
 		storeData      map[string][]byte
-		taskFn         func(string, string, string, func(int, []byte)) error
+		taskFn         func(context.Context, string, string, string, func(int, []byte)) error
 		expectedStatus int
 		expectedBody   string
 	}{
@@ -30,7 +31,7 @@ func TestImageHandler_SVGImage(t *testing.T) {
 		{
 			name: "fallback via NewTask succeeds",
 			url:  "/owner/repo/image",
-			taskFn: func(repo, id, kind string, cb func(int, []byte)) error {
+			taskFn: func(_ context.Context, repo, id, kind string, cb func(int, []byte)) error {
 				if cb != nil {
 					cb(10, []byte("<svg>fresh</svg>"))
 				}
@@ -42,7 +43,7 @@ func TestImageHandler_SVGImage(t *testing.T) {
 		{
 			name: "fallback via NewTask fails",
 			url:  "/owner/repo/image",
-			taskFn: func(_, _, _ string, _ func(int, []byte)) error {
+			taskFn: func(_ context.Context, _, _, _ string, _ func(int, []byte)) error {
 				return errors.New("fetch failed")
 			},
 			expectedStatus: fiber.StatusNotFound,
