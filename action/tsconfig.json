@@ -6,7 +6,8 @@
     "outDir": "dist",
     "module": "NodeNext",
     "paths": { "@/*": ["src/*"] },
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    "types": ["node", "vitest/globals"]
   },
   "include": ["src", "tests"],
   "exclude": ["dist", "node_modules"]

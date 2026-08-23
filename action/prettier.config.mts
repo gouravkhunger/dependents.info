@@ -1,5 +1,6 @@
-/** @type {import("prettier").Config} */
-export default {
+import type { Config } from "prettier";
+
+const config: Config = {
   plugins: ["@ianvs/prettier-plugin-sort-imports"],
   importOrder: [
     "<BUILTIN_MODULES>",
@@ -11,3 +12,5 @@ export default {
     "^[.]",
   ],
 };
+
+export default config;
