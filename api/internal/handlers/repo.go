@@ -76,7 +76,7 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(repoJSON(cfg.Host(), owner, repo, id, totalInt, hasImage))
 	}
 	if format == "md" {
-		c.Type("md")
+		c.Type("txt")
 		return c.Status(fiber.StatusOK).SendString(repoMarkdown(cfg.Host(), owner, repo, id, totalInt, hasImage))
 	}
 

@@ -134,6 +134,9 @@ func TestRepoHandler_Formats(t *testing.T) {
 		if resp.StatusCode != fiber.StatusOK {
 			t.Fatalf("expected 200, got %d", resp.StatusCode)
 		}
+		if ct := resp.Header.Get("Content-Type"); !strings.HasPrefix(ct, "text/plain") {
+			t.Errorf("Content-Type = %q, want text/plain", ct)
+		}
 		body, _ := io.ReadAll(resp.Body)
 		text := string(body)
 		if !strings.Contains(text, "# owner/repo") {
