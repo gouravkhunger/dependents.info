@@ -132,6 +132,9 @@ func TestSendError(t *testing.T) {
 			if resp.StatusCode != tt.status {
 				t.Errorf("expected status %d, got %d", tt.status, resp.StatusCode)
 			}
+			if cc := resp.Header.Get("Cache-Control"); cc != "private, no-store" {
+				t.Errorf("Cache-Control = %q, want private, no-store", cc)
+			}
 
 			body, _ := io.ReadAll(resp.Body)
 			var got models.APIResponse
