@@ -150,6 +150,42 @@ func TestBadgeHandler_Shields(t *testing.T) {
 			t.Errorf("expected 404, got %d", resp.StatusCode)
 		}
 	})
+
+	t.Run("miss scrapes then serves", func(t *testing.T) {
+		called := false
+		store := test.NewMockStore()
+		app := test.NewServer(cfg)
+		h := NewBadgeHandler(store, &test.MockDependentsTasker{
+			NewTaskFn: func(_ context.Context, repo, id, kind string, callback func(int, []byte)) error {
+				called = true
+				if callback != nil {
+					callback(48, nil)
+				}
+				return nil
+			},
+		})
+		app.Get("/:owner/:repo/shields.json", h.Shields)
+
+		req := httptest.NewRequest("GET", "/owner/repo/shields.json", nil)
+		resp, err := app.Test(req, -1)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if !called {
+			t.Error("NewTask should run on miss")
+		}
+		if resp.StatusCode != fiber.StatusOK {
+			t.Fatalf("expected 200, got %d", resp.StatusCode)
+		}
+		body, _ := io.ReadAll(resp.Body)
+		var payload map[string]any
+		if err := json.Unmarshal(body, &payload); err != nil {
+			t.Fatalf("invalid json: %v", err)
+		}
+		if payload["message"] != "48" {
+			t.Errorf("message = %v", payload["message"])
+		}
+	})
 }
 
 func TestBadgeHandler_SelfBadge(t *testing.T) {

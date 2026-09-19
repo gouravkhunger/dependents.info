@@ -30,6 +30,7 @@ func TestValidateRepository(t *testing.T) {
 		{"owner/repo name", false},
 		{"owner/repo$name", false},
 		{"owner/repo/extra", false},
+		{".well-known/llms.txt", false},
 	}
 
 	for _, tt := range tests {

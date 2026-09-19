@@ -54,6 +54,11 @@ func TestRepoHandler_RepoPage(t *testing.T) {
 			pageResult:     []byte("<html>pkg page</html>"),
 			expectedStatus: fiber.StatusOK,
 		},
+		{
+			name:           "invalid owner does not redirect",
+			url:            "/.well-known/llms.txt",
+			expectedStatus: fiber.StatusNotFound,
+		},
 	}
 
 	cfg := test.NewConfig()
