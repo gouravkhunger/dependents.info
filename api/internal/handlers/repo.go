@@ -41,6 +41,9 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 	owner := c.Params("owner")
 	repo, format := splitRepoFormat(c.Params("repo"))
 	name := owner + "/" + repo
+	if !utils.ValidateRepository(name) {
+		return utils.SendError(c, fiber.StatusNotFound, "Repository not found", nil)
+	}
 	cfg := config.FromContext(c.UserContext())
 
 	if id != "" {
