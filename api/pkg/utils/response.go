@@ -19,5 +19,6 @@ func SendError(c *fiber.Ctx, status int, message string, err error) error {
 		response.Error = err.Error()
 	}
 	c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
+	c.Set(fiber.HeaderCacheControl, "private, no-store")
 	return c.Status(status).JSON(response)
 }

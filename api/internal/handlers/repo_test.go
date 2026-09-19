@@ -209,6 +209,30 @@ func TestRepoHandler_Formats(t *testing.T) {
 		if resp.StatusCode != fiber.StatusNotFound {
 			t.Errorf("expected 404, got %d", resp.StatusCode)
 		}
+		if cc := resp.Header.Get("Cache-Control"); cc != "private, no-store" {
+			t.Errorf("Cache-Control = %q", cc)
+		}
+	})
+
+	t.Run("markdown missing", func(t *testing.T) {
+		req := httptest.NewRequest("GET", "/missing/repo.md", nil)
+		resp, err := app.Test(req, -1)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if resp.StatusCode != fiber.StatusNotFound {
+			t.Errorf("expected 404, got %d", resp.StatusCode)
+		}
+		if ct := resp.Header.Get("Content-Type"); !strings.HasPrefix(ct, "text/plain") {
+			t.Errorf("Content-Type = %q, want text/plain", ct)
+		}
+		if cc := resp.Header.Get("Cache-Control"); cc != "private, no-store" {
+			t.Errorf("Cache-Control = %q", cc)
+		}
+		body, _ := io.ReadAll(resp.Body)
+		if strings.TrimSpace(string(body)) != "Total dependents not found" {
+			t.Errorf("body = %q", body)
+		}
 	})
 
 	t.Run("html still works", func(t *testing.T) {

@@ -51,6 +51,12 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 	err := h.store.Get("total:"+name, &total)
 
 	if err != nil {
+		if format == "md" {
+			c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
+			c.Set(fiber.HeaderCacheControl, "private, no-store")
+			c.Type("txt")
+			return c.Status(fiber.StatusNotFound).SendString("Total dependents not found")
+		}
 		if format != "html" {
 			return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
 		}
