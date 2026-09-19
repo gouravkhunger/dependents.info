@@ -34,6 +34,9 @@
     <link rel="stylesheet" crossorigin href="/assets/{{.StylesFile}}" />
 
     <link rel="canonical" href="https://dependents.info/{{.Owner}}/{{.Repo}}" />
+    <link rel="describedby" href="/llms.txt" />
+    <link rel="alternate" type="text/markdown" href="/{{.Owner}}/{{.Repo}}.md{{if .Id}}?id={{.Id}}{{end}}" />
+    <link rel="alternate" type="application/json" href="/{{.Owner}}/{{.Repo}}.json{{if .Id}}?id={{.Id}}{{end}}" />
   </head>
   <body>
     <article class="prose container mt-4">
