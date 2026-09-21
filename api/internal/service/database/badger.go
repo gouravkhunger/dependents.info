@@ -2,9 +2,15 @@ package database
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/dgraph-io/badger/v4"
+)
+
+var (
+	openAttempts = 120
+	openWait     = time.Second
 )
 
 type Txn = *badger.Txn
@@ -26,7 +32,7 @@ func NewBadgerService(path string) *BadgerService {
 		WithMemTableSize(32 << 20).
 		WithNumLevelZeroTables(3)
 
-	db, err := badger.Open(opts)
+	db, err := openDB(opts)
 	if err != nil {
 		panic("Failed to open Badger database: " + err.Error())
 	}
@@ -53,6 +59,29 @@ func NewBadgerService(path string) *BadgerService {
 	}()
 
 	return service
+}
+
+func openDB(opts badger.Options) (*badger.DB, error) {
+	var db *badger.DB
+	var err error
+	for i := 0; i < openAttempts; i++ {
+		db, err = badger.Open(opts)
+		if err == nil {
+			return db, nil
+		}
+		if !isLockErr(err) || i == openAttempts-1 {
+			return nil, err
+		}
+		if i == 0 {
+			log.Printf("waiting for badger lock")
+		}
+		time.Sleep(openWait)
+	}
+	return nil, err
+}
+
+func isLockErr(err error) bool {
+	return err != nil && strings.Contains(err.Error(), "directory lock")
 }
 
 func (b *BadgerService) Sync() error {
