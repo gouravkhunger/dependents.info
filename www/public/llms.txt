@@ -42,6 +42,12 @@ Shields.io endpoint (uses this service as the JSON source):
 https://img.shields.io/endpoint?url=https://dependents.info/owner/repo/shields.json
 ```
 
+## Files
+
+- [Repo JSON](https://dependents.info/owner/repo.json): totals and embed URLs. 404 if unknown.
+- [Repo markdown](https://dependents.info/owner/repo.md): pasteable summary. 404 if unknown.
+- [Shields endpoint](https://dependents.info/owner/repo/shields.json): JSON for shields.io. Scrapes on first fetch, like the badge.
+
 ## GitHub Action
 
 ```yml
@@ -65,7 +71,7 @@ Base URL: `https://dependents.info`
 | GET | `/{owner}/{repo}.md` | Markdown document (404 if unknown) |
 | GET | `/{owner}/{repo}/badge` | Shields-style SVG. Alias: `/badge.svg` |
 | GET | `/{owner}/{repo}/image` | Dependents avatar SVG. Alias: `/image.svg` |
-| GET | `/{owner}/{repo}/shields.json` | [Shields endpoint](https://shields.io/badges/endpoint-badge) JSON |
+| GET | `/{owner}/{repo}/shields.json` | [Shields endpoint](https://shields.io/badges/endpoint-badge) JSON. Scrapes on first fetch |
 | POST | `/{owner}/{repo}/ingest` | Action only. OIDC in production |
 | DELETE | `/{owner}/{repo}` | Admin. Bearer password |
 

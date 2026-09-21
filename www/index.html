@@ -32,6 +32,7 @@
 
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="canonical" href="https://dependents.info" />
+    <link rel="describedby" href="/llms.txt" />
   </head>
   <body>
     <article class="prose container">
@@ -194,6 +195,13 @@
           <li><code>style</code>: [flat (default), flat-square, plastic, for-the-badge, social]</li>
         </ul>
         usage: <code>/badge?color=red&style=flat-square</code>
+      </p>
+      <p>
+        or a <a href="https://shields.io/badges/endpoint-badge" target="_blank" rel="noopener noreferrer">shields.io endpoint</a> badge:
+        <code>https://img.shields.io/endpoint?url=https://dependents.info/owner/repo/shields.json</code>
+      </p>
+      <p>
+        machine-readable copies live at <code>/owner/repo.json</code> and <code>/owner/repo.md</code>.
       </p>
       <p>
         paste this code where you want the badge to appear in the readme.
