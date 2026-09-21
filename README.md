@@ -92,9 +92,9 @@ https://dependents.info/owner/repo.md
 https://img.shields.io/endpoint?url=https://dependents.info/owner/repo/shields.json
 ```
 
-json, markdown, and shields scrape on first fetch, like the badge.
+json, markdown, and shields scrape on first fetch, like the badge and the image.
 
-the badge and the image are self updating. they are generated on fetch requests and cached for a period of 7 days.
+everything is self updating. it is generated on fetch requests and cached for a period of 7 days.
 
 when using the [github action](#github-action), they update as soon as new data is ingested.
 

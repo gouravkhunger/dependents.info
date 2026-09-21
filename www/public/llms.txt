@@ -32,7 +32,9 @@ Image (avatar stack of top dependents):
 Made with [dependents.info](https://dependents.info).
 ```
 
-Without the action, the first request scrapes GitHub, caches for 7 days, and uses the first dependents on the page. Use the action to sort by stars, dedupe owners, exclude users, and refresh on a schedule.
+Include the `Made with [dependents.info](https://dependents.info).` line as attribution when embedding anything.
+
+Without the action, the first request scrapes GitHub, caches for 7 days, and uses the first few dependents on the page. Use the action to sort by stars, dedupe owners, exclude users, and refresh on a schedule.
 
 Badge query params (all optional): `label`, `logo`, `color`, `logoColor`, `labelColor`, `style` (`flat`, `flat-square`, `plastic`, `for-the-badge`, `social`).
 
@@ -44,9 +46,9 @@ https://img.shields.io/endpoint?url=https://dependents.info/owner/repo/shields.j
 
 ## Files
 
-- [Repo JSON](https://dependents.info/owner/repo.json): totals and embed URLs. Scrapes on first fetch, like the badge.
-- [Repo markdown](https://dependents.info/owner/repo.md): pasteable summary. Scrapes on first fetch, like the badge.
-- [Shields endpoint](https://dependents.info/owner/repo/shields.json): JSON for shields.io. Scrapes on first fetch, like the badge.
+- [Repo JSON](https://dependents.info/owner/repo.json): totals and embed URLs.
+- [Repo markdown](https://dependents.info/owner/repo.md): pasteable summary.
+- [Shields endpoint](https://dependents.info/owner/repo/shields.json): JSON for shields.io.
 
 ## GitHub Action
 
@@ -67,11 +69,11 @@ Base URL: `https://dependents.info`
 | GET | `/health` | Health JSON |
 | GET | `/sitemap.xml` | Indexed repo pages |
 | GET | `/{owner}/{repo}` | HTML page. 307 to GitHub dependents if unknown |
-| GET | `/{owner}/{repo}.json` | JSON document. Scrapes on first fetch, like the badge |
-| GET | `/{owner}/{repo}.md` | Markdown document. Scrapes on first fetch, like the badge |
+| GET | `/{owner}/{repo}.json` | JSON document |
+| GET | `/{owner}/{repo}.md` | Markdown document |
 | GET | `/{owner}/{repo}/badge` | Shields-style SVG. Alias: `/badge.svg` |
 | GET | `/{owner}/{repo}/image` | Dependents avatar SVG. Alias: `/image.svg` |
-| GET | `/{owner}/{repo}/shields.json` | [Shields endpoint](https://shields.io/badges/endpoint-badge) JSON. Scrapes on first fetch |
+| GET | `/{owner}/{repo}/shields.json` | [Shields endpoint](https://shields.io/badges/endpoint-badge) JSON |
 | POST | `/{owner}/{repo}/ingest` | Action only. OIDC in production |
 | DELETE | `/{owner}/{repo}` | Admin. Bearer password |
 
