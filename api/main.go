@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"syscall"
 
 	"github.com/joho/godotenv"
 
@@ -30,7 +31,7 @@ func main() {
 	app := server.Build(cfg, &static, handlers)
 
 	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
 		_ = app.Shutdown()
