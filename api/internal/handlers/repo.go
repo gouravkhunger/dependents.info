@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -14,14 +15,16 @@ import (
 )
 
 type RepoHandler struct {
-	renderer service.Renderer
-	store    service.Store
+	dependentsService service.DependentsTasker
+	renderer          service.Renderer
+	store             service.Store
 }
 
-func NewRepoHandler(store service.Store, renderer service.Renderer) *RepoHandler {
+func NewRepoHandler(store service.Store, renderer service.Renderer, dependentsService service.DependentsTasker) *RepoHandler {
 	return &RepoHandler{
-		renderer: renderer,
-		store:    store,
+		dependentsService: dependentsService,
+		renderer:          renderer,
+		store:             store,
 	}
 }
 
@@ -54,21 +57,31 @@ func (h *RepoHandler) RepoPage(c *fiber.Ctx) error {
 	err := h.store.Get("total:"+name, &total)
 
 	if err != nil {
-		if format == "md" {
+		if format == "html" {
+			url := "https://github.com/" + owner + "/" + repo + "/network/dependents"
+			if id != "" {
+				url += "?package_id=" + id
+			}
 			c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
-			c.Set(fiber.HeaderCacheControl, "private, no-store")
-			c.Type("txt")
-			return c.Status(fiber.StatusNotFound).SendString("Total dependents not found")
+			return c.Redirect(url, fiber.StatusTemporaryRedirect)
 		}
-		if format != "html" {
+		taskErr := h.dependentsService.NewTask(c.UserContext(), owner+"/"+repo, id, "badge", func(total int, svg []byte) {
+			_ = h.store.SaveWithTTL("total:"+name, []byte(strconv.Itoa(total)), 7*24*time.Hour)
+		})
+		if taskErr != nil {
+			err = taskErr
+		} else {
+			err = h.store.Get("total:"+name, &total)
+		}
+		if err != nil {
+			if format == "md" {
+				c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
+				c.Set(fiber.HeaderCacheControl, "private, no-store")
+				c.Type("txt")
+				return c.Status(fiber.StatusNotFound).SendString("Total dependents not found")
+			}
 			return utils.SendError(c, fiber.StatusNotFound, "Total dependents not found", err)
 		}
-		url := "https://github.com/" + owner + "/" + repo + "/network/dependents"
-		if id != "" {
-			url += "?package_id=" + id
-		}
-		c.Set(fiber.HeaderXRobotsTag, "noindex, nofollow")
-		return c.Redirect(url, fiber.StatusTemporaryRedirect)
 	}
 
 	var image string

@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http/httptest"
 	"strings"
@@ -72,7 +74,7 @@ func TestRepoHandler_RepoPage(t *testing.T) {
 
 			renderer := &test.MockRenderer{PageResult: tt.pageResult}
 			app := test.NewServer(cfg)
-			h := NewRepoHandler(store, renderer)
+			h := NewRepoHandler(store, renderer, &test.MockDependentsTasker{})
 			app.Get("/:owner/:repo", h.RepoPage)
 
 			req := httptest.NewRequest("GET", tt.url, nil)
@@ -95,7 +97,7 @@ func TestRepoHandler_Formats(t *testing.T) {
 	store.Save("total:owner/repo:pkg1", []byte("7"))
 
 	app := test.NewServer(cfg)
-	h := NewRepoHandler(store, &test.MockRenderer{PageResult: []byte("<html>ok</html>")})
+	h := NewRepoHandler(store, &test.MockRenderer{PageResult: []byte("<html>ok</html>")}, &test.MockDependentsTasker{})
 	app.Get("/:owner/:repo", h.RepoPage)
 
 	t.Run("json", func(t *testing.T) {
@@ -248,6 +250,172 @@ func TestRepoHandler_Formats(t *testing.T) {
 		}
 		if resp.StatusCode != fiber.StatusOK {
 			t.Errorf("expected 200, got %d", resp.StatusCode)
+		}
+	})
+}
+
+func TestRepoHandler_ScrapeOnMiss(t *testing.T) {
+	cfg := test.NewConfig()
+
+	t.Run("json miss scrapes then serves", func(t *testing.T) {
+		called := false
+		store := test.NewMockStore()
+		app := test.NewServer(cfg)
+		h := NewRepoHandler(store, &test.MockRenderer{}, &test.MockDependentsTasker{
+			NewTaskFn: func(_ context.Context, repo, id, kind string, callback func(int, []byte)) error {
+				called = true
+				if repo != "owner/repo" || id != "" || kind != "badge" {
+					t.Errorf("repo=%q id=%q kind=%q", repo, id, kind)
+				}
+				if callback != nil {
+					callback(48, nil)
+				}
+				return nil
+			},
+		})
+		app.Get("/:owner/:repo", h.RepoPage)
+
+		req := httptest.NewRequest("GET", "/owner/repo.json", nil)
+		resp, err := app.Test(req, -1)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if !called {
+			t.Error("NewTask should run on miss")
+		}
+		if resp.StatusCode != fiber.StatusOK {
+			t.Fatalf("expected 200, got %d", resp.StatusCode)
+		}
+		body, _ := io.ReadAll(resp.Body)
+		var payload map[string]any
+		if err := json.Unmarshal(body, &payload); err != nil {
+			t.Fatalf("invalid json: %v", err)
+		}
+		if payload["total"] != float64(48) {
+			t.Errorf("total = %v", payload["total"])
+		}
+		if payload["has_image"] != false {
+			t.Errorf("has_image = %v", payload["has_image"])
+		}
+	})
+
+	t.Run("markdown miss scrapes then serves", func(t *testing.T) {
+		called := false
+		store := test.NewMockStore()
+		app := test.NewServer(cfg)
+		h := NewRepoHandler(store, &test.MockRenderer{}, &test.MockDependentsTasker{
+			NewTaskFn: func(_ context.Context, repo, id, kind string, callback func(int, []byte)) error {
+				called = true
+				if kind != "badge" {
+					t.Errorf("kind = %q", kind)
+				}
+				if callback != nil {
+					callback(48, nil)
+				}
+				return nil
+			},
+		})
+		app.Get("/:owner/:repo", h.RepoPage)
+
+		req := httptest.NewRequest("GET", "/owner/repo.md", nil)
+		resp, err := app.Test(req, -1)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if !called {
+			t.Error("NewTask should run on miss")
+		}
+		if resp.StatusCode != fiber.StatusOK {
+			t.Fatalf("expected 200, got %d", resp.StatusCode)
+		}
+		if ct := resp.Header.Get("Content-Type"); !strings.HasPrefix(ct, "text/plain") {
+			t.Errorf("Content-Type = %q, want text/plain", ct)
+		}
+		body, _ := io.ReadAll(resp.Body)
+		if !strings.Contains(string(body), "found **48 projects**") {
+			t.Errorf("body = %q", body)
+		}
+	})
+
+	t.Run("json scrape fail", func(t *testing.T) {
+		app := test.NewServer(cfg)
+		h := NewRepoHandler(test.NewMockStore(), &test.MockRenderer{}, &test.MockDependentsTasker{
+			NewTaskFn: func(_ context.Context, _, _, _ string, _ func(int, []byte)) error {
+				return errors.New("fetch failed")
+			},
+		})
+		app.Get("/:owner/:repo", h.RepoPage)
+
+		req := httptest.NewRequest("GET", "/missing/repo.json", nil)
+		resp, err := app.Test(req, -1)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if resp.StatusCode != fiber.StatusNotFound {
+			t.Errorf("expected 404, got %d", resp.StatusCode)
+		}
+		if cc := resp.Header.Get("Cache-Control"); cc != "private, no-store" {
+			t.Errorf("Cache-Control = %q", cc)
+		}
+	})
+
+	t.Run("html miss does not scrape", func(t *testing.T) {
+		called := false
+		app := test.NewServer(cfg)
+		h := NewRepoHandler(test.NewMockStore(), &test.MockRenderer{}, &test.MockDependentsTasker{
+			NewTaskFn: func(_ context.Context, _, _, _ string, _ func(int, []byte)) error {
+				called = true
+				return nil
+			},
+		})
+		app.Get("/:owner/:repo", h.RepoPage)
+
+		req := httptest.NewRequest("GET", "/owner/repo", nil)
+		resp, err := app.Test(req, -1)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if resp.StatusCode != fiber.StatusTemporaryRedirect {
+			t.Errorf("expected 307, got %d", resp.StatusCode)
+		}
+		if called {
+			t.Error("NewTask should not run for html")
+		}
+	})
+
+	t.Run("json miss with package id", func(t *testing.T) {
+		app := test.NewServer(cfg)
+		h := NewRepoHandler(test.NewMockStore(), &test.MockRenderer{}, &test.MockDependentsTasker{
+			NewTaskFn: func(_ context.Context, repo, id, kind string, callback func(int, []byte)) error {
+				if id != "pkg1" {
+					t.Errorf("id = %q", id)
+				}
+				if callback != nil {
+					callback(7, nil)
+				}
+				return nil
+			},
+		})
+		app.Get("/:owner/:repo", h.RepoPage)
+
+		req := httptest.NewRequest("GET", "/owner/repo.json?id=pkg1", nil)
+		resp, err := app.Test(req, -1)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if resp.StatusCode != fiber.StatusOK {
+			t.Fatalf("expected 200, got %d", resp.StatusCode)
+		}
+		body, _ := io.ReadAll(resp.Body)
+		var payload map[string]any
+		if err := json.Unmarshal(body, &payload); err != nil {
+			t.Fatalf("invalid json: %v", err)
+		}
+		if payload["id"] != "pkg1" {
+			t.Errorf("id = %v", payload["id"])
+		}
+		if payload["total"] != float64(7) {
+			t.Errorf("total = %v", payload["total"])
 		}
 	})
 }

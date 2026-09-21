@@ -44,8 +44,8 @@ https://img.shields.io/endpoint?url=https://dependents.info/owner/repo/shields.j
 
 ## Files
 
-- [Repo JSON](https://dependents.info/owner/repo.json): totals and embed URLs. 404 if unknown.
-- [Repo markdown](https://dependents.info/owner/repo.md): pasteable summary. 404 if unknown.
+- [Repo JSON](https://dependents.info/owner/repo.json): totals and embed URLs. Scrapes on first fetch, like the badge.
+- [Repo markdown](https://dependents.info/owner/repo.md): pasteable summary. Scrapes on first fetch, like the badge.
 - [Shields endpoint](https://dependents.info/owner/repo/shields.json): JSON for shields.io. Scrapes on first fetch, like the badge.
 
 ## GitHub Action
@@ -67,8 +67,8 @@ Base URL: `https://dependents.info`
 | GET | `/health` | Health JSON |
 | GET | `/sitemap.xml` | Indexed repo pages |
 | GET | `/{owner}/{repo}` | HTML page. 307 to GitHub dependents if unknown |
-| GET | `/{owner}/{repo}.json` | JSON document (404 if unknown) |
-| GET | `/{owner}/{repo}.md` | Markdown document (404 if unknown) |
+| GET | `/{owner}/{repo}.json` | JSON document. Scrapes on first fetch, like the badge |
+| GET | `/{owner}/{repo}.md` | Markdown document. Scrapes on first fetch, like the badge |
 | GET | `/{owner}/{repo}/badge` | Shields-style SVG. Alias: `/badge.svg` |
 | GET | `/{owner}/{repo}/image` | Dependents avatar SVG. Alias: `/image.svg` |
 | GET | `/{owner}/{repo}/shields.json` | [Shields endpoint](https://shields.io/badges/endpoint-badge) JSON. Scrapes on first fetch |

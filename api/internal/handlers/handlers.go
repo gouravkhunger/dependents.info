@@ -27,6 +27,7 @@ func BuildAll(services *service.Services) *Handlers {
 	repoHandler := NewRepoHandler(
 		services.Store,
 		services.Renderer,
+		services.DependentsService,
 	)
 	ingestHandler := NewIngestHandler(
 		services.OIDCVerifier,

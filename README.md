@@ -92,7 +92,7 @@ https://dependents.info/owner/repo.md
 https://img.shields.io/endpoint?url=https://dependents.info/owner/repo/shields.json
 ```
 
-json and markdown 404 if the repository is not yet known. the shields endpoint scrapes on first fetch, like the badge.
+json, markdown, and shields scrape on first fetch, like the badge.
 
 the badge and the image are self updating. they are generated on fetch requests and cached for a period of 7 days.
 
